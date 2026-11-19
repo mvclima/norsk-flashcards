@@ -3812,13 +3812,14 @@ function search(){
   $('sRes').innerHTML=shown.map(([,w])=>{
     const art=ART.includes(w.g)?`<span class="art" style="color:var(--mut)">${w.g} </span>`:'';
     const src=THEMES[w.k].name+(w.cat?' › '+w.cat.split(' · ')[0]:'');
-    return `<tr><td class="nb"><span class="dot g-${w.g}"></span>${art}${lang==='no'?hi(w.nb,q):esc(w.nb)}<button type="button" class="src" data-k="${w.k}" data-gi="${w.gi}">${esc(src)}</button></td><td>${w.sw?`<span class="sws" style="background:${w.sw};margin:0 6px 0 0"></span>`:''}${lang==='en'?hi(w.pt,q):esc(w.pt)}${w.note?`<span class="rn">${esc(w.note)}</span>`:''}</td></tr>`}).join('');
+    return `<tr><td class="nb"><span class="dot g-${w.g}"></span>${art}${lang==='no'?hi(w.nb,q):esc(w.nb)}<button type="button" class="src" data-k="${w.k}" data-gi="${w.gi}" data-nb="${esc(w.nb)}">${esc(src)}</button></td><td>${w.sw?`<span class="sws" style="background:${w.sw};margin:0 6px 0 0"></span>`:''}${lang==='en'?hi(w.pt,q):esc(w.pt)}${w.note?`<span class="rn">${esc(w.note)}</span>`:''}</td></tr>`}).join('');
 }
 $('sForm').onsubmit=e=>{e.preventDefault();search()};
 $('sLang').onchange=()=>{if($('sQ').value.trim())search();else{try{localStorage.setItem('kjp-slang',$('sLang').value)}catch(e){}}};
 $('sRes').onclick=e=>{const b=e.target.closest('.src');if(!b)return;
   const k=b.dataset.k,gi=+b.dataset.gi;$('theme').value=k;loadTheme(k);
   if(gi>=0){$('filt').value='c'+gi;build(false)}
+  {const x=deck.findIndex(w=>w.nb===b.dataset.nb);if(x>0){i=x;render()}}
   location.hash='flashcards';show('flash')};
 try{const l=localStorage.getItem('kjp-slang');if(l==='no'||l==='en')$('sLang').value=l}catch(e){}
 /* ---- practice ---- */
