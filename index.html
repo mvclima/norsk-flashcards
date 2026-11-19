@@ -116,6 +116,12 @@ body.nav .scrim{display:block}
 @media(prefers-reduced-motion:reduce){.card,.track i{transition:none}}
 @media(max-width:600px){.bar button,.bar select{flex:1 1 auto}}
 </style>
+<style>
+.side .inst{display:flex;align-items:center;gap:12px;min-height:48px;padding:0 14px;margin-top:auto;border-radius:12px;border:1px solid var(--line);background:var(--bg);color:var(--ink);font:600 16px Inter,sans-serif;cursor:pointer;width:100%;text-align:left}
+.side .inst svg{width:22px;height:22px;fill:currentColor;flex:none}
+.side .inst:hover{border-color:var(--red);color:var(--red)}
+.side .iosTip{font-size:14px;line-height:1.45;color:var(--mut);margin:4px 6px 0;padding:10px 12px;border-radius:10px;background:var(--bg)}
+</style>
 <link rel="manifest" href="manifest.webmanifest">
 <meta name="theme-color" content="#e2412b">
 <link rel="apple-touch-icon" href="icons/icon-180.png">
@@ -129,6 +135,8 @@ body.nav .scrim{display:block}
 <a href="#flashcards" id="navF"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h11a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2zm0 2v12h11V7H4zm15-4a2 2 0 0 1 2 2v12h-2V5H7V3h12z"/></svg>Flashcards</a>
 <a href="#practice" id="navP"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M17 3l4 4-4 4V8h-2.6l-2.2 2.6-1.3-1.5L13.5 6H17V3zM3 6h4.5l9 10H17v-3l4 4-4 4v-3h-1.5l-9-10H3V6zm0 10h3.6l2.1-2.4 1.3 1.5L7.5 18H3v-2z"/></svg>Practice</a>
 <a href="#search" id="navS"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 3a7 7 0 0 1 5.6 11.2l5.1 5.1-1.4 1.4-5.1-5.1A7 7 0 1 1 10 3zm0 2a5 5 0 1 0 0 10 5 5 0 0 0 0-10z"/></svg>Search</a>
+<button type="button" id="navI" class="inst" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M11 3h2v9.2l3.3-3.3 1.4 1.4L12 16l-5.7-5.7 1.4-1.4 3.3 3.3V3zM5 19h14v2H5z"/></svg>Install app</button>
+<p id="iosTip" class="iosTip" hidden>On iPhone/iPad: tap <b>Share</b> <span aria-hidden="true">⎙</span> at the bottom of Safari, then <b>Add to Home Screen</b>.</p>
 </nav>
 <div class="scrim" id="scrim"></div>
 <div>
@@ -3887,6 +3895,15 @@ search();
 route();
 }
 </script>
+<script>{
+const b=document.getElementById('navI'),tip=document.getElementById('iosTip');let dp=null;
+const standalone=matchMedia('(display-mode: standalone)').matches||navigator.standalone===true;
+const ios=/iphone|ipad|ipod/i.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
+if(!standalone&&ios)b.hidden=false;
+window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();dp=e;if(!standalone)b.hidden=false});
+window.addEventListener('appinstalled',()=>{b.hidden=true;tip.hidden=true;dp=null});
+b.onclick=async()=>{if(dp){dp.prompt();try{const r=await dp.userChoice;if(r.outcome==='accepted')b.hidden=true}catch(e){}dp=null}else if(ios){tip.hidden=!tip.hidden}};
+}</script>
 <script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}))</script>
 <script data-goatcounter="https://mvclima.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 <script>window.addEventListener('hashchange',()=>{try{window.goatcounter&&window.goatcounter.count&&window.goatcounter.count({path:location.pathname+location.hash})}catch(e){}})</script>
