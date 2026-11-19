@@ -3671,7 +3671,7 @@ function loadTheme(id){
   $('allOpt').textContent=`All ${W.length}`;
   document.title='Flashcards: '+t.name;
   try{localStorage.setItem('kjp-theme',id)}catch(e){}
-  $('filt').value='all';list();build(false);
+  list();if(!restorePos()){$('filt').value='all';build(false)}
 }
 
 let dir='no',deck=[],i=0,flipped=false;
@@ -3708,7 +3708,15 @@ function build(shuffle){
   i=0;render();
 }
 
+const savePos=()=>{try{localStorage.setItem(tKey+'-pos',JSON.stringify({f:$('filt').value,d:deck.map(w=>w.id),i}))}catch(e){}};
+function restorePos(){try{
+  const s=JSON.parse(localStorage.getItem(tKey+'-pos')||'null');if(!s||!Array.isArray(s.d))return false;
+  if(![...$('filt').options].some(o=>o.value===s.f))return false;
+  const by=new Map(W.map(w=>[w.id,w])),d=s.d.map(x=>by.get(x)).filter(Boolean);if(!d.length)return false;
+  $('filt').value=s.f;deck=d;i=Math.max(0,Math.min(+s.i||0,d.length));render();return true;
+}catch(e){return false}}
 function render(){
+  savePos();
   flipped=false;
   const st=$('stage');
   if(!deck.length){st.innerHTML=`<div class="face done" style="position:static"><h2>Nothing here</h2><p>${$('filt').value==='miss'?'You haven’t missed any words yet. Great!':'No words in this filter.'}</p></div>`;prog();return}
@@ -3794,7 +3802,7 @@ function show(v){
   const s=v==='search';
   [['flash','vFlash','navF'],['practice','vPractice','navP'],['search','vSearch','navS']].forEach(([n,vi,na])=>{$(vi).hidden=n!==v;$(na).classList.toggle('on',n===v);$(na).setAttribute('aria-current',n===v?'page':'false')});
   document.title=v==='search'?'Search · Norsk':v==='practice'?'Practice · Norsk':'Flashcards: '+THEMES[$('theme').value].name;
-  if(v==='practice'&&!pReady){pReady=true;pBuild()}
+  if(v==='practice'&&!pReady){pReady=true;if(!pRestore())pBuild()}
   document.body.classList.remove('nav');window.scrollTo(0,0);
   if(s&&matchMedia('(min-width:900px)').matches)setTimeout(()=>$('sQ').focus(),0);
 }
@@ -3853,7 +3861,14 @@ function pProg(){
   $('ppKnown').textContent=`Known ${pKnown.size.toLocaleString('en')} of ${ALL.length.toLocaleString('en')}`;
   $('ppBar').style.width=(pKnown.size/ALL.length*100)+'%';
 }
+const pSavePos=()=>{try{localStorage.setItem('kjp-practice-pos',JSON.stringify({d:pDeck.map(w=>w.pid),i:pI}))}catch(e){}};
+function pRestore(){try{
+  const s=JSON.parse(localStorage.getItem('kjp-practice-pos')||'null');if(!s||!Array.isArray(s.d))return false;
+  const by=new Map(ALL.map(w=>[w.pid,w])),d=s.d.map(x=>by.get(x)).filter(Boolean);if(!d.length)return false;
+  pDeck=d;pI=Math.max(0,Math.min(+s.i||0,d.length));pRender();return true;
+}catch(e){return false}}
 function pRender(){
+  pSavePos();
   const st=$('pStage');
   if(pKnown.size>=ALL.length){st.innerHTML=`<div class="face done" style="position:static"><h2>Gratulerer!</h2><p>You know all ${ALL.length.toLocaleString('en')} words.</p></div>`;pProg();return}
   if(pI>=pDeck.length){
