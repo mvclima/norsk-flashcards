@@ -3759,7 +3759,7 @@ const SECTIONS=[['Basics',['smaord','tall','farger','tid','pronomen']],
 ['Grammar',['verb','adjektiv','adverb','preposisjoner','konjunksjoner','abstrakt']]];
 {const used=new Set(SECTIONS.flatMap(x=>x[1]));const rest=Object.keys(THEMES).filter(k=>!used.has(k));if(rest.length)SECTIONS.push(['More',rest]);}
 $('theme').innerHTML=SECTIONS.map(([lab,ids])=>`<optgroup label="${lab}">`+ids.filter(k=>THEMES[k]).map(id=>`<option value="${id}">${THEMES[id].name}</option>`).join('')+'</optgroup>').join('');
-let start='tall';try{const v=localStorage.getItem('kjp-theme');if(THEMES[v])start=v}catch(e){}
+let start=$('theme').options[0].value;try{const v=localStorage.getItem('kjp-theme');if(THEMES[v])start=v}catch(e){}
 $('theme').value=start;
 $('theme').onchange=()=>loadTheme($('theme').value);
 loadTheme(start);
