@@ -116,6 +116,11 @@ body.nav .scrim{display:block}
 @media(prefers-reduced-motion:reduce){.card,.track i{transition:none}}
 @media(max-width:600px){.bar button,.bar select{flex:1 1 auto}}
 </style>
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#e2412b">
+<link rel="apple-touch-icon" href="icons/icon-180.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Norsk">
 </head>
 <body>
 <div class="app">
@@ -3882,6 +3887,7 @@ search();
 route();
 }
 </script>
+<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}))</script>
 <script data-goatcounter="https://mvclima.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 <script>window.addEventListener('hashchange',()=>{try{window.goatcounter&&window.goatcounter.count&&window.goatcounter.count({path:location.pathname+location.hash})}catch(e){}})</script>
 </body>
