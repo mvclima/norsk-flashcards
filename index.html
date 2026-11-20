@@ -4088,13 +4088,13 @@ function gRender(){gDone=false;const st=$('gStage');
   st.querySelectorAll('.gbtns button').forEach(b=>b.onclick=()=>gAnswer(b.dataset.a));
   $('gNext').onclick=()=>{gI++;gRender()};gProg()}
 function gAnswer(a){if(gDone)return;gDone=true;const x=gDeck[gI],w=x.w,ok=x.alt.has(a);
-  gN++;gTot.t++;if(ok){gOk++;gTot.r++;gStreak++;gWrong.delete(x.id)}else{gStreak=0;gWrong.add(x.id)}gSave();
+  gN++;gTot.t++;if(ok){gOk++;gTot.r++;gStreak++;gWrong.delete(x.id)}else{gStreak=0;gWrong.add(x.id)}gSave();gFiltUI();
   $('gStage').querySelectorAll('.gbtns button').forEach(b=>{b.disabled=true;if(b.dataset.a===w.g)b.classList.add('right');else if(b.dataset.a===a&&!ok)b.classList.add('wrong');else if(b.dataset.a===a&&ok)b.classList.add('right')});
   const extra=a!==w.g&&ok?` · <i>${a} ${esc(w.nb)}</i> is also correct`:(w.g==='ei'&&a===w.g?' · <i>en</i> is also accepted in Bokmål':'');
   $('gFb').innerHTML=(ok?'<span class="ok">Riktig!</span> ':'<span class="bad">Feil.</span> ')+`It’s <b>${w.g} ${esc(w.nb)}</b>${extra}${w.note?`<br><span style="color:var(--mut);font-size:14px">${esc(w.note)}</span>`:''}`;
   $('gNext').hidden=false;$('gNext').focus();gProg()}
 $('gFilt').onchange=gBuild;
-$('gReset').onclick=()=>{gWrong.clear();gTot={r:0,t:0};gSave();gFiltUI()};
+$('gReset').onclick=()=>{gWrong.clear();gTot={r:0,t:0};gOk=0;gN=0;gStreak=0;gSave();gFiltUI();if($('gFilt').value==='miss')gBuild();else gProg()};
 document.addEventListener('keydown',e=>{
   if($('vGender').hidden||e.target.tagName==='SELECT')return;
   const k={'1':'en','2':'ei','3':'et'}[e.key];
