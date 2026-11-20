@@ -1066,55 +1066,66 @@ preposisjoner:{name:'Preposisjoner',desc:'prepositions',key:'kjp-prep',groups:[
 ['x','til tross for','despite','til tross for at = even though'],
 ['x','i tråd med','in line with, in accordance with','en tråd = a thread · i tråd med reglene']]]
 ]},
-smaord:{name:'Hilsener og uttrykk',desc:'greetings and phrases',key:'kjp-smaord',groups:[
-['Greetings & politeness · hilsener og høflighet',[
+smaord:{name:'Hilsener',desc:'greetings, thanks and wishes',key:'kjp-smaord',groups:[
+['Hello & goodbye · hei og ha det',[
 ['x','hei','hi',''],
 ['x','hallo','hello; hello? (on the phone)',''],
-['x','ha det!','bye!',''],
-['x','ha det bra!','goodbye!, take care!',''],
-['x','takk','thanks',''],
-['x','tusen takk','thank you very much',''],
-['x','takk skal du ha','thank you (polite)',''],
-['x','vær så god','here you are; please, go ahead',''],
-['x','vel bekomme','you are welcome (after a meal)','answer to: Takk for maten!'],
-['x','velkommen','welcome',''],
-['x','i like måte','likewise, same to you','God helg! – I like måte!'],
-['x','takk, det samme!','thanks, same to you!','God helg! – Takk, det samme!'],
-['x','unnskyld','excuse me; sorry',''],
-['x','god tur!','have a nice trip!',''],
-['x','god helg!','Have a nice weekend!','answer: I like måte!'],
-['x','ja','yes',''],
-['x','nei','no',''],
-['x','jo','yes (to a negative question)','Kommer du ikke? – Jo!'],
-['x','ja visst','certainly, of course',''],
-['x','ikke sant?','right?, isn’t it?',''],
-['x','det går bra','it is fine, I am fine','Hvordan går det? – Det går bra.'],
-['x','bare bra!','just fine!',''],
-['x','sånn passe','so-so, OK','Hvordan går det? – Sånn passe.'],
-['x','alt i orden','all right, everything OK',''],
 ['x','god morgen!','good morning!',''],
 ['x','god dag!','good day!, hello (formal)',''],
 ['x','god kveld!','good evening!',''],
 ['x','god natt!','good night!','when going to bed'],
-['x','ha en fin dag!','have a nice day!',''],
-['x','lykke til!','good luck!',''],
-['x','god bedring!','get well soon!',''],
-['x','god jul!','merry Christmas!',''],
-['x','godt nytt år!','happy New Year!','']]],
-['Useful phrases · nyttige uttrykk',[
+['x','ha det!','bye!',''],
+['x','ha det bra!','goodbye!, take care!',''],
+['x','vi snakkes','talk soon',''],
+['x','vi ses','see you',''],
+['x','velkommen','welcome',''],
+['x','hyggelig å møte deg','Nice to meet you','']]],
+['How are you? · hvordan går det?',[
 ['x','hvordan har du det?','How are you?','Bare bra, takk!'],
 ['x','hvordan går det med deg?','How are things with you?',''],
-['x','hyggelig å møte deg','Nice to meet you',''],
+['x','det går bra','it is fine, I am fine','Hvordan går det? – Det går bra.'],
+['x','bare bra!','just fine!',''],
+['x','sånn passe','so-so, OK','Hvordan går det? – Sånn passe.'],
+['x','alt i orden','all right, everything OK','']]],
+['Please, thanks & sorry · takk og unnskyld',[
+['x','takk','thanks',''],
+['x','tusen takk','thank you very much',''],
+['x','takk skal du ha','thank you (polite)',''],
+['x','vær så god','here you are; please, go ahead',''],
 ['x','vær så snill','please','Kan du være så snill å …? = Could you please …?'],
 ['x','vennligst','please (formal, written)',''],
 ['x','bare hyggelig','you are welcome',''],
 ['x','ingen årsak','no problem, don’t mention it',''],
-['x','vi snakkes','talk soon',''],
-['x','vi ses','see you',''],
+['x','vel bekomme','you are welcome (after a meal)','answer to: Takk for maten!'],
+['x','unnskyld','excuse me; sorry','']]],
+['Wishes · ønsker og gratulasjoner',[
+['x','ha en fin dag!','have a nice day!',''],
+['x','god helg!','Have a nice weekend!','answer: I like måte!'],
+['x','i like måte','likewise, same to you','God helg! – I like måte!'],
+['x','takk, det samme!','thanks, same to you!','God helg! – Takk, det samme!'],
+['x','god tur!','have a nice trip!',''],
+['x','lykke til!','good luck!',''],
+['x','god bedring!','get well soon!',''],
+['x','gratulerer med dagen!','Happy birthday!',''],
+['x','god jul!','merry Christmas!',''],
+['x','godt nytt år!','happy New Year!','']]],
+['Letters & emails · brev og e-post',[
+['x','kjære …','Dear … (letter opening)','Kjære Ola,'],
+['x','hilsen','Regards (informal)','Hilsen Maria'],
+['x','beste hilsen','Best regards','email sign-off'],
+['x','med vennlig hilsen','Kind regards','formal; short: mvh']]]
+]},
+uttrykk:{name:'Uttrykk',desc:'everyday phrases and expressions',key:'kjp-uttrykk',from:['kjp-smaord'],groups:[
+['Yes, no & reactions · ja, nei og reaksjoner',[
+['x','ja','yes',''],
+['x','nei','no',''],
+['x','jo','yes (to a negative question)','Kommer du ikke? – Jo!'],
+['x','ja visst','certainly, of course',''],
 ['x','så klart','of course',''],
+['x','ikke sant?','right?, isn’t it?','']]],
+['Useful phrases · nyttige uttrykk',[
 ['x','en gang til','once more',''],
 ['x','jeg trenger en til','I need one more',''],
-['x','gratulerer med dagen!','Happy birthday!',''],
 ['x','kunne vi få regningen?','Could we have the bill?',''],
 ['x','hva driver du med?','What are you up to? What do you do?',''],
 ['x','jeg gleder meg til …','I look forward to …',''],
@@ -1126,11 +1137,7 @@ smaord:{name:'Hilsener og uttrykk',desc:'greetings and phrases',key:'kjp-smaord'
 ['x','finnes det … i nærheten?','Is there a … nearby?',''],
 ['x','jeg tok det for gitt','I took it for granted',''],
 ['x','jeg er vant til å …','I am used to …',''],
-['x','det lønner seg ikke','It is not worth it',''],
-['x','beste hilsen','Best regards','email sign-off'],
-['x','med vennlig hilsen','Kind regards','formal; short: mvh'],
-['x','hilsen','Regards (informal)','Hilsen Maria'],
-['x','kjære …','Dear … (letter opening)','Kjære Ola,']]]
+['x','det lønner seg ikke','It is not worth it','']]]
 ]},
 hverdag:{name:'Hverdag',desc:'everyday nouns',key:'kjp-hverdag',groups:[
 ['Things · ting',[
@@ -3779,7 +3786,7 @@ document.addEventListener('keydown',e=>{
 try{loadVoices();speechSynthesis.onvoiceschanged=loadVoices}catch(e){const n=$('vNote');if(n){n.hidden=false;n.textContent='Speech is not available in this browser.'}}
 $('vSel').onchange=()=>{try{localStorage.setItem('kjp-voice',$('vSel').value)}catch(e){}};
 $('vTest').onclick=()=>say('Hei! Jeg snakker norsk.');
-const SECTIONS=[['Basics',['smaord','tall','farger','tid','pronomen']],
+const SECTIONS=[['Basics',['smaord','uttrykk','tall','farger','tid','pronomen']],
 ['Me & people',['familie','folk','land','kroppen','tanker']],
 ['Everyday life',['mat','klaer','hjem','hverdag','skole','byen']],
 ['The wider world',['natur','dyr','reise','transport','fritid','teknologi']],
