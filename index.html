@@ -64,8 +64,8 @@ button:disabled{opacity:.4;cursor:default}
 .track{height:8px;border-radius:9px;background:var(--line);margin-top:6px;overflow:hidden}
 .track i{display:block;height:100%;background:var(--et);transition:width .3s}
 .done{text-align:center;padding:40px 20px}
-.done h2{font:700 32px/1.1 Rubik;margin:0 0 8px}
-h2.sec{font:700 24px/1.1 Rubik;margin:8px 0 12px}
+.done h2{font:700 32px/1.1 Rubik,sans-serif;margin:0 0 8px}
+h2.sec{font:700 24px/1.1 Rubik,sans-serif;margin:8px 0 12px}
 .legend{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px;font-size:14px}
 table{width:100%;border-collapse:collapse;background:var(--card);border-radius:14px;overflow:hidden}
 td{padding:10px 12px;border-top:1px solid var(--line);vertical-align:top}
@@ -113,6 +113,35 @@ body.nav .scrim{display:block}
 .menuBtn svg{width:22px;height:22px;fill:#fff}}
 @media(max-width:480px){.sform{flex-wrap:wrap}.sform input{flex-basis:100%}.sform select{flex:1}}
 @media(prefers-reduced-motion:reduce){nav.side{transition:none}}
+.mode{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+.mode button{font-weight:600}
+.gcard{background:var(--card);border:1px solid var(--line);border-radius:22px;padding:34px 20px 26px;text-align:center;box-shadow:0 10px 30px -18px rgba(0,0,0,.35);position:relative}
+.gcard .word{margin:6px 0 4px}
+.gcard .gpt{color:var(--mut);font-size:16px}
+.gcard .num{position:absolute;top:14px;left:18px;font:600 14px Inter;color:var(--mut)}
+.gbtns{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:16px}
+.gbtns button{min-height:64px;font:700 24px Rubik,sans-serif;border-width:2px}
+.gbtns .b-en{border-color:var(--en);color:var(--en)}.gbtns .b-ei{border-color:var(--ei);color:var(--ei)}.gbtns .b-et{border-color:var(--et);color:var(--et)}
+.gbtns button.right{background:var(--et);border-color:var(--et);color:#fff}
+.gbtns button.wrong{background:var(--red);border-color:var(--red);color:#fff}
+.gbtns button:disabled{opacity:1;cursor:default}
+.gbtns button:disabled:not(.right):not(.wrong){opacity:.35}
+.gfb{min-height:52px;margin-top:14px;text-align:center;font-size:16px}
+.gfb b{font-family:Rubik,sans-serif}
+.gfb .ok{color:var(--et);font-weight:700}.gfb .bad{color:var(--red);font-weight:700}
+#gNext{width:100%;min-height:52px;font-weight:700;margin-top:6px}
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,200px),1fr));gap:12px;margin-bottom:24px}
+.tile{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px 18px}
+.tile .big{font:700 34px/1.1 Rubik,sans-serif}
+.tile .lab{color:var(--mut);font-size:14px;margin-top:4px}
+.tile .track{margin-top:10px}
+table.ov td{vertical-align:middle}
+table.ov tr.sec td{font:700 15px Rubik,sans-serif;background:var(--bg);padding-top:16px}
+table.ov tr.row{cursor:pointer}
+table.ov tr.row:hover td{background:var(--bg)}
+table.ov .pc{width:30%;min-width:90px}
+table.ov .pc .track{margin:0}
+table.ov .num2{text-align:right;white-space:nowrap;color:var(--mut);font-size:14px}
 @media(prefers-reduced-motion:reduce){.card,.track i{transition:none}}
 @media(max-width:600px){.bar button,.bar select{flex:1 1 auto}}
 </style>
@@ -134,7 +163,9 @@ body.nav .scrim{display:block}
 <div class="brand">Norsk Flashcards</div>
 <a href="#flashcards" id="navF"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h11a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2zm0 2v12h11V7H4zm15-4a2 2 0 0 1 2 2v12h-2V5H7V3h12z"/></svg>Flashcards</a>
 <a href="#practice" id="navP"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M17 3l4 4-4 4V8h-2.6l-2.2 2.6-1.3-1.5L13.5 6H17V3zM3 6h4.5l9 10H17v-3l4 4-4 4v-3h-1.5l-9-10H3V6zm0 10h3.6l2.1-2.4 1.3 1.5L7.5 18H3v-2z"/></svg>Practice</a>
+<a href="#gender" id="navG"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 5h5v14H3V5zm6.5 0h5v14h-5V5zM16 5h5v14h-5V5zM4.5 6.5v11h2v-11h-2zm6.5 0v11h2v-11h-2zm6.5 0v11h2v-11h-2z"/></svg>Gender</a>
 <a href="#search" id="navS"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 3a7 7 0 0 1 5.6 11.2l5.1 5.1-1.4 1.4-5.1-5.1A7 7 0 1 1 10 3zm0 2a5 5 0 1 0 0 10 5 5 0 0 0 0-10z"/></svg>Search</a>
+<a href="#progress" id="navO"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19h16v2H4zM5 11h3v6H5zm5.5-4h3v10h-3zM16 3h3v14h-3z"/></svg>Progress</a>
 <button type="button" id="navI" class="inst" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M11 3h2v9.2l3.3-3.3 1.4 1.4L12 16l-5.7-5.7 1.4-1.4 3.3 3.3V3zM5 19h14v2H5z"/></svg>Install app</button>
 <p id="iosTip" class="iosTip" hidden>On iPhone/iPad: tap <b>Share</b> <span aria-hidden="true">⎙</span> at the bottom of Safari, then <b>Add to Home Screen</b>.</p>
 </nav>
@@ -185,9 +216,36 @@ body.nav .scrim{display:block}
 <button id="pdPt" aria-pressed="false">English → Norsk</button>
 <button id="pReset">Reset progress</button>
 </div>
+<div class="mode" role="group" aria-label="Practice mode"><button id="pmAll" class="on" aria-pressed="true">All cards</button><button id="pmRev" aria-pressed="false">Review</button></div>
 <div id="pStage"></div>
 <div class="prog"><span id="ppTxt"></span><span id="ppKnown"></span></div>
 <div class="track"><i id="ppBar" style="width:0"></i></div>
+</main>
+</div>
+<div id="vGender" hidden>
+<header><div class="band">
+<div class="top"><button class="menuBtn" type="button" aria-label="Open menu"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg></button></div>
+<h1>Gender</h1>
+<p id="gDesc">en, ei or et? Pick the article for each noun.</p>
+</div></header>
+<main class="band">
+<div class="bar"><select id="gFilt" aria-label="Which nouns"></select><button id="gReset">Reset stats</button></div>
+<div id="gStage"></div>
+<div class="prog"><span id="gTxt"></span><span id="gScore"></span></div>
+<div class="track"><i id="gBar" style="width:0"></i></div>
+</main>
+</div>
+<div id="vStats" hidden>
+<header><div class="band">
+<div class="top"><button class="menuBtn" type="button" aria-label="Open menu"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg></button></div>
+<h1>Progress</h1>
+<p>What you know, what is due for review, and how each theme is going</p>
+</div></header>
+<main class="band">
+<div class="tiles" id="oTiles"></div>
+<h2 class="sec">By theme</h2>
+<p style="color:var(--mut);font-size:14px;margin:-4px 0 12px">A word counts as known when you marked it “Knew it!” in Flashcards or Practice. Tap a theme to open it.</p>
+<table class="ov"><tbody id="oList"></tbody></table>
 </main>
 </div>
 <div id="vSearch" hidden>
@@ -3704,7 +3762,13 @@ abstrakt:{name:'Abstrakte ord',desc:'abstract nouns by ending',key:'kjp-abstrakt
 ['en','samling','collection; gathering','← å samle']]]
 ]}
 };
-let W=[],tKey='',catList=[];
+let W=[],tKey='',catList=[],curK='';
+/* ---- spaced repetition: each card gets a box (1–6) and a due day ---- */
+const today=()=>{const d=new Date();return Math.floor((d.getTime()-d.getTimezoneOffset()*60000)/86400000)};
+const IV=[0,1,3,7,14,30,60];
+let SRS={};try{SRS=JSON.parse(localStorage.getItem('kjp-srs')||'{}')||{}}catch(e){}
+const srsSave=()=>{try{localStorage.setItem('kjp-srs',JSON.stringify(SRS))}catch(e){}};
+function srsGrade(key,ok){const c=SRS[key];const b=ok?(c?Math.min(c[0]+1,6):2):1;SRS[key]=[b,today()+IV[b]];srsSave()}
 
 const $=id=>document.getElementById(id);
 const gName={en:'en · masculine',ei:'ei · feminine',et:'et · neuter',pl:'plural',adj:'adjective',x:'word / expression',verb:'verb'};
@@ -3714,7 +3778,7 @@ const ART=['en','ei','et'];
 let known=new Set(),missed=new Set();
 const save=()=>{try{localStorage.setItem(tKey,JSON.stringify({k:[...known],m:[...missed]}))}catch(e){}};
 function loadTheme(id){
-  const t=THEMES[id];tKey=t.key;
+  const t=THEMES[id];tKey=t.key;curK=id;
   if(t.groups){let n=0;W=[];t.groups.forEach(([cat,ws])=>ws.forEach(([g,nb,pt,note])=>W.push({n:++n,g,nb,pt,note,cat})))}
   else W=t.words.map(([n,g,nb,pt,note,sw])=>({n,g,nb,pt,note,sw}));
   const cats=t.groups?t.groups.map(c=>c[0]):[];
@@ -3804,8 +3868,8 @@ function render(){
   c.onclick=e=>{if(!e.target.closest('.spk'))flip()};
   c.onkeydown=e=>{if(e.key===' '||e.key==='Enter'){e.preventDefault();flip()}};
   ['s1','s2'].forEach(id=>{const b=$(id);if(b)b.onclick=e=>{e.stopPropagation();say(full(w))}});
-  $('bYes').onclick=()=>{known.add(w.id);missed.delete(w.id);save();i++;render();list()};
-  $('bNo').onclick=()=>{missed.add(w.id);known.delete(w.id);save();i++;render();list()};
+  $('bYes').onclick=()=>{known.add(w.id);missed.delete(w.id);save();srsGrade(curK+'|'+w.id,true);i++;render();list()};
+  $('bNo').onclick=()=>{missed.add(w.id);known.delete(w.id);save();srsGrade(curK+'|'+w.id,false);i++;render();list()};
   $('bBack').onclick=()=>{if(i>0){i--;render()}};
   prog();
 }
@@ -3860,18 +3924,21 @@ const fold=s=>s.toLowerCase().replace(/æ/g,'ae').replace(/[øö]/g,'o').replace
 const hi=(s,q)=>{const i=s.toLowerCase().indexOf(q);return i<0?esc(s):esc(s.slice(0,i))+'<mark>'+esc(s.slice(i,i+q.length))+'</mark>'+esc(s.slice(i+q.length))};
 function show(v){
   const s=v==='search';
-  [['flash','vFlash','navF'],['practice','vPractice','navP'],['search','vSearch','navS']].forEach(([n,vi,na])=>{$(vi).hidden=n!==v;$(na).classList.toggle('on',n===v);$(na).setAttribute('aria-current',n===v?'page':'false')});
-  document.title=v==='search'?'Search · Norsk Flashcards':v==='practice'?'Practice · Norsk Flashcards':'Flashcards: '+THEMES[$('theme').value].name;
-  if(v==='practice'&&!pReady){pReady=true;if(!pRestore())pBuild()}
+  [['flash','vFlash','navF'],['practice','vPractice','navP'],['gender','vGender','navG'],['search','vSearch','navS'],['progress','vStats','navO']].forEach(([n,vi,na])=>{$(vi).hidden=n!==v;$(na).classList.toggle('on',n===v);$(na).setAttribute('aria-current',n===v?'page':'false')});
+  document.title={search:'Search',practice:'Practice',gender:'Gender',progress:'Progress'}[v]?({search:'Search',practice:'Practice',gender:'Gender',progress:'Progress'}[v]+' · Norsk Flashcards'):'Flashcards: '+THEMES[$('theme').value].name;
+  if(v==='gender'&&!gReady){gReady=true;gBuild()}
+  if(v==='progress')oRender();
+  if(v==='practice'&&pReady&&pMode==='review'&&pI>=pDeck.length)pBuild();
+  if(v==='practice'&&!pReady){pReady=true;if(pMode==='review'||!pRestore())pBuild()}
   document.body.classList.remove('nav');window.scrollTo(0,0);
   if(s&&matchMedia('(min-width:900px)').matches)setTimeout(()=>$('sQ').focus(),0);
 }
-const route=()=>show(location.hash==='#search'?'search':location.hash==='#practice'?'practice':'flash');
+const route=()=>{const m={'#search':'search','#practice':'practice','#gender':'gender','#progress':'progress'};show(m[location.hash]||'flash')};
 window.addEventListener('hashchange',route);
 document.querySelectorAll('.menuBtn').forEach(b=>b.onclick=()=>document.body.classList.add('nav'));
 $('scrim').onclick=()=>document.body.classList.remove('nav');
 document.addEventListener('keydown',e=>{if(e.key==='Escape')document.body.classList.remove('nav')});
-['navF','navP','navS'].forEach(id=>$(id).addEventListener('click',()=>document.body.classList.remove('nav')));
+['navF','navP','navG','navS','navO'].forEach(id=>$(id).addEventListener('click',()=>document.body.classList.remove('nav')));
 /* ---- search ---- */
 function search(){
   const raw=$('sQ').value.trim(),lang=$('sLang').value;
@@ -3905,23 +3972,41 @@ $('sRes').onclick=e=>{const b=e.target.closest('.src');if(!b)return;
   location.hash='flashcards';show('flash')};
 try{const l=localStorage.getItem('kjp-slang');if(l==='no'||l==='en')$('sLang').value=l}catch(e){}
 /* ---- practice ---- */
-let pReady=false,pDir='no',pDeck=[],pI=0,pKnown=new Set(),pMissed=new Set(),pRound={ok:0,n:0};
+let pReady=false,pMode='all',pDir='no',pDeck=[],pI=0,pKnown=new Set(),pMissed=new Set(),pRound={ok:0,n:0};
 {const cnt={};ALL.forEach(w=>{const k=w.k+'|'+w.nb;cnt[k]=(cnt[k]||0)+1});ALL.forEach(w=>{w.pid=w.k+'|'+(cnt[w.k+'|'+w.nb]>1?w.cat+'|':'')+w.nb})}
 try{const s=JSON.parse(localStorage.getItem('kjp-practice')||'{}');const ids=new Set(ALL.map(w=>w.pid));pKnown=new Set((s.k||[]).filter(x=>ids.has(x)));pMissed=new Set((s.m||[]).filter(x=>ids.has(x)))}catch(e){}
 const pSave=()=>{try{localStorage.setItem('kjp-practice',JSON.stringify({k:[...pKnown],m:[...pMissed]}))}catch(e){}};
 $('pDesc').textContent=`All ${ALL.length.toLocaleString('en')} words from every theme, shuffled. A word you know leaves the deck for good.`;
+const dueList=()=>{const t=today();return ALL.filter(w=>SRS[w.pid]&&SRS[w.pid][1]<=t)};
+const P_DESC_ALL=`All ${ALL.length.toLocaleString('en')} words from every theme, shuffled. A word you know leaves the deck for good.`;
+const P_DESC_REV='Words you answered in Flashcards or Practice come back here at growing intervals: 1, 3, 7, 14, 30 and 60 days. Miss one and it starts again tomorrow.';
+function pModeUI(){
+  const n=dueList().length;$('pDesc').textContent=pMode==='review'?P_DESC_REV:P_DESC_ALL;
+  $('pmRev').textContent=`Review · ${n.toLocaleString('en')} due`;
+  $('pmAll').classList.toggle('on',pMode==='all');$('pmRev').classList.toggle('on',pMode==='review');
+  $('pmAll').setAttribute('aria-pressed',pMode==='all');$('pmRev').setAttribute('aria-pressed',pMode==='review');
+}
+function pSetMode(m){pMode=m;try{localStorage.setItem('kjp-pmode',m)}catch(e){}if(m==='all'){if(!pRestore())pBuild()}else pBuild()}
 function pBuild(){
+  if(pMode==='review'){pDeck=dueList();pDeck.forEach(w=>w.rq=false);
+    for(let k=pDeck.length-1;k>0;k--){const j=Math.floor(Math.random()*(k+1));[pDeck[k],pDeck[j]]=[pDeck[j],pDeck[k]]}
+    pDeck.sort((a,b)=>SRS[a.pid][1]-SRS[b.pid][1]);pI=0;pRender();return}
   pDeck=ALL.filter(w=>!pKnown.has(w.pid));
   for(let k=pDeck.length-1;k>0;k--){const j=Math.floor(Math.random()*(k+1));[pDeck[k],pDeck[j]]=[pDeck[j],pDeck[k]]}
   pI=0;pRender();
 }
 function pProg(){
+  pModeUI();
   const n=pDeck.length;
+  if(pMode==='review'){const v=Object.values(SRS);
+    $('ppTxt').textContent=n?(pI<n?`Review ${pI+1} of ${n}`:'Reviews done'):'';
+    $('ppKnown').textContent=`Learning ${v.filter(c=>c[0]<5).length.toLocaleString('en')} · Mastered ${v.filter(c=>c[0]>=5).length.toLocaleString('en')}`;
+    $('ppBar').style.width=(n?Math.min(pI,n)/n*100:100)+'%';return}
   $('ppTxt').textContent=n?(pI<n?`Card ${(pI+1).toLocaleString('en')} of ${n.toLocaleString('en')}`:'Round complete'):'';
   $('ppKnown').textContent=`Known ${pKnown.size.toLocaleString('en')} of ${ALL.length.toLocaleString('en')}`;
   $('ppBar').style.width=(pKnown.size/ALL.length*100)+'%';
 }
-const pSavePos=()=>{try{localStorage.setItem('kjp-practice-pos',JSON.stringify({d:pDeck.map(w=>w.pid),i:pI}))}catch(e){}};
+const pSavePos=()=>{if(pMode!=='all')return;try{localStorage.setItem('kjp-practice-pos',JSON.stringify({d:pDeck.map(w=>w.pid),i:pI}))}catch(e){}};
 function pRestore(){try{
   const s=JSON.parse(localStorage.getItem('kjp-practice-pos')||'null');if(!s||!Array.isArray(s.d))return false;
   const by=new Map(ALL.map(w=>[w.pid,w])),d=s.d.map(x=>by.get(x)).filter(Boolean);if(!d.length)return false;
@@ -3930,7 +4015,11 @@ function pRestore(){try{
 function pRender(){
   pSavePos();
   const st=$('pStage');
-  if(pKnown.size>=ALL.length){st.innerHTML=`<div class="face done" style="position:static"><h2>Gratulerer!</h2><p>You know all ${ALL.length.toLocaleString('en')} words.</p></div>`;pProg();return}
+  if(pMode==='review'&&pI>=pDeck.length){
+    const t=today(),tom=ALL.filter(w=>SRS[w.pid]&&SRS[w.pid][1]===t+1).length,any=Object.keys(SRS).length;
+    st.innerHTML=`<div class="face done" style="position:static"><h2>${pDeck.length?'Ferdig! All reviews done':'Nothing to review today'}</h2><p>${any?`Tomorrow: ${tom} card${tom===1?'':'s'} to review.`:'Answer cards in Flashcards or Practice and they will come back here for review at the right time.'}</p><div class="ans"><button class="yes" id="pToAll">Practice all cards</button>${pDeck.length?'<button id="pBack2">← Back</button>':''}</div></div>`;
+    $('pToAll').onclick=()=>pSetMode('all');if($('pBack2'))$('pBack2').onclick=()=>{pI--;pRender()};pProg();return}
+  if(pKnown.size>=ALL.length&&pMode==='all'){st.innerHTML=`<div class="face done" style="position:static"><h2>Gratulerer!</h2><p>You know all ${ALL.length.toLocaleString('en')} words.</p></div>`;pProg();return}
   if(pI>=pDeck.length){
     const ok=pDeck.filter(w=>pKnown.has(w.pid)).length;
     st.innerHTML=`<div class="face done" style="position:static"><h2>Ferdig! Round complete</h2><p>You knew ${ok} of ${pDeck.length}. ${ALL.length-pKnown.size} words are still left.</p><div class="ans"><button class="yes" id="pAgain">Next round</button><button id="pBack2">← Back</button></div></div>`;
@@ -3952,20 +4041,86 @@ function pRender(){
   c.onclick=e=>{if(!e.target.closest('.spk'))flip()};
   c.onkeydown=e=>{if(e.key===' '||e.key==='Enter'){e.preventDefault();flip()}};
   ['ps1','ps2'].forEach(id=>{const b=$(id);if(b)b.onclick=e=>{e.stopPropagation();say(full(w))}});
-  $('pYes').onclick=()=>{pKnown.add(w.pid);pMissed.delete(w.pid);pSave();pI++;pRender()};
-  $('pNo').onclick=()=>{pMissed.add(w.pid);pKnown.delete(w.pid);pSave();pI++;pRender()};
+  $('pYes').onclick=()=>{pKnown.add(w.pid);pMissed.delete(w.pid);pSave();srsGrade(w.pid,true);pI++;pRender()};
+  $('pNo').onclick=()=>{pMissed.add(w.pid);pKnown.delete(w.pid);pSave();srsGrade(w.pid,false);if(pMode==='review'&&!w.rq){w.rq=true;pDeck.push(w)}pI++;pRender()};
   $('pBack').onclick=()=>{if(pI>0){pI--;pRender()}};
   pProg();
 }
 function pSetDir(d){pDir=d;$('pdNo').classList.toggle('on',d==='no');$('pdPt').classList.toggle('on',d==='pt');$('pdNo').setAttribute('aria-pressed',d==='no');$('pdPt').setAttribute('aria-pressed',d==='pt');if(pReady)pRender()}
 $('pdNo').onclick=()=>pSetDir('no');$('pdPt').onclick=()=>pSetDir('pt');
 $('pReset').onclick=()=>{pKnown.clear();pMissed.clear();pSave();pBuild()};
+$('pmAll').onclick=()=>pSetMode('all');$('pmRev').onclick=()=>pSetMode('review');
+try{if(localStorage.getItem('kjp-pmode')==='review')pMode='review'}catch(e){}
 document.addEventListener('keydown',e=>{
   if($('vPractice').hidden||e.target.tagName==='SELECT'||e.target.tagName==='INPUT')return;
   if(e.key==='ArrowRight'&&$('pYes'))$('pYes').click();
   if(e.key==='ArrowLeft'&&$('pNo'))$('pNo').click();
   if(e.key==='Backspace'&&$('pBack')&&!$('pBack').disabled)$('pBack').click();
 });
+/* ---- gender trainer ---- */
+let gReady=false,gDeck=[],gI=0,gDone=false,gOk=0,gN=0,gStreak=0,gWrong=new Set(),gTot={r:0,t:0};
+const GN=[];{const seen=new Set();ALL.forEach(w=>{if(!ART.includes(w.g))return;const key=w.g+'|'+w.nb;if(seen.has(key))return;seen.add(key);
+  const alt=new Set([w.g]);if(w.g==='ei')alt.add('en');
+  const m=String(w.note||'').match(/also:?\s*(en|ei|et)\s+([^\s·,;]+)/i);if(m&&m[2].toLowerCase()===w.nb.toLowerCase())alt.add(m[1].toLowerCase());
+  GN.push({w,alt,id:w.pid})})}
+try{const s=JSON.parse(localStorage.getItem('kjp-gender')||'{}');gWrong=new Set(s.w||[]);gTot={r:+s.r||0,t:+s.t||0}}catch(e){}
+const gSave=()=>{try{localStorage.setItem('kjp-gender',JSON.stringify({w:[...gWrong],r:gTot.r,t:gTot.t}))}catch(e){}};
+function gFiltUI(){const c={en:0,ei:0,et:0};GN.forEach(x=>c[x.w.g]++);const v=$('gFilt').value||'all';
+  $('gFilt').innerHTML=`<option value="all">All nouns (${GN.length.toLocaleString('en')})</option><option value="miss">Only my mistakes (${GN.filter(x=>gWrong.has(x.id)).length})</option><option value="en">Only en words (${c.en})</option><option value="ei">Only ei words (${c.ei})</option><option value="et">Only et words (${c.et})</option>`;
+  $('gFilt').value=v}
+function gBuild(){gFiltUI();const f=$('gFilt').value;
+  gDeck=GN.filter(x=>f==='all'||(f==='miss'?gWrong.has(x.id):x.w.g===f));
+  for(let k=gDeck.length-1;k>0;k--){const j=Math.floor(Math.random()*(k+1));[gDeck[k],gDeck[j]]=[gDeck[j],gDeck[k]]}
+  gI=0;gOk=0;gN=0;gStreak=0;gRender()}
+function gProg(){const n=gDeck.length;
+  $('gTxt').textContent=n?(gI<n?`Word ${gI+1} of ${n.toLocaleString('en')}`:'Done'):'';
+  $('gScore').textContent=gN?`Right ${gOk} of ${gN}`+(gStreak>2?` · streak ${gStreak}`:''):(gTot.t?`All time: ${Math.round(gTot.r/gTot.t*100)}% right`:'');
+  $('gBar').style.width=(n?Math.min(gI,n)/n*100:0)+'%'}
+function gRender(){gDone=false;const st=$('gStage');
+  if(!gDeck.length){st.innerHTML=`<div class="face done" style="position:static"><h2>Nothing here</h2><p>${$('gFilt').value==='miss'?'No mistakes saved. Great!':'No nouns in this filter.'}</p></div>`;gProg();return}
+  if(gI>=gDeck.length){st.innerHTML=`<div class="face done" style="position:static"><h2>Ferdig!</h2><p>You got ${gOk} of ${gN} right.</p><div class="ans"><button class="yes" id="gAgain">Again</button>${gWrong.size?`<button class="no" id="gMiss">My mistakes (${gWrong.size})</button>`:''}</div></div>`;
+    $('gAgain').onclick=gBuild;if($('gMiss'))$('gMiss').onclick=()=>{$('gFilt').value='miss';gBuild()};gProg();return}
+  const x=gDeck[gI],w=x.w;
+  st.innerHTML=`<div class="gcard"><span class="num">${esc(THEMES[w.k].name)}</span><button class="spk" id="gs" aria-label="Hear pronunciation">${spkSVG}</button><div class="word">${esc(w.nb)}</div><div class="gpt">${esc(w.pt)}</div></div>
+  <div class="gbtns">${ART.map((a,k)=>`<button class="b-${a}" data-a="${a}" aria-keyshortcuts="${k+1}">${a}</button>`).join('')}</div>
+  <div class="gfb" id="gFb" aria-live="polite"></div><button id="gNext" hidden>Next →</button>`;
+  $('gs').onclick=()=>say(w.nb);
+  st.querySelectorAll('.gbtns button').forEach(b=>b.onclick=()=>gAnswer(b.dataset.a));
+  $('gNext').onclick=()=>{gI++;gRender()};gProg()}
+function gAnswer(a){if(gDone)return;gDone=true;const x=gDeck[gI],w=x.w,ok=x.alt.has(a);
+  gN++;gTot.t++;if(ok){gOk++;gTot.r++;gStreak++;gWrong.delete(x.id)}else{gStreak=0;gWrong.add(x.id)}gSave();
+  $('gStage').querySelectorAll('.gbtns button').forEach(b=>{b.disabled=true;if(b.dataset.a===w.g)b.classList.add('right');else if(b.dataset.a===a&&!ok)b.classList.add('wrong');else if(b.dataset.a===a&&ok)b.classList.add('right')});
+  const extra=a!==w.g&&ok?` · <i>${a} ${esc(w.nb)}</i> is also correct`:(w.g==='ei'&&a===w.g?' · <i>en</i> is also accepted in Bokmål':'');
+  $('gFb').innerHTML=(ok?'<span class="ok">Riktig!</span> ':'<span class="bad">Feil.</span> ')+`It’s <b>${w.g} ${esc(w.nb)}</b>${extra}${w.note?`<br><span style="color:var(--mut);font-size:14px">${esc(w.note)}</span>`:''}`;
+  $('gNext').hidden=false;$('gNext').focus();gProg()}
+$('gFilt').onchange=gBuild;
+$('gReset').onclick=()=>{gWrong.clear();gTot={r:0,t:0};gSave();gFiltUI()};
+document.addEventListener('keydown',e=>{
+  if($('vGender').hidden||e.target.tagName==='SELECT')return;
+  const k={'1':'en','2':'ei','3':'et'}[e.key];
+  if(k&&!gDone&&gDeck[gI]){e.preventDefault();gAnswer(k)}
+  else if((e.key==='Enter'||e.key==='ArrowRight')&&gDone&&e.target.id!=='gNext'){e.preventDefault();$('gNext').click()}
+});
+/* ---- progress overview ---- */
+function themeKnown(k){const t=THEMES[k];let s;try{s=JSON.parse(localStorage.getItem(t.key)||'{}')}catch(e){s={}}return new Set((s.k||[]).map(x=>k+'|'+x))}
+function oRender(){
+  const t=today(),v=Object.values(SRS),due=v.filter(c=>c[1]<=t).length,mast=v.filter(c=>c[0]>=5).length,learn=v.length-mast;
+  const byK={};ALL.forEach(w=>{(byK[w.k]=byK[w.k]||[]).push(w)});
+  let tot=0;const rows=[];
+  SECTIONS.forEach(([lab,ids])=>{rows.push(`<tr class="sec"><td colspan="3">${esc(lab)}</td></tr>`);
+    ids.filter(k=>THEMES[k]).forEach(k=>{const fk=themeKnown(k),ws=byK[k]||[];const n=ws.filter(w=>fk.has(w.pid)||pKnown.has(w.pid)).length;tot+=n;
+      const p=ws.length?n/ws.length*100:0;
+      rows.push(`<tr class="row" data-k="${k}" tabindex="0"><td class="nb">${esc(THEMES[k].name)}</td><td class="pc"><div class="track"><i style="width:${p}%"></i></div></td><td class="num2">${n} / ${ws.length}</td></tr>`)})});
+  $('oList').innerHTML=rows.join('');
+  const pct=ALL.length?tot/ALL.length*100:0;
+  $('oTiles').innerHTML=`<div class="tile"><div class="big">${tot.toLocaleString('en')}</div><div class="lab">words known of ${ALL.length.toLocaleString('en')} (${Math.round(pct)}%)</div><div class="track"><i style="width:${pct}%"></i></div></div>
+  <div class="tile"><div class="big">${due.toLocaleString('en')}</div><div class="lab">due for review today</div>${due?'<button id="oRev" class="yes" style="margin-top:10px;width:100%">Review now</button>':''}</div>
+  <div class="tile"><div class="big">${learn.toLocaleString('en')} <span style="font-size:20px;color:var(--mut)">/ ${mast.toLocaleString('en')}</span></div><div class="lab">learning / mastered (reviewed over weeks)</div></div>
+  <div class="tile"><div class="big">${gTot.t?Math.round(gTot.r/gTot.t*100)+'%':'–'}</div><div class="lab">right in Gender${gTot.t?` (${gTot.t.toLocaleString('en')} answers)`:''}</div></div>`;
+  if($('oRev'))$('oRev').onclick=()=>{pMode='review';try{localStorage.setItem('kjp-pmode','review')}catch(e){}location.hash='practice';if(pReady)pBuild()};
+}
+$('oList').onclick=e=>{const r=e.target.closest('tr.row');if(!r)return;$('theme').value=r.dataset.k;loadTheme(r.dataset.k);location.hash='flashcards'};
+$('oList').onkeydown=e=>{if(e.key==='Enter'){const r=e.target.closest('tr.row');if(r)r.click()}};
 search();
 route();
 }
