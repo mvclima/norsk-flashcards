@@ -4094,7 +4094,7 @@ function gAnswer(a){if(gDone)return;gDone=true;const x=gDeck[gI],w=x.w,ok=x.alt.
   $('gFb').innerHTML=(ok?'<span class="ok">Riktig!</span> ':'<span class="bad">Feil.</span> ')+`It’s <b>${w.g} ${esc(w.nb)}</b>${extra}${w.note?`<br><span style="color:var(--mut);font-size:14px">${esc(w.note)}</span>`:''}`;
   $('gNext').hidden=false;$('gNext').focus();gProg()}
 $('gFilt').onchange=gBuild;
-$('gReset').onclick=()=>{gWrong.clear();gTot={r:0,t:0};gOk=0;gN=0;gStreak=0;gSave();gFiltUI();if($('gFilt').value==='miss')gBuild();else gProg()};
+$('gReset').onclick=()=>{gWrong.clear();gTot={r:0,t:0};gOk=0;gN=0;gStreak=0;gSave();gBuild()};
 document.addEventListener('keydown',e=>{
   if($('vGender').hidden||e.target.tagName==='SELECT')return;
   const k={'1':'en','2':'ei','3':'et'}[e.key];
