@@ -304,7 +304,7 @@ klaer:{name:'Klær',desc:'clothes and accessories',key:'kjp6',groups:[
 ['et','ullundertøy','wool underwear, thermals','ull = wool + undertøy'],
 ['ei','truse','underpants, briefs, knickers',''],
 ['en','BH','bra','short for brysteholder'],
-['pl','sokker','socks','sing. en sokk'],
+['en','sokk','sock','pl. sokker · et par sokker = a pair of socks'],
 ['ei','strømpebukse','tights, pantyhose','strømpe = stocking + bukse'],
 ['en','pyjamas','pyjamas',''],
 ['ei','morgenkåpe','bathrobe, dressing gown','morgen = morning + kåpe'],
@@ -313,15 +313,15 @@ klaer:{name:'Klær',desc:'clothes and accessories',key:'kjp6',groups:[
 ['ei','badebukse','swim trunks','bade = bathe + bukse']]],
 ['Footwear · fottøy',[
 ['en','sko','shoe','pl. sko · ta av seg skoene = take off your shoes'],
-['pl','joggesko','sneakers, trainers','plural; sing. en joggesko'],
-['pl','pensko','dress shoes','pen = nice/smart + sko'],
-['pl','vintersko','winter shoes','vinter = winter + sko = shoe'],
-['pl','støvler','boots','sing. en støvel'],
-['pl','gummistøvler','rubber boots, wellies','gummi = rubber + støvler; sing. en gummistøvel'],
-['pl','tøfler','slippers','sing. en tøffel'],
-['pl','sandaler','sandals','sing. en sandal'],
-['pl','brodder','ice cleats (spikes you put on shoes)','sing. en brodd'],
-['pl','piggsko','shoes with built-in spikes','pigg = spike + sko; sing. en piggsko']]],
+['en','joggesko','sneaker, trainer','pl. joggesko (unchanged)'],
+['en','pensko','dress shoe','pl. pensko · pen = nice/smart + sko'],
+['en','vintersko','winter shoe','pl. vintersko · vinter + sko'],
+['en','støvel','boot','pl. støvler'],
+['en','gummistøvel','rubber boot, welly','pl. gummistøvler · gummi = rubber'],
+['en','tøffel','slipper','pl. tøfler'],
+['en','sandal','sandal','pl. sandaler'],
+['en','brodd','ice cleat (spike for shoes)','pl. brodder · usually in the plural'],
+['en','piggsko','shoe with built-in spikes','pl. piggsko · pigg = spike + sko']]],
 ['Accessories · tilbehør',[
 ['ei','lue','beanie, knit hat',''],
 ['en','kaps','cap',''],
@@ -329,8 +329,8 @@ klaer:{name:'Klær',desc:'clothes and accessories',key:'kjp6',groups:[
 ['et','skjerf','scarf','pl. skjerf (unchanged)'],
 ['et','sjal','shawl','also used for a headscarf'],
 ['et','tørkle','headscarf, neckerchief',''],
-['pl','votter','mittens','sing. en vott'],
-['pl','hansker','gloves','sing. en hanske'],
+['en','vott','mitten','pl. votter · et par votter'],
+['en','hanske','glove','pl. hansker · et par hansker'],
 ['et','slips','tie','pl. slips (unchanged)'],
 ['et','belte','belt',''],
 ['en','lomme','pocket',''],
@@ -439,10 +439,10 @@ mat:{name:'Mat',desc:'food and drink',key:'kjp-mat',groups:[
 ['en','salat','lettuce; salad',''],
 ['en','spinat','spinach',''],
 ['en','ruccola','rocket, arugula','also spelled rucola'],
-['pl','erter','peas','sing. ei ert'],
-['pl','bønner','beans','sing. ei bønne'],
-['pl','kikerter','chickpeas','sing. ei kikert'],
-['pl','linser','lentils','sing. ei linse; also: lens'],
+['ei','ert','pea','pl. erter'],
+['ei','bønne','bean','pl. bønner'],
+['ei','kikert','chickpea','pl. kikerter'],
+['ei','linse','lentil; lens','pl. linser'],
 ['en','mais','corn, maize',''],
 ['en','sopp','mushroom',''],
 ['en','rødløk','red onion','rød = red + løk'],
@@ -537,7 +537,7 @@ mat:{name:'Mat',desc:'food and drink',key:'kjp-mat',groups:[
 ['en','ørret','trout',''],
 ['en','klippfisk','salted dried cod','Brazilian bacalhau comes from Norway!'],
 ['ei','pølse','sausage, hot dog',''],
-['pl','kjøttkaker','meatballs (Norwegian style)','sing. ei kjøttkake']]],
+['ei','kjøttkake','meatball (Norwegian style)','pl. kjøttkaker']]],
 ['Sweets & snacks · søtt og snacks',[
 ['en','dessert','dessert',''],
 ['en','is','ice cream','also: ice'],
@@ -656,7 +656,7 @@ hjem:{name:'Hjem',desc:'home, by room',key:'kjp-hjem',groups:[
 ['ei','lyspære','light bulb','lys + pære (pear); Pæra er gått = The bulb has blown'],
 ['et','stearinlys','candle','often just: et lys; tenne et lys = light a candle'],
 ['et','teppe','rug; blanket',''],
-['pl','gardiner','curtains','sing. ei gardin'],
+['ei','gardin','curtain','pl. gardiner'],
 ['ei','bokhylle','bookshelf','bok = book + hylle = shelf'],
 ['ei','hylle','shelf',''],
 ['en','peis','fireplace',''],
@@ -1743,7 +1743,7 @@ samfunn:{name:'Samfunn',desc:'society, public services and money',key:'kjp-samfu
 ['ei','avgift','fee, charge',''],
 ['en','kontoutskrift','bank statement',''],
 ['en','kunde','customer',''],
-['pl','kroner','kroner (NOK)','1 krone = 100 øre'],
+['en','krone','krone (NOK)','pl. kroner · 1 krone = 100 øre'],
 ['pl','penger','money','always plural'],
 ['en','pris','price; prize',''],
 ['ei','lønn','salary, pay',''],
@@ -3766,6 +3766,14 @@ abstrakt:{name:'Abstrakte ord',desc:'abstract nouns by ending',key:'kjp-abstrakt
 ['en','samling','collection; gathering','← å samle']]]
 ]}
 };
+/* ---- one-time: plural cards became singular (keep progress) ---- */
+try{if(!localStorage.getItem('kjp-mig-sing1')){const M={"klaer": {"sokker": "sokk", "joggesko": "joggesko", "pensko": "pensko", "vintersko": "vintersko", "støvler": "støvel", "gummistøvler": "gummistøvel", "tøfler": "tøffel", "sandaler": "sandal", "brodder": "brodd", "piggsko": "piggsko", "votter": "vott", "hansker": "hanske"}, "mat": {"erter": "ert", "bønner": "bønne", "kikerter": "kikert", "linser": "linse", "kjøttkaker": "kjøttkake"}, "hjem": {"gardiner": "gardin"}, "samfunn": {"kroner": "krone"}};
+  const ren=(k,x)=>{const m=M[k];return m&&m[x]?m[x]:x};
+  for(const k in M){const key=THEMES[k].key;const s=JSON.parse(localStorage.getItem(key)||'null');if(s){s.k=(s.k||[]).map(x=>ren(k,x));s.m=(s.m||[]).map(x=>ren(k,x));localStorage.setItem(key,JSON.stringify(s))}}
+  const fixP=x=>{const i=x.indexOf('|');return i<0?x:x.slice(0,i+1)+ren(x.slice(0,i),x.slice(i+1))};
+  const ps=JSON.parse(localStorage.getItem('kjp-practice')||'null');if(ps){ps.k=(ps.k||[]).map(fixP);ps.m=(ps.m||[]).map(fixP);localStorage.setItem('kjp-practice',JSON.stringify(ps))}
+  const sr=JSON.parse(localStorage.getItem('kjp-srs')||'null');if(sr){const o={};for(const x in sr)o[fixP(x)]=sr[x];localStorage.setItem('kjp-srs',JSON.stringify(o))}
+  localStorage.setItem('kjp-mig-sing1','1')}}catch(e){}
 let W=[],tKey='',catList=[],curK='';
 /* ---- spaced repetition: each card gets a box (1–6) and a due day ---- */
 const today=()=>{const d=new Date();return Math.floor((d.getTime()-d.getTimezoneOffset()*60000)/86400000)};
@@ -4070,7 +4078,7 @@ const GN=[];{const seen=new Set();ALL.forEach(w=>{if(!ART.includes(w.g))return;c
 try{const s=JSON.parse(localStorage.getItem('kjp-gender')||'{}');gWrong=new Set(s.w||[]);gTot={r:+s.r||0,t:+s.t||0}}catch(e){}
 const gSave=()=>{try{localStorage.setItem('kjp-gender',JSON.stringify({w:[...gWrong],r:gTot.r,t:gTot.t}))}catch(e){}};
 function gFiltUI(){const c={en:0,ei:0,et:0};GN.forEach(x=>c[x.w.g]++);const v=$('gFilt').value||'all';
-  $('gFilt').innerHTML=`<option value="all">All nouns (${GN.length.toLocaleString('en')})</option><option value="miss">Only my mistakes (${GN.filter(x=>gWrong.has(x.id)).length})</option><option value="en">Only en words (${c.en})</option><option value="ei">Only ei words (${c.ei})</option><option value="et">Only et words (${c.et})</option>`;
+  $('gFilt').innerHTML=`<option value="all">All nouns (${GN.length.toLocaleString('en')})</option><option value="miss">Only my mistakes (${GN.filter(x=>gWrong.has(x.id)).length})</option><option value="en">Only en words (${c.en.toLocaleString('en')})</option><option value="ei">Only ei words (${c.ei.toLocaleString('en')})</option><option value="et">Only et words (${c.et.toLocaleString('en')})</option>`;
   $('gFilt').value=v}
 function gBuild(){gFiltUI();const f=$('gFilt').value;
   gDeck=GN.filter(x=>f==='all'||(f==='miss'?gWrong.has(x.id):x.w.g===f));
