@@ -142,6 +142,15 @@ table.ov tr.row:hover td{background:var(--bg)}
 table.ov .pc{width:30%;min-width:90px}
 table.ov .pc .track{margin:0}
 table.ov .num2{text-align:right;white-space:nowrap;color:var(--mut);font-size:14px}
+.side .today{margin:-8px 14px 14px;font-size:13px;color:var(--mut);line-height:1.35}
+.side .today .track{margin-top:5px;height:6px}
+.side .today b{color:var(--ink)}
+.forms{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;width:100%;max-width:520px;margin-top:6px}
+.forms div{background:var(--bg);border-radius:12px;padding:10px 6px}
+.forms small{display:block;font-size:12px;color:var(--mut);margin-bottom:2px}
+.forms b{font:700 clamp(17px,4.4vw,22px)/1.15 Rubik,sans-serif;overflow-wrap:anywhere}
+.goalSel{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
+.goalSel button{min-height:36px;padding:0 10px;font-size:14px}
 @media(prefers-reduced-motion:reduce){.card,.track i{transition:none}}
 @media(max-width:600px){.bar button,.bar select{flex:1 1 auto}}
 </style>
@@ -161,8 +170,10 @@ table.ov .num2{text-align:right;white-space:nowrap;color:var(--mut);font-size:14
 <div class="app">
 <nav class="side" id="side" aria-label="Main menu">
 <div class="brand">Norsk Flashcards</div>
+<div class="today" id="today"></div>
 <a href="#flashcards" id="navF"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h11a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2zm0 2v12h11V7H4zm15-4a2 2 0 0 1 2 2v12h-2V5H7V3h12z"/></svg>Flashcards</a>
 <a href="#practice" id="navP"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M17 3l4 4-4 4V8h-2.6l-2.2 2.6-1.3-1.5L13.5 6H17V3zM3 6h4.5l9 10H17v-3l4 4-4 4v-3h-1.5l-9-10H3V6zm0 10h3.6l2.1-2.4 1.3 1.5L7.5 18H3v-2z"/></svg>Practice</a>
+<a href="#verbs" id="navV"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h10v2H4zm0 4h16v2H4zm0 4h10v2H4zm0 4h16v2H4zm13-12l4 2-4 2z"/></svg>Verbs</a>
 <a href="#gender" id="navG"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 5h5v14H3V5zm6.5 0h5v14h-5V5zM16 5h5v14h-5V5zM4.5 6.5v11h2v-11h-2zm6.5 0v11h2v-11h-2zm6.5 0v11h2v-11h-2z"/></svg>Gender</a>
 <a href="#search" id="navS"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 3a7 7 0 0 1 5.6 11.2l5.1 5.1-1.4 1.4-5.1-5.1A7 7 0 1 1 10 3zm0 2a5 5 0 1 0 0 10 5 5 0 0 0 0-10z"/></svg>Search</a>
 <a href="#progress" id="navO"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19h16v2H4zM5 11h3v6H5zm5.5-4h3v10h-3zM16 3h3v14h-3z"/></svg>Progress</a>
@@ -220,6 +231,19 @@ table.ov .num2{text-align:right;white-space:nowrap;color:var(--mut);font-size:14
 <div id="pStage"></div>
 <div class="prog"><span id="ppTxt"></span><span id="ppKnown"></span></div>
 <div class="track"><i id="ppBar" style="width:0"></i></div>
+</main>
+</div>
+<div id="vVerbs" hidden>
+<header><div class="band">
+<div class="top"><button class="menuBtn" type="button" aria-label="Open menu"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg></button></div>
+<h1>Verbs</h1>
+<p id="vbDesc">Remember the forms: present · past · perfect</p>
+</div></header>
+<main class="band">
+<div class="bar"><select id="vbFilt" aria-label="Which verbs"></select><button id="vbShuf">Shuffle</button><button id="vbReset">Reset progress</button></div>
+<div id="vbStage"></div>
+<div class="prog"><span id="vbTxt"></span><span id="vbKnown"></span></div>
+<div class="track"><i id="vbBar" style="width:0"></i></div>
 </main>
 </div>
 <div id="vGender" hidden>
@@ -3778,6 +3802,10 @@ try{if(!localStorage.getItem('kjp-mig-sing1')){const M={"klaer": {"sokker": "sok
   const sr=JSON.parse(localStorage.getItem('kjp-srs')||'null');if(sr){const o={};for(const x in sr)o[fixP(x)]=sr[x];localStorage.setItem('kjp-srs',JSON.stringify(o))}
   localStorage.setItem('kjp-mig-sing1','1')}}catch(e){}
 let W=[],tKey='',catList=[],curK='';
+/* ---- daily goal & streak ---- */
+let DAILY={goal:20,days:{}};try{const d=JSON.parse(localStorage.getItem('kjp-daily')||'null');if(d)DAILY={goal:+d.goal||20,days:d.days||{}}}catch(e){}
+function tick(){const t=String(new Date(Date.now()-new Date().getTimezoneOffset()*60000).toISOString().slice(0,10));
+  DAILY.days[t]=(DAILY.days[t]||0)+1;try{localStorage.setItem('kjp-daily',JSON.stringify(DAILY))}catch(e){}if(typeof dailyUI==='function')dailyUI()}
 /* ---- spaced repetition: each card gets a box (1–6) and a due day ---- */
 const today=()=>{const d=new Date();return Math.floor((d.getTime()-d.getTimezoneOffset()*60000)/86400000)};
 const IV=[0,1,3,7,14,30,60];
@@ -3883,8 +3911,8 @@ function render(){
   c.onclick=e=>{if(!e.target.closest('.spk'))flip()};
   c.onkeydown=e=>{if(e.key===' '||e.key==='Enter'){e.preventDefault();flip()}};
   ['s1','s2'].forEach(id=>{const b=$(id);if(b)b.onclick=e=>{e.stopPropagation();say(full(w))}});
-  $('bYes').onclick=()=>{known.add(w.id);missed.delete(w.id);save();srsGrade(curK+'|'+w.id,true);i++;render();list()};
-  $('bNo').onclick=()=>{missed.add(w.id);known.delete(w.id);save();srsGrade(curK+'|'+w.id,false);i++;render();list()};
+  $('bYes').onclick=()=>{known.add(w.id);missed.delete(w.id);save();srsGrade(curK+'|'+w.id,true);tick();i++;render();list()};
+  $('bNo').onclick=()=>{missed.add(w.id);known.delete(w.id);save();srsGrade(curK+'|'+w.id,false);tick();i++;render();list()};
   $('bBack').onclick=()=>{if(i>0){i--;render()}};
   prog();
 }
@@ -3939,21 +3967,22 @@ const fold=s=>s.toLowerCase().replace(/æ/g,'ae').replace(/[øö]/g,'o').replace
 const hi=(s,q)=>{const i=s.toLowerCase().indexOf(q);return i<0?esc(s):esc(s.slice(0,i))+'<mark>'+esc(s.slice(i,i+q.length))+'</mark>'+esc(s.slice(i+q.length))};
 function show(v){
   const s=v==='search';
-  [['flash','vFlash','navF'],['practice','vPractice','navP'],['gender','vGender','navG'],['search','vSearch','navS'],['progress','vStats','navO']].forEach(([n,vi,na])=>{$(vi).hidden=n!==v;$(na).classList.toggle('on',n===v);$(na).setAttribute('aria-current',n===v?'page':'false')});
-  document.title={search:'Search',practice:'Practice',gender:'Gender',progress:'Progress'}[v]?({search:'Search',practice:'Practice',gender:'Gender',progress:'Progress'}[v]+' · Norsk Flashcards'):'Flashcards: '+THEMES[$('theme').value].name;
+  [['flash','vFlash','navF'],['practice','vPractice','navP'],['verbs','vVerbs','navV'],['gender','vGender','navG'],['search','vSearch','navS'],['progress','vStats','navO']].forEach(([n,vi,na])=>{$(vi).hidden=n!==v;$(na).classList.toggle('on',n===v);$(na).setAttribute('aria-current',n===v?'page':'false')});
+  document.title={search:'Search',practice:'Practice',verbs:'Verbs',gender:'Gender',progress:'Progress'}[v]?({search:'Search',practice:'Practice',verbs:'Verbs',gender:'Gender',progress:'Progress'}[v]+' · Norsk Flashcards'):'Flashcards: '+THEMES[$('theme').value].name;
   if(v==='gender'&&!gReady){gReady=true;gBuild()}
+  if(v==='verbs'&&!vbReady){vbReady=true;if(!vbRestore())vbBuild()}
   if(v==='progress')oRender();
   if(v==='practice'&&pReady&&pMode==='review'&&pI>=pDeck.length)pBuild();
   if(v==='practice'&&!pReady){pReady=true;if(pMode==='review'||!pRestore())pBuild()}
   document.body.classList.remove('nav');window.scrollTo(0,0);
   if(s&&matchMedia('(min-width:900px)').matches)setTimeout(()=>$('sQ').focus(),0);
 }
-const route=()=>{const m={'#search':'search','#practice':'practice','#gender':'gender','#progress':'progress'};show(m[location.hash]||'flash')};
+const route=()=>{const m={'#search':'search','#practice':'practice','#verbs':'verbs','#gender':'gender','#progress':'progress'};show(m[location.hash]||'flash')};
 window.addEventListener('hashchange',route);
 document.querySelectorAll('.menuBtn').forEach(b=>b.onclick=()=>document.body.classList.add('nav'));
 $('scrim').onclick=()=>document.body.classList.remove('nav');
 document.addEventListener('keydown',e=>{if(e.key==='Escape')document.body.classList.remove('nav')});
-['navF','navP','navG','navS','navO'].forEach(id=>$(id).addEventListener('click',()=>document.body.classList.remove('nav')));
+['navF','navP','navV','navG','navS','navO'].forEach(id=>$(id).addEventListener('click',()=>document.body.classList.remove('nav')));
 /* ---- search ---- */
 function search(){
   const raw=$('sQ').value.trim(),lang=$('sLang').value;
@@ -4056,8 +4085,8 @@ function pRender(){
   c.onclick=e=>{if(!e.target.closest('.spk'))flip()};
   c.onkeydown=e=>{if(e.key===' '||e.key==='Enter'){e.preventDefault();flip()}};
   ['ps1','ps2'].forEach(id=>{const b=$(id);if(b)b.onclick=e=>{e.stopPropagation();say(full(w))}});
-  $('pYes').onclick=()=>{pKnown.add(w.pid);pMissed.delete(w.pid);pSave();srsGrade(w.pid,true);pI++;pRender()};
-  $('pNo').onclick=()=>{pMissed.add(w.pid);pKnown.delete(w.pid);pSave();srsGrade(w.pid,false);if(pMode==='review'&&!w.rq){w.rq=true;pDeck.push(w)}pI++;pRender()};
+  $('pYes').onclick=()=>{pKnown.add(w.pid);pMissed.delete(w.pid);pSave();srsGrade(w.pid,true);tick();pI++;pRender()};
+  $('pNo').onclick=()=>{pMissed.add(w.pid);pKnown.delete(w.pid);pSave();srsGrade(w.pid,false);tick();if(pMode==='review'&&!w.rq){w.rq=true;pDeck.push(w)}pI++;pRender()};
   $('pBack').onclick=()=>{if(pI>0){pI--;pRender()}};
   pProg();
 }
@@ -4103,7 +4132,7 @@ function gRender(){gDone=false;const st=$('gStage');
   st.querySelectorAll('.gbtns button').forEach(b=>b.onclick=()=>gAnswer(b.dataset.a));
   $('gNext').onclick=()=>{gI++;gRender()};gProg()}
 function gAnswer(a){if(gDone)return;gDone=true;const x=gDeck[gI],w=x.w,ok=x.alt.has(a);
-  gN++;gTot.t++;if(ok){gOk++;gTot.r++;gStreak++;gWrong.delete(x.id)}else{gStreak=0;gWrong.add(x.id)}gSave();gFiltUI();
+  gN++;gTot.t++;tick();if(ok){gOk++;gTot.r++;gStreak++;gWrong.delete(x.id)}else{gStreak=0;gWrong.add(x.id)}gSave();gFiltUI();
   $('gStage').querySelectorAll('.gbtns button').forEach(b=>{b.disabled=true;if(b.dataset.a===w.g)b.classList.add('right');else if(b.dataset.a===a&&!ok)b.classList.add('wrong');else if(b.dataset.a===a&&ok)b.classList.add('right')});
   const extra=a!==w.g&&ok?` · <i>${a} ${esc(w.nb)}</i> is also correct`:(w.g==='ei'&&a===w.g?' · <i>en</i> is also accepted in Bokmål':'');
   $('gFb').innerHTML=(ok?'<span class="ok">Riktig!</span> ':'<span class="bad">Feil.</span> ')+`It’s <b>${w.g} ${esc(w.nb)}</b>${extra}${w.note?`<br><span style="color:var(--mut);font-size:14px">${esc(w.note)}</span>`:''}`;
@@ -4128,14 +4157,74 @@ function oRender(){
       rows.push(`<tr class="row" data-k="${k}" tabindex="0"><td class="nb">${esc(THEMES[k].name)}</td><td class="pc"><div class="track"><i style="width:${p}%"></i></div></td><td class="num2">${n} / ${ws.length}</td></tr>`)})});
   $('oList').innerHTML=rows.join('');
   const pct=ALL.length?tot/ALL.length*100:0;
-  $('oTiles').innerHTML=`<div class="tile"><div class="big">${tot.toLocaleString('en')}</div><div class="lab">words known of ${ALL.length.toLocaleString('en')} (${Math.round(pct)}%)</div><div class="track"><i style="width:${pct}%"></i></div></div>
+  $('oTiles').innerHTML=`<div class="tile" id="oDaily"></div><div class="tile"><div class="big">${tot.toLocaleString('en')}</div><div class="lab">words known of ${ALL.length.toLocaleString('en')} (${Math.round(pct)}%)</div><div class="track"><i style="width:${pct}%"></i></div></div>
   <div class="tile"><div class="big">${due.toLocaleString('en')}</div><div class="lab">due for review today</div>${due?'<button id="oRev" class="yes" style="margin-top:10px;width:100%">Review now</button>':''}</div>
   <div class="tile"><div class="big">${learn.toLocaleString('en')} <span style="font-size:20px;color:var(--mut)">/ ${mast.toLocaleString('en')}</span></div><div class="lab">learning / mastered (reviewed over weeks)</div></div>
   <div class="tile"><div class="big">${gTot.t?Math.round(gTot.r/gTot.t*100)+'%':'–'}</div><div class="lab">right in Gender${gTot.t?` (${gTot.t.toLocaleString('en')} answers)`:''}</div></div>`;
+  oDaily();
+  {const k=VB.filter(x=>vbKnown.has(x.id)).length;$('oTiles').insertAdjacentHTML('beforeend',`<div class="tile"><div class="big">${k} <span style="font-size:20px;color:var(--mut)">/ ${VB.length}</span></div><div class="lab">verb forms known</div><div class="track"><i style="width:${k/VB.length*100}%"></i></div></div>`)}
   if($('oRev'))$('oRev').onclick=()=>{pMode='review';try{localStorage.setItem('kjp-pmode','review')}catch(e){}location.hash='practice';if(pReady)pBuild()};
 }
 $('oList').onclick=e=>{const r=e.target.closest('tr.row');if(!r)return;$('theme').value=r.dataset.k;loadTheme(r.dataset.k);location.hash='flashcards'};
 $('oList').onkeydown=e=>{if(e.key==='Enter'){const r=e.target.closest('tr.row');if(r)r.click()}};
+/* ---- verb forms trainer ---- */
+let vbReady=false,vbDeck=[],vbI=0,vbKnown=new Set(),vbMissed=new Set();
+const VB=ALL.filter(w=>w.g==='verb').map(w=>{const p=String(w.note||'').split(' · ');return p.length>=3&&/^har /.test(p[2])?{w,id:w.pid,f:p.slice(0,3),rest:p.slice(3).join(' · '),strong:!/(et|te|de|dde)$/.test(p[1].split(' ')[0])}:null}).filter(Boolean);
+try{const s=JSON.parse(localStorage.getItem('kjp-verbs')||'{}');vbKnown=new Set(s.k||[]);vbMissed=new Set(s.m||[])}catch(e){}
+const vbSave=()=>{try{localStorage.setItem('kjp-verbs',JSON.stringify({k:[...vbKnown],m:[...vbMissed]}))}catch(e){}};
+$('vbDesc').textContent=`${VB.length} verbs. See the infinitive, say the present, past and perfect, then flip to check.`;
+function vbFiltUI(){const v=$('vbFilt').value||'all';const cats=[...new Set(VB.map(x=>x.w.cat))];
+  $('vbFilt').innerHTML=`<option value="all">All verbs (${VB.length})</option><option value="miss">Only the ones I missed (${VB.filter(x=>vbMissed.has(x.id)).length})</option><option value="strong">Strong verbs, vowel change (${VB.filter(x=>x.strong).length})</option>`+cats.map((c,k)=>`<option value="c${k}">Only ${esc(c.split(' · ')[0])}</option>`).join('');
+  $('vbFilt').value=[...$('vbFilt').options].some(o=>o.value===v)?v:'all';return cats}
+function vbBuild(shuffle){const cats=vbFiltUI(),f=$('vbFilt').value;
+  vbDeck=VB.filter(x=>f==='all'||(f==='miss'?vbMissed.has(x.id):f==='strong'?x.strong:x.w.cat===cats[+f.slice(1)]));
+  if(shuffle!==false)for(let k=vbDeck.length-1;k>0;k--){const j=Math.floor(Math.random()*(k+1));[vbDeck[k],vbDeck[j]]=[vbDeck[j],vbDeck[k]]}
+  vbI=0;vbRender()}
+const vbSavePos=()=>{try{localStorage.setItem('kjp-verbs-pos',JSON.stringify({f:$('vbFilt').value,d:vbDeck.map(x=>x.id),i:vbI}))}catch(e){}};
+function vbRestore(){try{vbFiltUI();const s=JSON.parse(localStorage.getItem('kjp-verbs-pos')||'null');if(!s||!Array.isArray(s.d))return false;
+  if(![...$('vbFilt').options].some(o=>o.value===s.f))return false;const by=new Map(VB.map(x=>[x.id,x])),d=s.d.map(x=>by.get(x)).filter(Boolean);if(!d.length)return false;
+  $('vbFilt').value=s.f;vbDeck=d;vbI=Math.max(0,Math.min(+s.i||0,d.length));vbRender();return true}catch(e){return false}}
+function vbProg(){const n=vbDeck.length;
+  $('vbTxt').textContent=n?(vbI<n?`Verb ${vbI+1} of ${n}`:'Round complete'):'';
+  const k=VB.filter(x=>vbKnown.has(x.id)).length;$('vbKnown').textContent=`Known ${k} of ${VB.length}`;$('vbBar').style.width=(k/VB.length*100)+'%'}
+function vbRender(){vbSavePos();const st=$('vbStage');
+  if(!vbDeck.length){st.innerHTML=`<div class="face done" style="position:static"><h2>Nothing here</h2><p>${$('vbFilt').value==='miss'?'You haven’t missed any verbs yet.':'No verbs in this filter.'}</p></div>`;vbProg();return}
+  if(vbI>=vbDeck.length){const ok=vbDeck.filter(x=>vbKnown.has(x.id)).length;
+    st.innerHTML=`<div class="face done" style="position:static"><h2>Ferdig! Round complete</h2><p>You knew ${ok} of ${vbDeck.length}.</p><div class="ans"><button class="yes" id="vbAgain">Again</button><button class="no" id="vbRev">My misses (${VB.filter(x=>vbMissed.has(x.id)).length})</button><button id="vbBack2">← Back</button></div></div>`;
+    $('vbAgain').onclick=()=>vbBuild(true);$('vbRev').onclick=()=>{$('vbFilt').value='miss';vbBuild(true)};$('vbBack2').onclick=()=>{vbI--;vbRender()};vbProg();return}
+  const x=vbDeck[vbI],w=x.w;const L=['present','past','perfect'];
+  st.innerHTML=`<div class="scene"><div class="card" id="vbCard" tabindex="0" role="button" aria-label="Flip card">
+  <div class="face"><span class="num">${esc(w.cat.split(' · ')[0])}</span><button class="spk" id="vb1" aria-label="Hear pronunciation">${spkSVG}</button><span class="tag g-verb">verb${x.strong?' · strong':''}</span><div class="word">${esc(w.nb)}</div><div class="note">${esc(w.pt)}</div><span class="hint">Say the three forms, then tap to flip</span></div>
+  <div class="face back"><span class="num">${esc(w.nb)}</span><button class="spk" id="vb2" aria-label="Hear pronunciation">${spkSVG}</button><div class="forms">${x.f.map((f,k)=>`<div><small>${L[k]}</small><b>${esc(f)}</b></div>`).join('')}</div>${x.rest?`<div class="note">${esc(x.rest)}</div>`:''}</div>
+  </div></div>
+  <div class="ans"><button class="no" id="vbNo">Didn’t know</button><button class="yes" id="vbYes">Knew it!</button><button id="vbBack" ${vbI===0?'disabled':''}>← Back</button></div>`;
+  const c=$('vbCard');let fl=false;const flip=()=>{fl=!fl;c.classList.toggle('flip',fl)};
+  c.onclick=e=>{if(!e.target.closest('.spk'))flip()};c.onkeydown=e=>{if(e.key===' '||e.key==='Enter'){e.preventDefault();flip()}};
+  $('vb1').onclick=e=>{e.stopPropagation();say(w.nb)};$('vb2').onclick=e=>{e.stopPropagation();say(x.f.join(', '))};
+  $('vbYes').onclick=()=>{vbKnown.add(x.id);vbMissed.delete(x.id);vbSave();tick();vbI++;vbRender()};
+  $('vbNo').onclick=()=>{vbMissed.add(x.id);vbKnown.delete(x.id);vbSave();tick();vbI++;vbFiltUI();vbRender()};
+  $('vbBack').onclick=()=>{if(vbI>0){vbI--;vbRender()}};vbProg()}
+$('vbFilt').onchange=()=>vbBuild(true);$('vbShuf').onclick=()=>vbBuild(true);
+$('vbReset').onclick=()=>{vbKnown.clear();vbMissed.clear();vbSave();vbBuild(true)};
+document.addEventListener('keydown',e=>{
+  if($('vVerbs').hidden||e.target.tagName==='SELECT'||e.target.tagName==='INPUT')return;
+  if(e.key==='ArrowRight'&&$('vbYes'))$('vbYes').click();
+  if(e.key==='ArrowLeft'&&$('vbNo'))$('vbNo').click();
+  if(e.key==='Backspace'&&$('vbBack')&&!$('vbBack').disabled)$('vbBack').click();
+});
+/* ---- daily goal & streak UI ---- */
+const dayKey=off=>{const d=new Date();d.setDate(d.getDate()-off);return new Date(d.getTime()-d.getTimezoneOffset()*60000).toISOString().slice(0,10)};
+function streak(){let s=0,off=(DAILY.days[dayKey(0)]||0)>=DAILY.goal?0:1;while((DAILY.days[dayKey(off)]||0)>=DAILY.goal){s++;off++}return s}
+function dailyUI(){const n=DAILY.days[dayKey(0)]||0,g=DAILY.goal,st=streak();
+  $('today').innerHTML=`Today <b>${n} / ${g}</b>${st?` · ${st}-day streak`:''}<div class="track"><i style="width:${Math.min(n/g*100,100)}%"></i></div>`;
+  if(!$('vStats').hidden&&$('oDaily'))oDaily()}
+function oDaily(){const n=DAILY.days[dayKey(0)]||0,g=DAILY.goal,st=streak(),wk=[...Array(7)].map((_,k)=>DAILY.days[dayKey(6-k)]||0);
+  const best=(()=>{const ks=Object.keys(DAILY.days).sort();let b=0,c=0,prev=null;ks.forEach(k=>{const ok=DAILY.days[k]>=g;const d=new Date(k);if(ok){c=prev&&(d-prev)/864e5===1?c+1:1;b=Math.max(b,c);prev=d}else{c=0;prev=null}});return b})();
+  $('oDaily').innerHTML=`<div class="big">${n} <span style="font-size:20px;color:var(--mut)">/ ${g}</span></div><div class="lab">cards today${n>=g?' · goal reached!':''} · streak ${st} day${st===1?'':'s'} (best ${best})</div><div class="track"><i style="width:${Math.min(n/g*100,100)}%"></i></div>
+  <div class="lab" style="margin-top:8px">Last 7 days: ${wk.join(' · ')}</div>
+  <div class="goalSel" role="group" aria-label="Daily goal">${[10,20,30,50,100].map(x=>`<button data-g="${x}" class="${x===g?'on':''}">${x}/day</button>`).join('')}</div>`;
+  $('oDaily').querySelectorAll('.goalSel button').forEach(b=>b.onclick=()=>{DAILY.goal=+b.dataset.g;try{localStorage.setItem('kjp-daily',JSON.stringify(DAILY))}catch(e){}dailyUI();oDaily()})}
+dailyUI();
 search();
 route();
 }
