@@ -151,6 +151,20 @@ table.ov .num2{text-align:right;white-space:nowrap;color:var(--mut);font-size:14
 .forms b{font:700 clamp(17px,4.4vw,22px)/1.15 Rubik,sans-serif;overflow-wrap:anywhere}
 .goalSel{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
 .goalSel button{min-height:36px;padding:0 10px;font-size:14px}
+.help h2{font:700 22px/1.15 Rubik,sans-serif;margin:30px 0 8px;display:flex;align-items:center;gap:10px}
+.help h2 svg{width:22px;height:22px;fill:var(--red);flex:none}
+.help h2:first-of-type{margin-top:4px}
+.help p,.help li{max-width:68ch}
+.help ul{padding-left:20px;margin:6px 0}
+.help li{margin:4px 0}
+.help table{margin:10px 0 6px;font-size:15px}
+.help th{text-align:left;padding:8px 12px;background:var(--bg);font:600 14px Inter,sans-serif;color:var(--mut)}
+.help kbd{font:600 13px Inter,sans-serif;background:var(--card);border:1px solid var(--line);border-bottom-width:2px;border-radius:6px;padding:1px 7px}
+.help .toc{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 24px}
+.help .toc a{font-size:14px;font-weight:600;color:var(--ink);text-decoration:none;border:1px solid var(--line);background:var(--card);border-radius:99px;padding:6px 12px}
+.help .toc a:hover{border-color:var(--red);color:var(--red)}
+.help .tip{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin:10px 0}
+.tile .q{font-size:13px;color:var(--mut);margin-top:6px;display:inline-block}
 @media(prefers-reduced-motion:reduce){.card,.track i{transition:none}}
 @media(max-width:600px){.bar button,.bar select{flex:1 1 auto}}
 </style>
@@ -177,6 +191,7 @@ table.ov .num2{text-align:right;white-space:nowrap;color:var(--mut);font-size:14
 <a href="#gender" id="navG"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 5h5v14H3V5zm6.5 0h5v14h-5V5zM16 5h5v14h-5V5zM4.5 6.5v11h2v-11h-2zm6.5 0v11h2v-11h-2zm6.5 0v11h2v-11h-2z"/></svg>Gender</a>
 <a href="#search" id="navS"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 3a7 7 0 0 1 5.6 11.2l5.1 5.1-1.4 1.4-5.1-5.1A7 7 0 1 1 10 3zm0 2a5 5 0 1 0 0 10 5 5 0 0 0 0-10z"/></svg>Search</a>
 <a href="#progress" id="navO"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19h16v2H4zM5 11h3v6H5zm5.5-4h3v10h-3zM16 3h3v14h-3z"/></svg>Progress</a>
+<a href="#help" id="navH"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a10 10 0 1 1 0 20 10 10 0 0 1 0-20zm0 2a8 8 0 1 0 0 16 8 8 0 0 0 0-16zm-1 11h2v2h-2zm1-9a3.5 3.5 0 0 1 2.2 6.2c-.7.6-1.2 1-1.2 1.8v.5h-2V14c0-1.6.9-2.4 1.7-3A1.5 1.5 0 1 0 10.5 9.5h-2A3.5 3.5 0 0 1 12 6z"/></svg>Help</a>
 <button type="button" id="navI" class="inst" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M11 3h2v9.2l3.3-3.3 1.4 1.4L12 16l-5.7-5.7 1.4-1.4 3.3 3.3V3zM5 19h14v2H5z"/></svg>Install app</button>
 <p id="iosTip" class="iosTip" hidden>On iPhone/iPad: tap <b>Share</b> <span aria-hidden="true">⎙</span> at the bottom of Safari, then <b>Add to Home Screen</b>.</p>
 </nav>
@@ -270,6 +285,117 @@ table.ov .num2{text-align:right;white-space:nowrap;color:var(--mut);font-size:14
 <h2 class="sec">By theme</h2>
 <p style="color:var(--mut);font-size:14px;margin:-4px 0 12px">A word counts as known when you marked it “Knew it!” in Flashcards or Practice. Tap a theme to open it.</p>
 <table class="ov"><tbody id="oList"></tbody></table>
+</main>
+</div>
+<div id="vHelp" hidden>
+<header><div class="band">
+<div class="top"><button class="menuBtn" type="button" aria-label="Open menu"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg></button></div>
+<h1>Help</h1>
+<p>How each part of the app works</p>
+</div></header>
+<main class="band help">
+<nav class="toc" aria-label="Help topics">
+<a href="#h-flash">Flashcards</a><a href="#h-practice">Practice</a><a href="#h-review">Review</a><a href="#h-verbs">Verbs</a><a href="#h-gender">Gender</a><a href="#h-search">Search</a><a href="#h-progress">Progress</a><a href="#h-goal">Daily goal</a><a href="#h-voice">Pronunciation</a><a href="#h-keys">Keyboard</a><a href="#h-saved">Your progress</a><a href="#h-install">Install</a>
+</nav>
+
+<h2 id="h-flash">Flashcards</h2>
+<p>Study one theme at a time. Pick a theme at the top, then tap the card to flip it.</p>
+<ul>
+<li><b>Norsk → English / English → Norsk</b> chooses which side you see first.</li>
+<li><b>Knew it!</b> marks the word as known; <b>Didn’t know</b> marks it as missed. Both move to the next card. <b>← Back</b> goes to the previous one.</li>
+<li>The list next to the buttons filters the cards: all, only the ones you missed, one group of the theme, or one kind of word (en, ei, et, verbs…). <b>Shuffle</b> mixes the order.</li>
+<li>The coloured label shows the kind of word: <b>en</b> masculine, <b>ei</b> feminine, <b>et</b> neuter, plural, adjective, verb or expression. The note under the translation gives plurals, verb forms, examples and tips.</li>
+<li>The app remembers the card you stopped at in each theme.</li>
+<li>The <b>Full list</b> at the bottom shows every word in the theme.</li>
+</ul>
+
+<h2 id="h-practice">Practice</h2>
+<p>All words from every theme in one shuffled deck, with two modes:</p>
+<ul>
+<li><b>All cards</b>: a word you mark <b>Knew it!</b> leaves this deck for good. <b>Didn’t know</b> keeps it, and it comes back in the next round. <b>Reset progress</b> puts all words back.</li>
+<li><b>Review</b>: only the words that are due today, see below.</li>
+</ul>
+
+<h2 id="h-review">Review (spaced repetition)</h2>
+<p>Every time you answer a card in Flashcards or Practice, the app schedules it for review. Words you know come back less and less often; words you miss come back soon. This is the best way to keep words in long-term memory.</p>
+<table><thead><tr><th>Step</th><th>Next review</th><th>Counts as</th></tr></thead><tbody>
+<tr><td>1</td><td>tomorrow</td><td><b>learning</b></td></tr>
+<tr><td>2</td><td>in 3 days</td><td><b>learning</b></td></tr>
+<tr><td>3</td><td>in 7 days</td><td><b>learning</b></td></tr>
+<tr><td>4</td><td>in 14 days</td><td><b>learning</b></td></tr>
+<tr><td>5</td><td>in 30 days</td><td><b>mastered</b></td></tr>
+<tr><td>6</td><td>in 60 days</td><td><b>mastered</b></td></tr>
+</tbody></table>
+<ul>
+<li><b>Knew it!</b> moves the word one step up. The first time you know a word it goes straight to step 2.</li>
+<li><b>Didn’t know</b> sends it back to step 1. In Review it also comes back once more at the end of the same session.</li>
+<li><b>Learning</b> are words still being fixed in memory (reviews up to 14 days apart). <b>Mastered</b> are words that reached 30 days or more, which takes several correct reviews spread over a few weeks.</li>
+<li>Open <b>Practice → Review</b> each day to clear the words that are due. The button shows how many there are.</li>
+</ul>
+
+<h2 id="h-verbs">Verbs</h2>
+<p>Practise the three forms of 500+ verbs. The card shows the infinitive (for example <i>å skrive · to write</i>). Say the <b>present · past · perfect</b> out loud, then flip to check (<i>skriver · skrev · har skrevet</i>).</p>
+<ul>
+<li>Filter by all verbs, the ones you missed, <b>strong verbs</b> (they change the vowel in the past, like <i>skrive → skrev</i>), or one group.</li>
+<li>The speaker on the back reads all three forms.</li>
+</ul>
+
+<h2 id="h-gender">Gender</h2>
+<p>Choose the article for each noun: <b>en</b>, <b>ei</b> or <b>et</b>. You see the noun and its meaning; tap the article (or press <kbd>1</kbd> <kbd>2</kbd> <kbd>3</kbd>).</p>
+<ul>
+<li>In Bokmål every <b>ei</b> word can also be used with <b>en</b>, so <i>en bok</i> is accepted for <i>ei bok</i>. Other accepted forms mentioned in the card’s note also count as right.</li>
+<li>Wrong answers are saved; choose <b>Only my mistakes</b> to practise them. <b>Reset stats</b> clears the score, the mistakes and starts a new round.</li>
+</ul>
+
+<h2 id="h-search">Search</h2>
+<p>Find any word in all themes. Type a whole word or part of one, choose its language (<b>NO</b> or <b>EN</b>) and press the magnifier.</p>
+<ul>
+<li>You can type without special letters: <i>vaeske</i> finds <i>væske</i>, <i>o</i> finds <i>ø</i>, <i>a</i> finds <i>å</i>.</li>
+<li>Under each result is its theme and group. Tap it to open that card in Flashcards.</li>
+</ul>
+
+<h2 id="h-progress">Progress</h2>
+<ul>
+<li><b>Cards today</b>: answers today, your daily goal and your streak.</li>
+<li><b>Words known</b>: words you marked <b>Knew it!</b> in Flashcards or Practice.</li>
+<li><b>Due for review today</b>, with a button to start the review.</li>
+<li><b>Learning / mastered</b>: see <a href="#h-review">Review</a> above.</li>
+<li><b>Right in Gender</b> and <b>verb forms known</b>.</li>
+<li><b>By theme</b>: progress in each theme. Tap a theme to open it.</li>
+</ul>
+
+<h2 id="h-goal">Daily goal and streak</h2>
+<ul>
+<li>Every answer in Flashcards, Practice, Verbs and Gender counts towards today’s goal. It is shown under the app name in the menu.</li>
+<li>Choose the goal in <b>Progress</b>: 10, 20, 30, 50 or 100 cards a day.</li>
+<li>Your <b>streak</b> counts the days in a row on which you reached the goal. If you haven’t reached it yet today, yesterday’s streak still counts until the day is over.</li>
+</ul>
+
+<h2 id="h-voice">Pronunciation</h2>
+<p>Tap the speaker on a card to hear the word. In <b>Flashcards</b> you can choose the voice at the bottom of the page and test it.</p>
+<div class="tip">If no Norwegian voice is listed, install one on your device. <b>Android:</b> Settings → Text-to-speech → Google → Install voice data → Norwegian. <b>iPhone/iPad:</b> Settings → Accessibility → Spoken Content → Voices → Norwegian. <b>Windows:</b> Settings → Time &amp; language → Speech → Add voices → Norsk.</div>
+
+<h2 id="h-keys">Keyboard shortcuts</h2>
+<ul>
+<li><kbd>Space</kbd> or <kbd>Enter</kbd>: flip the card</li>
+<li><kbd>→</kbd> Knew it! · <kbd>←</kbd> Didn’t know · <kbd>Backspace</kbd> Back</li>
+<li>Gender: <kbd>1</kbd> en · <kbd>2</kbd> ei · <kbd>3</kbd> et · <kbd>Enter</kbd> next</li>
+<li><kbd>Esc</kbd> closes the menu on small screens</li>
+</ul>
+
+<h2 id="h-saved">Where your progress is saved</h2>
+<p>Your progress is saved in this browser on this device. Nothing is sent anywhere and there is no account.</p>
+<ul>
+<li>Your phone and your computer each have their own progress. The installed app and the browser on the same phone share it.</li>
+<li>Clearing the browser’s data for this site deletes your progress.</li>
+</ul>
+
+<h2 id="h-install">Install the app</h2>
+<ul>
+<li><b>Android / computer (Chrome, Edge):</b> tap <b>Install app</b> at the bottom of the menu, or use the browser menu ⋮ → Install.</li>
+<li><b>iPhone / iPad (Safari):</b> Share → Add to Home Screen.</li>
+<li>Once installed, the app also works without internet.</li>
+</ul>
 </main>
 </div>
 <div id="vSearch" hidden>
@@ -3967,8 +4093,8 @@ const fold=s=>s.toLowerCase().replace(/æ/g,'ae').replace(/[øö]/g,'o').replace
 const hi=(s,q)=>{const i=s.toLowerCase().indexOf(q);return i<0?esc(s):esc(s.slice(0,i))+'<mark>'+esc(s.slice(i,i+q.length))+'</mark>'+esc(s.slice(i+q.length))};
 function show(v){
   const s=v==='search';
-  [['flash','vFlash','navF'],['practice','vPractice','navP'],['verbs','vVerbs','navV'],['gender','vGender','navG'],['search','vSearch','navS'],['progress','vStats','navO']].forEach(([n,vi,na])=>{$(vi).hidden=n!==v;$(na).classList.toggle('on',n===v);$(na).setAttribute('aria-current',n===v?'page':'false')});
-  document.title={search:'Search',practice:'Practice',verbs:'Verbs',gender:'Gender',progress:'Progress'}[v]?({search:'Search',practice:'Practice',verbs:'Verbs',gender:'Gender',progress:'Progress'}[v]+' · Norsk Flashcards'):'Flashcards: '+THEMES[$('theme').value].name;
+  [['flash','vFlash','navF'],['practice','vPractice','navP'],['verbs','vVerbs','navV'],['gender','vGender','navG'],['search','vSearch','navS'],['progress','vStats','navO'],['help','vHelp','navH']].forEach(([n,vi,na])=>{$(vi).hidden=n!==v;$(na).classList.toggle('on',n===v);$(na).setAttribute('aria-current',n===v?'page':'false')});
+  document.title={search:'Search',practice:'Practice',verbs:'Verbs',gender:'Gender',progress:'Progress',help:'Help'}[v]?({search:'Search',practice:'Practice',verbs:'Verbs',gender:'Gender',progress:'Progress',help:'Help'}[v]+' · Norsk Flashcards'):'Flashcards: '+THEMES[$('theme').value].name;
   if(v==='gender'&&!gReady){gReady=true;gBuild()}
   if(v==='verbs'&&!vbReady){vbReady=true;if(!vbRestore())vbBuild()}
   if(v==='progress')oRender();
@@ -3977,12 +4103,12 @@ function show(v){
   document.body.classList.remove('nav');window.scrollTo(0,0);
   if(s&&matchMedia('(min-width:900px)').matches)setTimeout(()=>$('sQ').focus(),0);
 }
-const route=()=>{const m={'#search':'search','#practice':'practice','#verbs':'verbs','#gender':'gender','#progress':'progress'};show(m[location.hash]||'flash')};
+const route=()=>{const m={'#search':'search','#practice':'practice','#verbs':'verbs','#gender':'gender','#progress':'progress','#help':'help'};if(/^#h-/.test(location.hash)){if($('vHelp').hidden)show('help');const t=document.getElementById(location.hash.slice(1));if(t)t.scrollIntoView();return}show(m[location.hash]||'flash')};
 window.addEventListener('hashchange',route);
 document.querySelectorAll('.menuBtn').forEach(b=>b.onclick=()=>document.body.classList.add('nav'));
 $('scrim').onclick=()=>document.body.classList.remove('nav');
 document.addEventListener('keydown',e=>{if(e.key==='Escape')document.body.classList.remove('nav')});
-['navF','navP','navV','navG','navS','navO'].forEach(id=>$(id).addEventListener('click',()=>document.body.classList.remove('nav')));
+['navF','navP','navV','navG','navS','navO','navH'].forEach(id=>$(id).addEventListener('click',()=>document.body.classList.remove('nav')));
 /* ---- search ---- */
 function search(){
   const raw=$('sQ').value.trim(),lang=$('sLang').value;
@@ -4159,7 +4285,7 @@ function oRender(){
   const pct=ALL.length?tot/ALL.length*100:0;
   $('oTiles').innerHTML=`<div class="tile" id="oDaily"></div><div class="tile"><div class="big">${tot.toLocaleString('en')}</div><div class="lab">words known of ${ALL.length.toLocaleString('en')} (${Math.round(pct)}%)</div><div class="track"><i style="width:${pct}%"></i></div></div>
   <div class="tile"><div class="big">${due.toLocaleString('en')}</div><div class="lab">due for review today</div>${due?'<button id="oRev" class="yes" style="margin-top:10px;width:100%">Review now</button>':''}</div>
-  <div class="tile"><div class="big">${learn.toLocaleString('en')} <span style="font-size:20px;color:var(--mut)">/ ${mast.toLocaleString('en')}</span></div><div class="lab">learning / mastered (reviewed over weeks)</div></div>
+  <div class="tile"><div class="big">${learn.toLocaleString('en')} <span style="font-size:20px;color:var(--mut)">/ ${mast.toLocaleString('en')}</span></div><div class="lab">learning / mastered</div><a class="q" href="#h-review">What’s the difference?</a></div>
   <div class="tile"><div class="big">${gTot.t?Math.round(gTot.r/gTot.t*100)+'%':'–'}</div><div class="lab">right in Gender${gTot.t?` (${gTot.t.toLocaleString('en')} answers)`:''}</div></div>`;
   oDaily();
   {const k=VB.filter(x=>vbKnown.has(x.id)).length;$('oTiles').insertAdjacentHTML('beforeend',`<div class="tile"><div class="big">${k} <span style="font-size:20px;color:var(--mut)">/ ${VB.length}</span></div><div class="lab">verb forms known</div><div class="track"><i style="width:${k/VB.length*100}%"></i></div></div>`)}
