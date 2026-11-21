@@ -37,7 +37,7 @@ A free web app for learning Norwegian (Bokmål) vocabulary, built by **Marcus Li
 
 ## How it was made: AI and my part
 
-I built this together with **Claude** (Anthropic’s AI assistant), in two long conversations (several hundred messages). I want to be clear about who did what.
+I built this together with **Claude** (Anthropic’s AI assistant), in two long conversations (several hundred messages), starting on 15 November 2026. I want to be clear about who did what.
 
 **What Claude did**
 - Wrote and changed all of the code (HTML, CSS, JavaScript, service worker, manifest).
@@ -45,7 +45,7 @@ I built this together with **Claude** (Anthropic’s AI assistant), in two long 
 - Checked its changes with automated browser tests (headless Chrome via Playwright) before publishing, and committed to this repository.
 
 **What I did**
-- **Starting point**: the project began with photos of my Norwegian textbook (chapter 6, *På kjøpesenteret*, p. 85). I asked for flashcards of the 42 clothing items in the pictures, and the app grew from there.
+- **Starting point**: on 15 November 2026 I sent photos of my Norwegian textbook (chapter 6, *På kjøpesenteret*, p. 85) and asked for flashcards of the 42 clothing items in the pictures, and the app grew from there.
 - **Product decisions**: what the app should do and in what order: the themes and their order, the menu sections, switching the interface from Portuguese to English, button placement (Reset next to Shuffle, a Back button next to *Knew it!*), Practice, Search, the side menu, spaced repetition, the Gender and Verbs trainers, the daily goal, the Help page, the name and the icon.
 - **Vocabulary sources and curation**: the words come from my textbook, from lists I typed in (for example the colours and a long list of adjectives), from my own vocabulary spreadsheet in Google Sheets (the A2/B1 verbs were picked from its Verbs tab), and from themes I described and Claude filled in (food, the home room by room). Since then I have kept adding words one by one from what I read and hear: a recruitment email, a language-lesson post, expressions on a whiteboard, everyday situations. I decided which words to add, where each one belongs and how it should be shown (for example, removing duplicates, using the singular with its gender instead of plural-only cards, and splitting themes and groups that had grown too large).
 - **Review**: I read the cards, questioned words and translations (spelling, meaning, false friends) and asked for corrections when something was wrong or unclear.
