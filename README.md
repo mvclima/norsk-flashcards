@@ -2,7 +2,7 @@
 
 [![Norsk Flashcards: learn Norwegian vocabulary. 3,200+ words, 500+ verbs, 32 themes](assets/thumbnail.png)](https://mvclima.github.io/norsk-flashcards/)
 
-A free web app for learning Norwegian (Bokmål) vocabulary, built by **Marcus Lima** ([LinkedIn](https://www.linkedin.com/in/mvcarvalholima/)) for his own study at A2–B1 level.
+A free web app for learning Norwegian (Bokmål) vocabulary, built by **Marcus Lima** ([LinkedIn](https://www.linkedin.com/in/mvcarvalholima/)) for his own study of Norwegian, working towards level A2–B1.
 
 **Live app:** https://mvclima.github.io/norsk-flashcards/
 
