@@ -82,3 +82,7 @@ Each card is one line in the `THEMES` object in `index.html`:
 ```
 
 Gender is `en`, `ei`, `et`, `pl` (plural only), `adj`, `verb` or `x` (expression or other).
+
+## License
+
+[MIT](LICENSE) © 2026 Marcus Lima
