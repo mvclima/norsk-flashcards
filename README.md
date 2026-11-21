@@ -1,6 +1,6 @@
 # Norsk Flashcards
 
-A free web app for learning Norwegian (Bokmål) vocabulary, built for my own study at A2–B1 level.
+A free web app for learning Norwegian (Bokmål) vocabulary, built by **Marcus Lima** ([LinkedIn](https://www.linkedin.com/in/mvcarvalholima/)) for his own study at A2–B1 level.
 
 **Live app:** https://mvclima.github.io/norsk-flashcards/
 
