@@ -4423,11 +4423,21 @@ route();
 <script>{
 const b=document.getElementById('navI'),tip=document.getElementById('iosTip');let dp=null;
 const standalone=matchMedia('(display-mode: standalone)').matches||navigator.standalone===true;
-const ios=/iphone|ipad|ipod/i.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
-if(!standalone&&ios)b.hidden=false;
+const ua=navigator.userAgent;
+const ios=/iphone|ipad|ipod/i.test(ua)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
+const ff=/firefox|fxios/i.test(ua),android=/android/i.test(ua),win=/windows/i.test(ua);
+const macSafari=!ios&&/macintosh/i.test(ua)&&/safari/i.test(ua)&&!/chrome|chromium|crios|edg|opr|firefox/i.test(ua);
+let msg='';
+if(ios)msg='On iPhone/iPad: tap <b>Share</b> <span aria-hidden="true">⎙</span> in the browser, then <b>Add to Home Screen</b>.';
+else if(ff&&android)msg='In Firefox: open the menu <b>⋮</b>, then tap <b>Add app to Home screen</b> (or <b>Install</b>).';
+else if(ff&&win)msg='Firefox can’t install apps the way Chrome does. In recent versions you can click the <b>Add tab to taskbar</b> icon in the address bar. For a full install, open this page in <b>Chrome</b> or <b>Edge</b>.';
+else if(ff)msg='Firefox on this computer can’t install web apps. To install, open this page in <b>Chrome</b> or <b>Edge</b>. You can still use it here as a normal page.';
+else if(macSafari)msg='In Safari: choose <b>File › Add to Dock</b> (or tap <b>Share</b>, then <b>Add to Dock</b>).';
+if(msg)tip.innerHTML=msg;
+if(!standalone&&msg)b.hidden=false;
 window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();dp=e;if(!standalone)b.hidden=false});
 window.addEventListener('appinstalled',()=>{b.hidden=true;tip.hidden=true;dp=null});
-b.onclick=async()=>{if(dp){dp.prompt();try{const r=await dp.userChoice;if(r.outcome==='accepted')b.hidden=true}catch(e){}dp=null}else if(ios){tip.hidden=!tip.hidden}};
+b.onclick=async()=>{if(dp){dp.prompt();try{const r=await dp.userChoice;if(r.outcome==='accepted')b.hidden=true}catch(e){}dp=null}else if(msg){tip.hidden=!tip.hidden}};
 }</script>
 <script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}))</script>
 <script data-goatcounter="https://mvclima.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
