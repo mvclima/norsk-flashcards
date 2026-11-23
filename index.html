@@ -157,6 +157,11 @@ table.ov .num2{text-align:right;white-space:nowrap;color:var(--mut);font-size:14
 .forms b{font:700 clamp(17px,4.4vw,22px)/1.15 Rubik,sans-serif;overflow-wrap:anywhere}
 .goalSel{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
 .goalSel button{min-height:36px;padding:0 10px;font-size:14px}
+.setCard{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px 20px;margin-bottom:16px}
+.setCard h2{font:700 20px/1.2 Rubik,sans-serif;margin:0 0 4px}
+.setCard p{margin:0 0 12px;color:var(--mut)}
+.seg{display:flex;flex-wrap:wrap;gap:8px}
+.seg button{flex:1 1 0;min-width:0;padding:0 8px}
 .help h2{font:700 22px/1.15 Rubik,sans-serif;margin:30px 0 8px;display:flex;align-items:center;gap:10px}
 .help h2 svg{width:22px;height:22px;fill:var(--red);flex:none}
 .help h2:first-of-type{margin-top:4px}
@@ -176,6 +181,7 @@ table.ov .num2{text-align:right;white-space:nowrap;color:var(--mut);font-size:14
 #filt,#vbFilt{flex:1 1 220px}
 @media(max-width:600px){.bar button,.bar select{flex:1 1 auto}#filt,#vbFilt{flex-basis:100%}.bar .brk{display:none}}
 </style>
+<script>try{const t=localStorage.getItem('kjp-ui-theme');if(t==='light'||t==='dark')document.documentElement.dataset.theme=t}catch(e){}</script>
 <meta property="og:image" content="https://mvclima.github.io/norsk-flashcards/assets/thumbnail.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="627">
@@ -204,6 +210,7 @@ table.ov .num2{text-align:right;white-space:nowrap;color:var(--mut);font-size:14
 <a href="#gender" id="navG"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 5h5v14H3V5zm6.5 0h5v14h-5V5zM16 5h5v14h-5V5zM4.5 6.5v11h2v-11h-2zm6.5 0v11h2v-11h-2zm6.5 0v11h2v-11h-2z"/></svg>Gender</a>
 <a href="#search" id="navS"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 3a7 7 0 0 1 5.6 11.2l5.1 5.1-1.4 1.4-5.1-5.1A7 7 0 1 1 10 3zm0 2a5 5 0 1 0 0 10 5 5 0 0 0 0-10z"/></svg>Search</a>
 <a href="#progress" id="navO"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19h16v2H4zM5 11h3v6H5zm5.5-4h3v10h-3zM16 3h3v14h-3z"/></svg>Progress</a>
+<a href="#settings" id="navT"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10.6 2h2.8l.5 2.6c.6.2 1.2.5 1.7.9l2.5-.9 1.4 2.4-2 1.7c.1.6.1 1.3 0 1.9l2 1.7-1.4 2.4-2.5-.9c-.5.4-1.1.7-1.7.9l-.5 2.6h-2.8l-.5-2.6c-.6-.2-1.2-.5-1.7-.9l-2.5.9-1.4-2.4 2-1.7a6 6 0 0 1 0-1.9l-2-1.7 1.4-2.4 2.5.9c.5-.4 1.1-.7 1.7-.9L10.6 2zM12 8.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5z" transform="translate(0 1.5)"/></svg>Settings</a>
 <a href="#help" id="navH"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a10 10 0 1 1 0 20 10 10 0 0 1 0-20zm0 2a8 8 0 1 0 0 16 8 8 0 0 0 0-16zm-1 11h2v2h-2zm1-9a3.5 3.5 0 0 1 2.2 6.2c-.7.6-1.2 1-1.2 1.8v.5h-2V14c0-1.6.9-2.4 1.7-3A1.5 1.5 0 1 0 10.5 9.5h-2A3.5 3.5 0 0 1 12 6z"/></svg>Help</a>
 <button type="button" id="navI" class="inst" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M11 3h2v9.2l3.3-3.3 1.4 1.4L12 16l-5.7-5.7 1.4-1.4 3.3 3.3V3zM5 19h14v2H5z"/></svg>Install app</button>
 <p id="iosTip" class="iosTip" hidden>On iPhone/iPad: tap <b>Share</b> <span aria-hidden="true">⎙</span> at the bottom of Safari, then <b>Add to Home Screen</b>.</p>
@@ -301,6 +308,22 @@ table.ov .num2{text-align:right;white-space:nowrap;color:var(--mut);font-size:14
 <table class="ov"><tbody id="oList"></tbody></table>
 </main>
 </div>
+<div id="vSettings" hidden>
+<header><div class="band">
+<div class="top"><button class="menuBtn" type="button" aria-label="Open menu"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg></button></div>
+<h1>Settings</h1>
+<p>Choose how the app looks</p>
+</div></header>
+<main class="band">
+<section class="setCard">
+<h2>Appearance</h2>
+<p>Light or dark colours. <b>Automatic</b> follows your device.</p>
+<div class="seg" role="group" aria-label="Appearance" id="setTheme">
+<button type="button" data-t="auto">Automatic</button><button type="button" data-t="light">Light</button><button type="button" data-t="dark">Dark</button>
+</div>
+</section>
+</main>
+</div>
 <div id="vHelp" hidden>
 <header><div class="band">
 <div class="top"><button class="menuBtn" type="button" aria-label="Open menu"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg></button></div>
@@ -309,7 +332,7 @@ table.ov .num2{text-align:right;white-space:nowrap;color:var(--mut);font-size:14
 </div></header>
 <main class="band help">
 <nav class="toc" aria-label="Help topics">
-<a href="#h-flash">Flashcards</a><a href="#h-practice">Practice</a><a href="#h-review">Review</a><a href="#h-verbs">Verbs</a><a href="#h-gender">Gender</a><a href="#h-search">Search</a><a href="#h-progress">Progress</a><a href="#h-goal">Daily goal</a><a href="#h-lang">NO / EN</a><a href="#h-voice">Pronunciation</a><a href="#h-keys">Keyboard</a><a href="#h-saved">Your progress</a><a href="#h-install">Install</a><a href="#h-about">About</a>
+<a href="#h-flash">Flashcards</a><a href="#h-practice">Practice</a><a href="#h-review">Review</a><a href="#h-verbs">Verbs</a><a href="#h-gender">Gender</a><a href="#h-search">Search</a><a href="#h-progress">Progress</a><a href="#h-goal">Daily goal</a><a href="#h-lang">NO / EN</a><a href="#h-voice">Pronunciation</a><a href="#h-keys">Keyboard</a><a href="#h-settings">Settings</a><a href="#h-saved">Your progress</a><a href="#h-install">Install</a><a href="#h-about">About</a>
 </nav>
 
 <h2 id="h-flash">Flashcards</h2>
@@ -406,6 +429,9 @@ table.ov .num2{text-align:right;white-space:nowrap;color:var(--mut);font-size:14
 <li>Gender: <kbd>1</kbd> en · <kbd>2</kbd> ei · <kbd>3</kbd> et · <kbd>Enter</kbd> next</li>
 <li><kbd>Esc</kbd> closes the menu on small screens</li>
 </ul>
+
+<h2 id="h-settings">Settings</h2>
+<p>Open <b>Settings</b> in the menu to choose the <b>Appearance</b>: <b>Automatic</b> follows your device’s light or dark mode, or choose <b>Light</b> or <b>Dark</b> to keep it fixed.</p>
 
 <h2 id="h-saved">Where your progress is saved</h2>
 <p>Your progress is saved in this browser on this device. Nothing is sent anywhere and there is no account.</p>
@@ -4185,8 +4211,8 @@ const fold=s=>s.toLowerCase().replace(/æ/g,'ae').replace(/[øö]/g,'o').replace
 const hi=(s,q)=>{const i=s.toLowerCase().indexOf(q);return i<0?esc(s):esc(s.slice(0,i))+'<mark>'+esc(s.slice(i,i+q.length))+'</mark>'+esc(s.slice(i+q.length))};
 function show(v){
   const s=v==='search';
-  [['flash','vFlash','navF'],['practice','vPractice','navP'],['verbs','vVerbs','navV'],['gender','vGender','navG'],['search','vSearch','navS'],['progress','vStats','navO'],['help','vHelp','navH']].forEach(([n,vi,na])=>{$(vi).hidden=n!==v;$(na).classList.toggle('on',n===v);$(na).setAttribute('aria-current',n===v?'page':'false')});
-  document.title={search:'Search',practice:'Practice',verbs:'Verbs',gender:'Gender',progress:'Progress',help:'Help'}[v]?({search:'Search',practice:'Practice',verbs:'Verbs',gender:'Gender',progress:'Progress',help:'Help'}[v]+' · Norsk Flashcards'):'Flashcards: '+tn($('theme').value);
+  [['flash','vFlash','navF'],['practice','vPractice','navP'],['verbs','vVerbs','navV'],['gender','vGender','navG'],['search','vSearch','navS'],['progress','vStats','navO'],['settings','vSettings','navT'],['help','vHelp','navH']].forEach(([n,vi,na])=>{$(vi).hidden=n!==v;$(na).classList.toggle('on',n===v);$(na).setAttribute('aria-current',n===v?'page':'false')});
+  document.title={search:'Search',practice:'Practice',verbs:'Verbs',gender:'Gender',progress:'Progress',settings:'Settings',help:'Help'}[v]?({search:'Search',practice:'Practice',verbs:'Verbs',gender:'Gender',progress:'Progress',settings:'Settings',help:'Help'}[v]+' · Norsk Flashcards'):'Flashcards: '+tn($('theme').value);
   if(v==='gender'&&!gReady){gReady=true;gBuild()}
   if(v==='verbs'&&!vbReady){vbReady=true;if(!vbRestore())vbBuild()}
   if(v==='progress')oRender();
@@ -4195,7 +4221,7 @@ function show(v){
   document.body.classList.remove('nav');window.scrollTo(0,0);
   if(s&&matchMedia('(min-width:900px)').matches)setTimeout(()=>$('sQ').focus(),0);
 }
-const route=()=>{const m={'#search':'search','#practice':'practice','#verbs':'verbs','#gender':'gender','#progress':'progress','#help':'help'};if(/^#h-/.test(location.hash)){if($('vHelp').hidden)show('help');const t=document.getElementById(location.hash.slice(1));if(t)t.scrollIntoView();return}show(m[location.hash]||'flash')};
+const route=()=>{const m={'#search':'search','#practice':'practice','#verbs':'verbs','#gender':'gender','#progress':'progress','#settings':'settings','#help':'help'};if(/^#h-/.test(location.hash)){if($('vHelp').hidden)show('help');const t=document.getElementById(location.hash.slice(1));if(t)t.scrollIntoView();return}show(m[location.hash]||'flash')};
 window.addEventListener('hashchange',route);
 document.querySelectorAll('.menuBtn').forEach(b=>b.onclick=()=>document.body.classList.add('nav'));
 document.querySelectorAll('header .top').forEach(t=>t.insertAdjacentHTML('beforeend','<div class="lang" role="group" aria-label="Language of theme and group names"><button type="button" data-l="no" title="Norsk">NO</button><button type="button" data-l="en" title="English">EN</button></div>'));
@@ -4209,9 +4235,16 @@ function setLang(l){if(l===LANG)return;LANG=l;try{localStorage.setItem('kjp-lang
   document.querySelectorAll('#pStage .num,#gStage .num').forEach(n=>{const k=n.dataset.k;if(k)n.textContent=tn(k)})}
 document.querySelectorAll('.lang').forEach(g=>g.onclick=e=>{const b=e.target.closest('button');if(b)setLang(b.dataset.l)});
 langUI();
+/* ---- settings: appearance ---- */
+function themeUI(){let t='auto';try{t=localStorage.getItem('kjp-ui-theme')||'auto'}catch(e){}
+  document.querySelectorAll('#setTheme button').forEach(b=>{const on=b.dataset.t===t;b.classList.toggle('on',on);b.setAttribute('aria-pressed',on)})}
+$('setTheme').onclick=e=>{const b=e.target.closest('button');if(!b)return;const t=b.dataset.t;
+  try{if(t==='auto')localStorage.removeItem('kjp-ui-theme');else localStorage.setItem('kjp-ui-theme',t)}catch(e){}
+  if(t==='auto')delete document.documentElement.dataset.theme;else document.documentElement.dataset.theme=t;themeUI()};
+themeUI();
 $('scrim').onclick=()=>document.body.classList.remove('nav');
 document.addEventListener('keydown',e=>{if(e.key==='Escape')document.body.classList.remove('nav')});
-['navF','navP','navV','navG','navS','navO','navH'].forEach(id=>$(id).addEventListener('click',()=>document.body.classList.remove('nav')));
+['navF','navP','navV','navG','navS','navO','navT','navH'].forEach(id=>$(id).addEventListener('click',()=>document.body.classList.remove('nav')));
 /* ---- search ---- */
 function search(){
   const raw=$('sQ').value.trim(),lang=$('sLang').value;
