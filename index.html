@@ -172,7 +172,9 @@ table.ov .num2{text-align:right;white-space:nowrap;color:var(--mut);font-size:14
 .help .tip{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin:10px 0}
 .tile .q{font-size:13px;color:var(--mut);margin-top:6px;display:inline-block}
 @media(prefers-reduced-motion:reduce){.card,.track i{transition:none}}
-@media(max-width:600px){.bar button,.bar select{flex:1 1 auto}#filt,#vbFilt{flex-basis:100%}}
+.bar .brk{flex-basis:100%;height:0}
+#filt,#vbFilt{flex:1 1 220px}
+@media(max-width:600px){.bar button,.bar select{flex:1 1 auto}#filt,#vbFilt{flex-basis:100%}.bar .brk{display:none}}
 </style>
 <meta property="og:image" content="https://mvclima.github.io/norsk-flashcards/assets/thumbnail.png">
 <meta property="og:image:width" content="1200">
@@ -220,6 +222,7 @@ table.ov .num2{text-align:right;white-space:nowrap;color:var(--mut);font-size:14
 <div class="bar">
 <button id="dNo" class="on" aria-pressed="true">Norsk → English</button>
 <button id="dPt" aria-pressed="false">English → Norsk</button>
+<span class="brk" aria-hidden="true"></span>
 <select id="filt" aria-label="Filter">
 <option value="all" id="allOpt">All</option>
 <option value="miss">Only the ones I missed</option>
