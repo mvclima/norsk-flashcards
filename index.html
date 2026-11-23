@@ -88,7 +88,12 @@ nav.side{position:sticky;top:0;height:100vh;background:var(--card);border-right:
 .side a.on{background:var(--red);color:#fff}
 .side a:focus-visible{outline:3px solid var(--red);outline-offset:2px}
 .top{display:flex;align-items:center;gap:10px;margin-bottom:12px}
-.top .tsel{margin:0}
+.top .tsel{margin:0;min-width:0;flex:0 1 auto}
+.top .tsel select{min-width:0;max-width:100%;flex:1 1 auto}
+.lang{display:inline-flex;margin-left:auto;flex:none;border:1px solid rgba(255,255,255,.7);border-radius:12px;overflow:hidden}
+.lang button{min-height:40px;padding:0 11px;border:0;border-radius:0;background:transparent;color:#fff;font-weight:600;font-size:14px;letter-spacing:.03em}
+.lang button.on{background:#fff;color:var(--red)}
+.lang button:focus-visible{outline:3px solid #fff;outline-offset:-5px}
 .menuBtn{display:none}
 .scrim{display:none}
 .sform{display:flex;gap:8px;margin-bottom:12px}
@@ -204,7 +209,7 @@ table.ov .num2{text-align:right;white-space:nowrap;color:var(--mut);font-size:14
 <div>
 <div id="vFlash">
 <header><div class="band">
-<div class="top"><button class="menuBtn" type="button" aria-label="Open menu"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg></button><label class="tsel"><span>Theme</span>
+<div class="top"><button class="menuBtn" type="button" aria-label="Open menu"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg></button><label class="tsel"><span id="tLab">Theme</span>
 <select id="theme" aria-label="Theme"></select></label></div>
 <h1 id="tName"></h1>
 <p id="tDesc"></p>
@@ -3993,6 +3998,12 @@ try{if(!localStorage.getItem('kjp-mig-sing1')){const M={"klaer": {"sokker": "sok
   const sr=JSON.parse(localStorage.getItem('kjp-srs')||'null');if(sr){const o={};for(const x in sr)o[fixP(x)]=sr[x];localStorage.setItem('kjp-srs',JSON.stringify(o))}
   localStorage.setItem('kjp-mig-sing1','1')}}catch(e){}
 let W=[],tKey='',catList=[],curK='';
+let LANG='no';try{if(localStorage.getItem('kjp-lang')==='en')LANG='en'}catch(e){}
+const T_EN={smaord:'Greetings',uttrykk:'Expressions',tall:'Numbers',farger:'Colours',tid:'Time',pronomen:'Pronouns',familie:'Family',folk:'People',land:'Countries & languages',kroppen:'The body',tanker:'Thoughts & feelings',mat:'Food & drink',klaer:'Clothes',hjem:'Home',hverdag:'Everyday things',skole:'School',byen:'The city',natur:'Nature & weather',dyr:'Animals',reise:'Travel',transport:'Transport',fritid:'Free time & sport',teknologi:'Technology',yrker:'Jobs',arbeid:'Work',samfunn:'Society',verb:'Verbs',adjektiv:'Adjectives',adverb:'Adverbs',preposisjoner:'Prepositions',konjunksjoner:'Conjunctions',abstrakt:'Abstract nouns'};
+const SEC_NO={'Basics':'Det grunnleggende','Me & people':'Meg og andre','Everyday life':'Hverdagsliv','The wider world':'Verden rundt oss','Work & society':'Arbeid og samfunn','Grammar':'Grammatikk','More':'Mer'};
+const tn=k=>LANG==='en'?(T_EN[k]||THEMES[k].name):THEMES[k].name;
+const gn=c=>{const p=String(c).split(' · ');return p.length<2?c:LANG==='en'?p[0]:p.slice(1).join(' · ')};
+const sn=x=>LANG==='en'?x:(SEC_NO[x]||x);
 /* ---- daily goal & streak ---- */
 let DAILY={goal:20,days:{}};try{const d=JSON.parse(localStorage.getItem('kjp-daily')||'null');if(d)DAILY={goal:+d.goal||20,days:d.days||{}}}catch(e){}
 function tick(){const t=String(new Date(Date.now()-new Date().getTimezoneOffset()*60000).toISOString().slice(0,10));
@@ -4017,17 +4028,17 @@ function loadTheme(id){
   else W=t.words.map(([n,g,nb,pt,note,sw])=>({n,g,nb,pt,note,sw}));
   const cats=t.groups?t.groups.map(c=>c[0]):[];
   const gs=Object.keys(gName).filter(g=>W.some(w=>w.g===g));
-  $('filt').innerHTML=`<option value="all" id="allOpt">All</option><option value="miss">Only the ones I missed</option>`+cats.map((c,k)=>`<option value="c${k}">Only ${c}</option>`).join('')+(gs.length>1?gs.map(g=>`<option value="${g}">${gFilt[g]}</option>`).join(''):'');
+  $('filt').innerHTML=`<option value="all" id="allOpt">All</option><option value="miss">Only the ones I missed</option>`+cats.map((c,k)=>`<option value="c${k}">Only ${gn(c)}</option>`).join('')+(gs.length>1?gs.map(g=>`<option value="${g}">${gFilt[g]}</option>`).join(''):'');
   catList=cats;
   $('legend').innerHTML=gs.map(g=>`<span><span class="dot g-${g}"></span>${gLeg[g]}</span>`).join('');
   known=new Set();missed=new Set();
   try{const s=JSON.parse(localStorage.getItem(tKey)||'{}');known=new Set(s.k||[]);missed=new Set(s.m||[])}catch(e){}
   if(t.from)try{const mk='kjp-mig-'+t.key+'-'+t.from.length;if(!localStorage.getItem(mk)){localStorage.setItem(mk,'1');t.from.forEach(f=>{const s=JSON.parse(localStorage.getItem(f)||'{}');(s.k||[]).forEach(x=>known.add(x));(s.m||[]).forEach(x=>{if(!known.has(x))missed.add(x)})})}}catch(e){}
   W.forEach(w=>w.id=W.filter(v=>v.nb===w.nb).length>1?w.cat+'|'+w.nb:w.nb);const ids=new Set(W.map(w=>w.id)),fix=x=>typeof x==='number'?(W[x-1]||{}).id:ids.has(x)?x:(W.find(w=>w.nb===x)||W.find(w=>w.nb.toLowerCase()===String(x).toLowerCase())||{}).id;known=new Set([...known].map(fix).filter(x=>ids.has(x)));missed=new Set([...missed].map(fix).filter(x=>ids.has(x)));save();
-  $('tName').textContent=t.name;
+  $('tName').textContent=tn(id);
   $('tDesc').textContent=`${W.length} words · ${t.desc}`;
   $('allOpt').textContent=`All ${W.length}`;
-  document.title='Flashcards: '+t.name;
+  document.title='Flashcards: '+tn(id);
   try{localStorage.setItem('kjp-theme',id)}catch(e){}
   list();if(!restorePos()){$('filt').value='all';build(false)}
 }
@@ -4117,7 +4128,7 @@ function prog(){
 
 function list(){
   let last;
-  $('list').innerHTML=W.map(w=>(w.cat&&w.cat!==last?(last=w.cat,`<tr class="cat"><td colspan="3">${w.cat}</td></tr>`):'')+`<tr><td class="n">${w.n}</td><td class="nb"><span class="dot g-${w.g}"></span>${full(w)}</td><td>${w.pt}${w.sw?`<span class="sws" style="background:${w.sw}"></span>`:''}${known.has(w.id)?' <span class="k">✓</span>':''}</td></tr>`).join('');
+  $('list').innerHTML=W.map(w=>(w.cat&&w.cat!==last?(last=w.cat,`<tr class="cat"><td colspan="3">${gn(w.cat)}</td></tr>`):'')+`<tr><td class="n">${w.n}</td><td class="nb"><span class="dot g-${w.g}"></span>${full(w)}</td><td>${w.pt}${w.sw?`<span class="sws" style="background:${w.sw}"></span>`:''}${known.has(w.id)?' <span class="k">✓</span>':''}</td></tr>`).join('');
 }
 
 function setDir(d){dir=d;$('dNo').classList.toggle('on',d==='no');$('dPt').classList.toggle('on',d==='pt');$('dNo').setAttribute('aria-pressed',d==='no');$('dPt').setAttribute('aria-pressed',d==='pt');render()}
@@ -4142,7 +4153,8 @@ const SECTIONS=[['Basics',['smaord','uttrykk','tall','farger','tid','pronomen']]
 ['Work & society',['yrker','arbeid','samfunn']],
 ['Grammar',['verb','adjektiv','adverb','preposisjoner','konjunksjoner','abstrakt']]];
 {const used=new Set(SECTIONS.flatMap(x=>x[1]));const rest=Object.keys(THEMES).filter(k=>!used.has(k));if(rest.length)SECTIONS.push(['More',rest]);}
-$('theme').innerHTML=SECTIONS.map(([lab,ids])=>`<optgroup label="${lab}">`+ids.filter(k=>THEMES[k]).map(id=>`<option value="${id}">${THEMES[id].name}</option>`).join('')+'</optgroup>').join('');
+function fillThemes(){const v=$('theme').value;$('theme').innerHTML=SECTIONS.map(([lab,ids])=>`<optgroup label="${sn(lab)}">`+ids.filter(k=>THEMES[k]).map(id=>`<option value="${id}">${tn(id)}</option>`).join('')+'</optgroup>').join('');if(v)$('theme').value=v}
+fillThemes();
 let start=$('theme').options[0].value;try{const v=localStorage.getItem('kjp-theme');if(THEMES[v])start=v}catch(e){}
 $('theme').value=start;
 $('theme').onchange=()=>loadTheme($('theme').value);
@@ -4159,7 +4171,7 @@ const hi=(s,q)=>{const i=s.toLowerCase().indexOf(q);return i<0?esc(s):esc(s.slic
 function show(v){
   const s=v==='search';
   [['flash','vFlash','navF'],['practice','vPractice','navP'],['verbs','vVerbs','navV'],['gender','vGender','navG'],['search','vSearch','navS'],['progress','vStats','navO'],['help','vHelp','navH']].forEach(([n,vi,na])=>{$(vi).hidden=n!==v;$(na).classList.toggle('on',n===v);$(na).setAttribute('aria-current',n===v?'page':'false')});
-  document.title={search:'Search',practice:'Practice',verbs:'Verbs',gender:'Gender',progress:'Progress',help:'Help'}[v]?({search:'Search',practice:'Practice',verbs:'Verbs',gender:'Gender',progress:'Progress',help:'Help'}[v]+' · Norsk Flashcards'):'Flashcards: '+THEMES[$('theme').value].name;
+  document.title={search:'Search',practice:'Practice',verbs:'Verbs',gender:'Gender',progress:'Progress',help:'Help'}[v]?({search:'Search',practice:'Practice',verbs:'Verbs',gender:'Gender',progress:'Progress',help:'Help'}[v]+' · Norsk Flashcards'):'Flashcards: '+tn($('theme').value);
   if(v==='gender'&&!gReady){gReady=true;gBuild()}
   if(v==='verbs'&&!vbReady){vbReady=true;if(!vbRestore())vbBuild()}
   if(v==='progress')oRender();
@@ -4171,6 +4183,17 @@ function show(v){
 const route=()=>{const m={'#search':'search','#practice':'practice','#verbs':'verbs','#gender':'gender','#progress':'progress','#help':'help'};if(/^#h-/.test(location.hash)){if($('vHelp').hidden)show('help');const t=document.getElementById(location.hash.slice(1));if(t)t.scrollIntoView();return}show(m[location.hash]||'flash')};
 window.addEventListener('hashchange',route);
 document.querySelectorAll('.menuBtn').forEach(b=>b.onclick=()=>document.body.classList.add('nav'));
+document.querySelectorAll('header .top').forEach(t=>t.insertAdjacentHTML('beforeend','<div class="lang" role="group" aria-label="Language of theme and group names"><button type="button" data-l="no" title="Norsk">NO</button><button type="button" data-l="en" title="English">EN</button></div>'));
+function langUI(){document.querySelectorAll('.lang button').forEach(b=>{const on=b.dataset.l===LANG;b.classList.toggle('on',on);b.setAttribute('aria-pressed',on)});$('tLab').textContent=LANG==='en'?'Theme':'Tema';$('theme').setAttribute('aria-label',LANG==='en'?'Theme':'Tema')}
+function setLang(l){if(l===LANG)return;LANG=l;try{localStorage.setItem('kjp-lang',l)}catch(e){}langUI();fillThemes();
+  $('tName').textContent=tn(curK);if(!$('vFlash').hidden)document.title='Flashcards: '+tn(curK);
+  [...$('filt').options].forEach(o=>{if(/^c\d+$/.test(o.value))o.textContent='Only '+gn(catList[+o.value.slice(1)])});list();
+  if($('sQ').value.trim()&&!$('sTable').hidden)search();
+  if(!$('vStats').hidden)oRender();
+  if(vbReady){const st=$('vbStage').querySelector('.face .num');if(st&&vbDeck[vbI])st.textContent=gn(vbDeck[vbI].w.cat);vbFiltUI()}
+  document.querySelectorAll('#pStage .num,#gStage .num').forEach(n=>{const k=n.dataset.k;if(k)n.textContent=tn(k)})}
+document.querySelectorAll('.lang').forEach(g=>g.onclick=e=>{const b=e.target.closest('button');if(b)setLang(b.dataset.l)});
+langUI();
 $('scrim').onclick=()=>document.body.classList.remove('nav');
 document.addEventListener('keydown',e=>{if(e.key==='Escape')document.body.classList.remove('nav')});
 ['navF','navP','navV','navG','navS','navO','navH'].forEach(id=>$(id).addEventListener('click',()=>document.body.classList.remove('nav')));
@@ -4195,7 +4218,7 @@ function search(){
   $('sTable').hidden=!res.length;
   $('sRes').innerHTML=shown.map(([,w])=>{
     const art=ART.includes(w.g)?`<span class="art" style="color:var(--mut)">${w.g} </span>`:'';
-    const src=THEMES[w.k].name+(w.cat?' › '+w.cat.split(' · ')[0]:'');
+    const src=tn(w.k)+(w.cat?' › '+gn(w.cat):'');
     return `<tr><td class="nb"><span class="dot g-${w.g}"></span>${art}${lang==='no'?hi(w.nb,q):esc(w.nb)}<button type="button" class="src" data-k="${w.k}" data-gi="${w.gi}" data-nb="${esc(w.nb)}">${esc(src)}</button></td><td>${w.sw?`<span class="sws" style="background:${w.sw};margin:0 6px 0 0"></span>`:''}${lang==='en'?hi(w.pt,q):esc(w.pt)}${w.note?`<span class="rn">${esc(w.note)}</span>`:''}</td></tr>`}).join('');
 }
 $('sForm').onsubmit=e=>{e.preventDefault();search()};
@@ -4265,11 +4288,11 @@ function pRender(){
   const no=`${tag}<div class="word">${nbHTML(w)}</div>`;
   const pt=(w.sw?`<div class="sw" style="background:${w.sw}"></div>`:'')+`<div class="pt">${w.pt}</div>`;
   const note=w.note?`<div class="note">${w.note}</div>`:'';
-  const src=esc(THEMES[w.k].name);
+  const src=esc(tn(w.k));
   const front=pDir==='no'?no:pt,back=pDir==='no'?pt+note:no+note;
   st.innerHTML=`<div class="scene"><div class="card" id="pCard" tabindex="0" role="button" aria-label="Flip card">
-  <div class="face"><span class="num">${src}</span>${pDir==='no'?`<button class="spk" id="ps1" aria-label="Hear pronunciation">${spkSVG}</button>`:''}${front}<span class="hint">Tap to flip</span></div>
-  <div class="face back"><span class="num">${src}</span><button class="spk" id="ps2" aria-label="Hear pronunciation">${spkSVG}</button>${back}</div>
+  <div class="face"><span class="num" data-k="${w.k}">${src}</span>${pDir==='no'?`<button class="spk" id="ps1" aria-label="Hear pronunciation">${spkSVG}</button>`:''}${front}<span class="hint">Tap to flip</span></div>
+  <div class="face back"><span class="num" data-k="${w.k}">${src}</span><button class="spk" id="ps2" aria-label="Hear pronunciation">${spkSVG}</button>${back}</div>
   </div></div>
   <div class="ans"><button class="no" id="pNo">Didn’t know</button><button class="yes" id="pYes">Knew it!</button><button id="pBack" ${pI===0?'disabled':''}>← Back</button></div>`;
   const c=$('pCard');let fl=false;const flip=()=>{fl=!fl;c.classList.toggle('flip',fl)};
@@ -4316,7 +4339,7 @@ function gRender(){gDone=false;const st=$('gStage');
   if(gI>=gDeck.length){st.innerHTML=`<div class="face done" style="position:static"><h2>Ferdig!</h2><p>You got ${gOk} of ${gN} right.</p><div class="ans"><button class="yes" id="gAgain">Again</button>${gWrong.size?`<button class="no" id="gMiss">My mistakes (${gWrong.size})</button>`:''}</div></div>`;
     $('gAgain').onclick=gBuild;if($('gMiss'))$('gMiss').onclick=()=>{$('gFilt').value='miss';gBuild()};gProg();return}
   const x=gDeck[gI],w=x.w;
-  st.innerHTML=`<div class="gcard"><span class="num">${esc(THEMES[w.k].name)}</span><button class="spk" id="gs" aria-label="Hear pronunciation">${spkSVG}</button><div class="word">${esc(w.nb)}</div><div class="gpt">${esc(w.pt)}</div></div>
+  st.innerHTML=`<div class="gcard"><span class="num" data-k="${w.k}">${esc(tn(w.k))}</span><button class="spk" id="gs" aria-label="Hear pronunciation">${spkSVG}</button><div class="word">${esc(w.nb)}</div><div class="gpt">${esc(w.pt)}</div></div>
   <div class="gbtns">${ART.map((a,k)=>`<button class="b-${a}" data-a="${a}" aria-keyshortcuts="${k+1}">${a}</button>`).join('')}</div>
   <div class="gfb" id="gFb" aria-live="polite"></div><button id="gNext" hidden>Next →</button>`;
   $('gs').onclick=()=>say(w.nb);
@@ -4342,10 +4365,10 @@ function oRender(){
   const t=today(),v=Object.values(SRS),due=v.filter(c=>c[1]<=t).length,mast=v.filter(c=>c[0]>=5).length,learn=v.length-mast;
   const byK={};ALL.forEach(w=>{(byK[w.k]=byK[w.k]||[]).push(w)});
   let tot=0;const rows=[];
-  SECTIONS.forEach(([lab,ids])=>{rows.push(`<tr class="sec"><td colspan="3">${esc(lab)}</td></tr>`);
+  SECTIONS.forEach(([lab,ids])=>{rows.push(`<tr class="sec"><td colspan="3">${esc(sn(lab))}</td></tr>`);
     ids.filter(k=>THEMES[k]).forEach(k=>{const fk=themeKnown(k),ws=byK[k]||[];const n=ws.filter(w=>fk.has(w.pid)||pKnown.has(w.pid)).length;tot+=n;
       const p=ws.length?n/ws.length*100:0;
-      rows.push(`<tr class="row" data-k="${k}" tabindex="0"><td class="nb">${esc(THEMES[k].name)}</td><td class="pc"><div class="track"><i style="width:${p}%"></i></div></td><td class="num2">${n} / ${ws.length}</td></tr>`)})});
+      rows.push(`<tr class="row" data-k="${k}" tabindex="0"><td class="nb">${esc(tn(k))}</td><td class="pc"><div class="track"><i style="width:${p}%"></i></div></td><td class="num2">${n} / ${ws.length}</td></tr>`)})});
   $('oList').innerHTML=rows.join('');
   const pct=ALL.length?tot/ALL.length*100:0;
   $('oTiles').innerHTML=`<div class="tile" id="oDaily"></div><div class="tile"><div class="big">${tot.toLocaleString('en')}</div><div class="lab">words known of ${ALL.length.toLocaleString('en')} (${Math.round(pct)}%)</div><div class="track"><i style="width:${pct}%"></i></div></div>
@@ -4365,7 +4388,7 @@ try{const s=JSON.parse(localStorage.getItem('kjp-verbs')||'{}');vbKnown=new Set(
 const vbSave=()=>{try{localStorage.setItem('kjp-verbs',JSON.stringify({k:[...vbKnown],m:[...vbMissed]}))}catch(e){}};
 $('vbDesc').textContent=`${VB.length} verbs. See the infinitive, say the present, past and perfect, then flip to check.`;
 function vbFiltUI(){const v=$('vbFilt').value||'all';const cats=[...new Set(VB.map(x=>x.w.cat))];
-  $('vbFilt').innerHTML=`<option value="all">All verbs (${VB.length})</option><option value="miss">Only the ones I missed (${VB.filter(x=>vbMissed.has(x.id)).length})</option><option value="strong">Strong verbs, vowel change (${VB.filter(x=>x.strong).length})</option>`+cats.map((c,k)=>`<option value="c${k}">Only ${esc(c.split(' · ')[0])}</option>`).join('');
+  $('vbFilt').innerHTML=`<option value="all">All verbs (${VB.length})</option><option value="miss">Only the ones I missed (${VB.filter(x=>vbMissed.has(x.id)).length})</option><option value="strong">Strong verbs, vowel change (${VB.filter(x=>x.strong).length})</option>`+cats.map((c,k)=>`<option value="c${k}">Only ${esc(gn(c))}</option>`).join('');
   $('vbFilt').value=[...$('vbFilt').options].some(o=>o.value===v)?v:'all';return cats}
 function vbBuild(shuffle){const cats=vbFiltUI(),f=$('vbFilt').value;
   vbDeck=VB.filter(x=>f==='all'||(f==='miss'?vbMissed.has(x.id):f==='strong'?x.strong:x.w.cat===cats[+f.slice(1)]));
@@ -4385,7 +4408,7 @@ function vbRender(){vbSavePos();const st=$('vbStage');
     $('vbAgain').onclick=()=>vbBuild(true);$('vbRev').onclick=()=>{$('vbFilt').value='miss';vbBuild(true)};$('vbBack2').onclick=()=>{vbI--;vbRender()};vbProg();return}
   const x=vbDeck[vbI],w=x.w;const L=['present','past','perfect'];
   st.innerHTML=`<div class="scene"><div class="card" id="vbCard" tabindex="0" role="button" aria-label="Flip card">
-  <div class="face"><span class="num">${esc(w.cat.split(' · ')[0])}</span><button class="spk" id="vb1" aria-label="Hear pronunciation">${spkSVG}</button><span class="tag g-verb">verb${x.strong?' · strong':''}</span><div class="word">${esc(w.nb)}</div><div class="note">${esc(w.pt)}</div><span class="hint">Say the three forms, then tap to flip</span></div>
+  <div class="face"><span class="num">${esc(gn(w.cat))}</span><button class="spk" id="vb1" aria-label="Hear pronunciation">${spkSVG}</button><span class="tag g-verb">verb${x.strong?' · strong':''}</span><div class="word">${esc(w.nb)}</div><div class="note">${esc(w.pt)}</div><span class="hint">Say the three forms, then tap to flip</span></div>
   <div class="face back"><span class="num">${esc(w.nb)}</span><button class="spk" id="vb2" aria-label="Hear pronunciation">${spkSVG}</button><div class="forms">${x.f.map((f,k)=>`<div><small>${L[k]}</small><b>${esc(f)}</b></div>`).join('')}</div>${x.rest?`<div class="note">${esc(x.rest)}</div>`:''}</div>
   </div></div>
   <div class="ans"><button class="no" id="vbNo">Didn’t know</button><button class="yes" id="vbYes">Knew it!</button><button id="vbBack" ${vbI===0?'disabled':''}>← Back</button></div>`;
