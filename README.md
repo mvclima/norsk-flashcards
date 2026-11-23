@@ -21,6 +21,7 @@ A free web app for learning Norwegian (Bokmål) vocabulary, built by **Marcus Li
 | **Gender** | Choose *en*, *ei* or *et* for 1,600+ nouns. Follows the Bokmål rule that *ei* words also accept *en*. |
 | **Search** | Find any word in Norwegian or English, also by part of a word and without special letters (*vaeske* finds *væske*). |
 | **Progress** | Words known, reviews due, learning vs. mastered, daily goal, streak and progress per theme. |
+| **NO / EN** | A switch in the header shows the names of themes, sections and word groups in Norwegian or English. |
 | **Help** | How everything works, inside the app. |
 | **Pronunciation** | Every card can be read aloud with the device’s Norwegian voice. |
 
