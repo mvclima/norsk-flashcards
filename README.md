@@ -22,7 +22,7 @@ A free web app for learning Norwegian (Bokmål) vocabulary, built by **Marcus Li
 | **Search** | Find any word in Norwegian or English, also by part of a word and without special letters (*vaeske* finds *væske*). |
 | **Progress** | Words known, reviews due, learning vs. mastered, daily goal, streak and progress per theme. |
 | **NO / EN** | A switch in the header shows the names of themes, sections and word groups in Norwegian or English. |
-| **Settings** | Light, dark or automatic appearance (follows the device). |
+| **Settings** | Appearance (light, dark or automatic), daily goal and pronunciation voice. |
 | **Help** | How everything works, inside the app. |
 | **Pronunciation** | Every card can be read aloud with the device’s Norwegian voice. |
 

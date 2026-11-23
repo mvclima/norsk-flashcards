@@ -76,7 +76,7 @@ tr.cat td{font:700 16px Rubik,sans-serif;padding-top:18px;background:var(--bg)}
 .dot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:8px;vertical-align:1px}
 .k{color:var(--et);font-weight:600}
 .voice{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:14px;font-size:14px;color:var(--mut)}
-.voice select{flex:1 1 200px;max-width:100%}
+.voice select{flex:1 1 0;min-width:0;max-width:100%}
 .vnote{margin-top:10px;padding:12px 14px;border-radius:12px;background:var(--card);border:1px solid var(--line);font-size:14px;line-height:1.5}
 .vnote b{color:var(--ink)}
 .app{display:grid;grid-template-columns:220px minmax(0,1fr);min-height:100vh}
@@ -155,8 +155,6 @@ table.ov .num2{text-align:right;white-space:nowrap;color:var(--mut);font-size:14
 .forms div{background:var(--bg);border-radius:12px;padding:10px 6px}
 .forms small{display:block;font-size:12px;color:var(--mut);margin-bottom:2px}
 .forms b{font:700 clamp(17px,4.4vw,22px)/1.15 Rubik,sans-serif;overflow-wrap:anywhere}
-.goalSel{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
-.goalSel button{min-height:36px;padding:0 10px;font-size:14px}
 .setCard{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px 20px;margin-bottom:16px}
 .setCard h2{font:700 20px/1.2 Rubik,sans-serif;margin:0 0 4px}
 .setCard p{margin:0 0 12px;color:var(--mut)}
@@ -242,8 +240,6 @@ table.ov .num2{text-align:right;white-space:nowrap;color:var(--mut);font-size:14
 
 <div class="prog"><span id="pTxt"></span><span id="pKnown"></span></div>
 <div class="track"><i id="pBar" style="width:0"></i></div>
-<div class="voice"><label for="vSel">Voice</label><select id="vSel" aria-label="Pronunciation voice"></select><button id="vTest">Test</button></div>
-<div class="vnote" id="vNote" hidden></div>
 
 <section style="margin-top:36px">
 <h2 class="sec">Full list</h2>
@@ -312,7 +308,7 @@ table.ov .num2{text-align:right;white-space:nowrap;color:var(--mut);font-size:14
 <header><div class="band">
 <div class="top"><button class="menuBtn" type="button" aria-label="Open menu"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg></button></div>
 <h1>Settings</h1>
-<p>Choose how the app looks</p>
+<p>Appearance, daily goal and pronunciation</p>
 </div></header>
 <main class="band">
 <section class="setCard">
@@ -321,6 +317,19 @@ table.ov .num2{text-align:right;white-space:nowrap;color:var(--mut);font-size:14
 <div class="seg" role="group" aria-label="Appearance" id="setTheme">
 <button type="button" data-t="auto">Automatic</button><button type="button" data-t="light">Light</button><button type="button" data-t="dark">Dark</button>
 </div>
+</section>
+<section class="setCard">
+<h2>Daily goal</h2>
+<p>How many cards you want to answer each day. Every answer in Flashcards, Practice, Verbs and Gender counts.</p>
+<div class="seg" role="group" aria-label="Daily goal" id="setGoal">
+<button type="button" data-g="10">10</button><button type="button" data-g="20">20</button><button type="button" data-g="30">30</button><button type="button" data-g="50">50</button><button type="button" data-g="100">100</button>
+</div>
+</section>
+<section class="setCard">
+<h2>Pronunciation</h2>
+<p>The voice that reads the words aloud. Tap <b>Test</b> to hear it.</p>
+<div class="voice" style="margin-top:0;flex-wrap:nowrap"><select id="vSel" aria-label="Pronunciation voice"></select><button id="vTest">Test</button></div>
+<div class="vnote" id="vNote" hidden></div>
 </section>
 </main>
 </div>
@@ -404,7 +413,7 @@ table.ov .num2{text-align:right;white-space:nowrap;color:var(--mut);font-size:14
 <h2 id="h-goal">Daily goal and streak</h2>
 <ul>
 <li>Every answer in Flashcards, Practice, Verbs and Gender counts towards today’s goal. It is shown under the app name in the menu.</li>
-<li>Choose the goal in <b>Progress</b>: 10, 20, 30, 50 or 100 cards a day.</li>
+<li>Choose the goal in <b>Settings</b>: 10, 20, 30, 50 or 100 cards a day. It starts at 20.</li>
 <li>Your <b>streak</b> counts the days in a row on which you reached the goal. If you haven’t reached it yet today, yesterday’s streak still counts until the day is over.</li>
 </ul>
 
@@ -419,7 +428,7 @@ table.ov .num2{text-align:right;white-space:nowrap;color:var(--mut);font-size:14
 <p>The words on the cards don’t change. The app remembers your choice; it starts in <b>NO</b>.</p>
 
 <h2 id="h-voice">Pronunciation</h2>
-<p>Tap the speaker on a card to hear the word. In <b>Flashcards</b> you can choose the voice at the bottom of the page and test it.</p>
+<p>Tap the speaker on a card to hear the word. In <b>Settings</b> you can choose the voice and test it.</p>
 <div class="tip">If no Norwegian voice is listed, install one on your device. <b>Android:</b> Settings → Text-to-speech → Google → Install voice data → Norwegian. <b>iPhone/iPad:</b> Settings → Accessibility → Spoken Content → Voices → Norwegian. <b>Windows:</b> Settings → Time &amp; language → Speech → Add voices → Norsk.</div>
 
 <h2 id="h-keys">Keyboard shortcuts</h2>
@@ -431,7 +440,12 @@ table.ov .num2{text-align:right;white-space:nowrap;color:var(--mut);font-size:14
 </ul>
 
 <h2 id="h-settings">Settings</h2>
-<p>Open <b>Settings</b> in the menu to choose the <b>Appearance</b>: <b>Automatic</b> follows your device’s light or dark mode, or choose <b>Light</b> or <b>Dark</b> to keep it fixed.</p>
+<p>Open <b>Settings</b> in the menu to change:</p>
+<ul>
+<li><b>Appearance</b>: <b>Automatic</b> follows your device’s light or dark mode; <b>Light</b> or <b>Dark</b> keeps it fixed.</li>
+<li><b>Daily goal</b>: 10, 20, 30, 50 or 100 cards a day, see <a href="#h-goal">Daily goal</a>.</li>
+<li><b>Pronunciation</b>: the voice that reads the words, with a <b>Test</b> button, see <a href="#h-voice">Pronunciation</a>.</li>
+</ul>
 
 <h2 id="h-saved">Where your progress is saved</h2>
 <p>Your progress is saved in this browser on this device. Nothing is sent anywhere and there is no account.</p>
@@ -4484,8 +4498,10 @@ function oDaily(){const n=DAILY.days[dayKey(0)]||0,g=DAILY.goal,st=streak(),wk=[
   const best=(()=>{const ks=Object.keys(DAILY.days).sort();let b=0,c=0,prev=null;ks.forEach(k=>{const ok=DAILY.days[k]>=g;const d=new Date(k);if(ok){c=prev&&(d-prev)/864e5===1?c+1:1;b=Math.max(b,c);prev=d}else{c=0;prev=null}});return b})();
   $('oDaily').innerHTML=`<div class="big">${n} <span style="font-size:20px;color:var(--mut)">/ ${g}</span></div><div class="lab">cards today${n>=g?' · goal reached!':''} · streak ${st} day${st===1?'':'s'} (best ${best})</div><div class="track"><i style="width:${Math.min(n/g*100,100)}%"></i></div>
   <div class="lab" style="margin-top:8px">Last 7 days: ${wk.join(' · ')}</div>
-  <div class="goalSel" role="group" aria-label="Daily goal">${[10,20,30,50,100].map(x=>`<button data-g="${x}" class="${x===g?'on':''}">${x}/day</button>`).join('')}</div>`;
-  $('oDaily').querySelectorAll('.goalSel button').forEach(b=>b.onclick=()=>{DAILY.goal=+b.dataset.g;try{localStorage.setItem('kjp-daily',JSON.stringify(DAILY))}catch(e){}dailyUI();oDaily()})}
+  <a class="q" href="#settings">Change the daily goal</a>`}
+function goalUI(){document.querySelectorAll('#setGoal button').forEach(b=>{const on=+b.dataset.g===DAILY.goal;b.classList.toggle('on',on);b.setAttribute('aria-pressed',on)})}
+$('setGoal').onclick=e=>{const b=e.target.closest('button');if(!b)return;DAILY.goal=+b.dataset.g;try{localStorage.setItem('kjp-daily',JSON.stringify(DAILY))}catch(e){}dailyUI();goalUI()};
+goalUI();
 dailyUI();
 search();
 route();
