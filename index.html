@@ -331,6 +331,15 @@ table.ov .num2{text-align:right;white-space:nowrap;color:var(--mut);font-size:14
 <div class="voice" style="margin-top:0;flex-wrap:nowrap"><select id="vSel" aria-label="Pronunciation voice"></select><button id="vTest">Test</button></div>
 <div class="vnote" id="vNote" hidden></div>
 </section>
+<section class="setCard">
+<h2>Reset progress</h2>
+<p>Delete everything this app has saved in this browser: progress in every theme, Practice, Review, Verbs, Gender, daily goal, streak and settings. The app starts again as for a new user.</p>
+<button type="button" class="no" id="setReset">Reset progress</button>
+<div id="setAsk" hidden>
+<p role="alert" style="color:var(--ink);margin:0 0 12px"><b>Delete all progress and settings?</b> This can’t be undone.</p>
+<div class="seg"><button type="button" class="no" id="setYes">Yes, delete everything</button><button type="button" id="setNo">Cancel</button></div>
+</div>
+</section>
 </main>
 </div>
 <div id="vHelp" hidden>
@@ -445,6 +454,7 @@ table.ov .num2{text-align:right;white-space:nowrap;color:var(--mut);font-size:14
 <li><b>Appearance</b>: <b>Automatic</b> follows your device’s light or dark mode; <b>Light</b> or <b>Dark</b> keeps it fixed.</li>
 <li><b>Daily goal</b>: 10, 20, 30, 50 or 100 cards a day, see <a href="#h-goal">Daily goal</a>.</li>
 <li><b>Pronunciation</b>: the voice that reads the words, with a <b>Test</b> button, see <a href="#h-voice">Pronunciation</a>.</li>
+<li><b>Reset progress</b>: deletes everything saved (progress, reviews, goal, streak and settings), after you confirm. The app starts again as for a new user. The <b>Reset progress</b> buttons in Flashcards, Practice, Verbs and Gender only clear that page.</li>
 </ul>
 
 <h2 id="h-saved">Where your progress is saved</h2>
@@ -4356,6 +4366,10 @@ $('setTheme').onclick=e=>{const b=e.target.closest('button');if(!b)return;const 
   try{if(t==='auto')localStorage.removeItem('kjp-ui-theme');else localStorage.setItem('kjp-ui-theme',t)}catch(e){}
   if(t==='auto')delete document.documentElement.dataset.theme;else document.documentElement.dataset.theme=t;themeUI()};
 themeUI();
+$('setReset').onclick=()=>{$('setReset').hidden=true;$('setAsk').hidden=false;$('setNo').focus()};
+$('setNo').onclick=()=>{$('setAsk').hidden=true;$('setReset').hidden=false;$('setReset').focus()};
+$('setYes').onclick=()=>{try{Object.keys(localStorage).filter(k=>/^kjp/.test(k)).forEach(k=>localStorage.removeItem(k))}catch(e){}
+  try{history.replaceState(null,'',location.pathname+location.search)}catch(e){}location.reload()};
 $('scrim').onclick=()=>document.body.classList.remove('nav');
 document.addEventListener('keydown',e=>{if(e.key==='Escape')document.body.classList.remove('nav')});
 ['navF','navP','navV','navG','navS','navO','navT','navH'].forEach(id=>$(id).addEventListener('click',()=>document.body.classList.remove('nav')));
