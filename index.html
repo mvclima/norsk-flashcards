@@ -4275,6 +4275,19 @@ const sn=x=>LANG==='en'?x:(SEC_NO[x]||x);
 const posGet=k=>{try{let s=JSON.parse(localStorage.getItem(k)||'null');if(!s||typeof s!=='object')return{cur:null,by:{}};if(!s.by)s={cur:s.f||null,by:s.f&&Array.isArray(s.d)?{[s.f]:{d:s.d,i:s.i}}:{}};return s}catch(e){return{cur:null,by:{}}}};
 const posPut=(k,f,o)=>{try{const s=posGet(k);s.cur=f;s.by[f]=o;localStorage.setItem(k,JSON.stringify(s))}catch(e){}};
 const posDel=k=>{try{localStorage.removeItem(k)}catch(e){}};
+/* imperative from the infinitive: drop the unstressed -e (spise → spis), keep it after hard clusters (sykle, åpne) */
+const IMP_NONE=new Set(['å kunne','å skulle','å ville','å måtte','å burde','å skje','å hende','å komme til å','å komme an på','å stå på spill','å gå i stykker','å ha lov til','å være nødt til','å gå tom for','å se ut','å avhenge av','å tilsvare','å inneholde','å gjelde']);
+const IMP_FIX={'å spørre':'spør','å eie':'ei'};
+function vbImp(nb){if(IMP_NONE.has(nb))return'';if(IMP_FIX[nb])return IMP_FIX[nb];
+  const ws=nb.replace(/^å /,'').split(' '),v=ws[0],rest=ws.slice(1).map(x=>x==='seg'?'deg':x);
+  if(/s$/.test(v)&&!/e$/.test(v))return'';
+  let iv=v;const V='aeiouyæøå';
+  if(v.length>2&&v.endsWith('e')){const st=v.slice(0,-1),a=st.slice(-1),b=st.slice(-2,-1);
+    if(!V.includes(a)){const keep=(/[lr]/.test(a)&&b&&!V.includes(b)&&b!==a)||(a==='n'&&/[pdkbtf]/.test(b));iv=keep?v:(st.endsWith('mm')?st.slice(0,-1):st)}
+    else if(v.length>3)iv=st}
+  return [iv,...rest].join(' ')}
+function vNote(w){const n=String(w.note||'');if(w.g!=='verb')return n;const p=n.split(' · ');if(p.length<3||!/^har /.test(p[2]))return n;const im=vbImp(w.nb);return im?[...p.slice(0,3),im+'!',...p.slice(3)].join(' · '):n}
+
 /* when each card was last answered: a card answered in one filter counts as done in the other filters' current round */
 const ansGet=k=>{try{const o=JSON.parse(localStorage.getItem(k)||'{}');return o&&typeof o==='object'?o:{}}catch(e){return{}}};
 const ansSet=(k,o)=>{try{localStorage.setItem(k,JSON.stringify(o))}catch(e){}};
@@ -4292,7 +4305,7 @@ function srsGrade(key,ok){const c=SRS[key];const b=ok?(c?Math.min(c[0]+1,6):2):1
 
 const $=id=>document.getElementById(id);
 const gName={en:'en · masculine',ei:'ei · feminine',et:'et · neuter',pl:'plural',adj:'adjective',x:'word / expression',verb:'verb'};
-const gLeg={en:'en = masculine',ei:'ei = feminine',et:'et = neuter',pl:'plural',adj:'adjective (forms: en · et · plural)',x:'no article / expression',verb:'verb (forms: present · past · perfect)'};
+const gLeg={en:'en = masculine',ei:'ei = feminine',et:'et = neuter',pl:'plural',adj:'adjective (forms: en · et · plural)',x:'no article / expression',verb:'verb (forms: present · past · perfect · imperative)'};
 const gFilt={en:'Only “en” (masculine)',ei:'Only “ei” (feminine)',et:'Only “et” (neuter)',pl:'Only plurals',adj:'Only adjectives',x:'Only expressions',verb:'Only verbs'};
 const ART=['en','ei','et'];
 let known=new Set(),missed=new Set();
@@ -4378,7 +4391,7 @@ function render(){
   const tag=`<span class="tag g-${w.g}">${gName[w.g]}</span>`;
   const no=`${tag}<div class="word">${nbHTML(w)}</div>`;
   const pt=(w.sw?`<div class="sw" style="background:${w.sw}"></div>`:'')+`<div class="pt">${w.pt}</div>`;
-  const note=w.note?`<div class="note">${w.note}</div>`:'';
+  const note=w.note?`<div class="note">${vNote(w)}</div>`:'';
   const front=dir==='no'?no:pt, back=dir==='no'?pt+note:no+note;
   st.innerHTML=`<div class="scene"><div class="card" id="card" tabindex="0" role="button" aria-label="Flip card">
   <div class="face"><span class="num">${w.n}</span>${dir==='no'?`<button class="spk" id="s1" aria-label="Hear pronunciation">${spkSVG}</button>`:''}${front}<span class="hint">Tap to flip</span></div>
@@ -4577,7 +4590,7 @@ function pRender(){
   const tag=`<span class="tag g-${w.g}">${gName[w.g]}</span>`;
   const no=`${tag}<div class="word">${nbHTML(w)}</div>`;
   const pt=(w.sw?`<div class="sw" style="background:${w.sw}"></div>`:'')+`<div class="pt">${w.pt}</div>`;
-  const note=w.note?`<div class="note">${w.note}</div>`:'';
+  const note=w.note?`<div class="note">${vNote(w)}</div>`:'';
   const src=esc(tn(w.k));
   const front=pDir==='no'?no:pt,back=pDir==='no'?pt+note:no+note;
   st.innerHTML=`<div class="scene"><div class="card" id="pCard" tabindex="0" role="button" aria-label="Flip card">
@@ -4679,17 +4692,6 @@ $('oList').onclick=e=>{const r=e.target.closest('tr.row');if(!r)return;$('theme'
 $('oList').onkeydown=e=>{if(e.key==='Enter'){const r=e.target.closest('tr.row');if(r)r.click()}};
 /* ---- verb forms trainer ---- */
 let vbReady=false,vbDeck=[],vbI=0,vbKnown=new Set(),vbMissed=new Set();
-/* imperative from the infinitive: drop the unstressed -e (spise → spis), keep it after hard clusters (sykle, åpne) */
-const IMP_NONE=new Set(['å kunne','å skulle','å ville','å måtte','å burde','å skje','å hende','å komme til å','å komme an på','å stå på spill','å gå i stykker','å ha lov til','å være nødt til','å gå tom for','å se ut','å avhenge av','å tilsvare','å inneholde','å gjelde']);
-const IMP_FIX={'å spørre':'spør','å eie':'ei'};
-function vbImp(nb){if(IMP_NONE.has(nb))return'';if(IMP_FIX[nb])return IMP_FIX[nb];
-  const ws=nb.replace(/^å /,'').split(' '),v=ws[0],rest=ws.slice(1).map(x=>x==='seg'?'deg':x);
-  if(/s$/.test(v)&&!/e$/.test(v))return'';
-  let iv=v;const V='aeiouyæøå';
-  if(v.length>2&&v.endsWith('e')){const st=v.slice(0,-1),a=st.slice(-1),b=st.slice(-2,-1);
-    if(!V.includes(a)){const keep=(/[lr]/.test(a)&&b&&!V.includes(b)&&b!==a)||(a==='n'&&/[pdkbtf]/.test(b));iv=keep?v:(st.endsWith('mm')?st.slice(0,-1):st)}
-    else if(v.length>3)iv=st}
-  return [iv,...rest].join(' ')}
 const VB=ALL.filter(w=>w.g==='verb').map(w=>{const p=String(w.note||'').split(' · ');return p.length>=3&&/^har /.test(p[2])?{w,id:w.pid,f:[...p.slice(0,3),vbImp(w.nb)||'—'],rest:p.slice(3).join(' · '),strong:!/(et|te|de|dde)$/.test(p[1].split(' ')[0])}:null}).filter(Boolean);
 try{const s=JSON.parse(localStorage.getItem('kjp-verbs')||'{}');vbKnown=new Set(s.k||[]);vbMissed=new Set(s.m||[])}catch(e){}
 const vbSave=()=>{try{localStorage.setItem('kjp-verbs',JSON.stringify({k:[...vbKnown],m:[...vbMissed]}))}catch(e){}};
