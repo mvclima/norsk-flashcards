@@ -4155,6 +4155,10 @@ const SEC_NO={'Basics':'Det grunnleggende','Me & people':'Meg og andre','Everyda
 const tn=k=>LANG==='en'?(T_EN[k]||THEMES[k].name):THEMES[k].name;
 const gn=c=>{const p=String(c).split(' · ');return p.length<2?c:LANG==='en'?p[0]:p.slice(1).join(' · ')};
 const sn=x=>LANG==='en'?x:(SEC_NO[x]||x);
+/* positions kept per filter: {cur, by:{filter:{d,i,...}}} */
+const posGet=k=>{try{let s=JSON.parse(localStorage.getItem(k)||'null');if(!s||typeof s!=='object')return{cur:null,by:{}};if(!s.by)s={cur:s.f||null,by:s.f&&Array.isArray(s.d)?{[s.f]:{d:s.d,i:s.i}}:{}};return s}catch(e){return{cur:null,by:{}}}};
+const posPut=(k,f,o)=>{try{const s=posGet(k);s.cur=f;s.by[f]=o;localStorage.setItem(k,JSON.stringify(s))}catch(e){}};
+const posDel=k=>{try{localStorage.removeItem(k)}catch(e){}};
 /* ---- daily goal & streak ---- */
 let DAILY={goal:20,days:{}};try{const d=JSON.parse(localStorage.getItem('kjp-daily')||'null');if(d)DAILY={goal:+d.goal||20,days:d.days||{}}}catch(e){}
 function tick(){const t=String(new Date(Date.now()-new Date().getTimezoneOffset()*60000).toISOString().slice(0,10));
@@ -4228,9 +4232,9 @@ function build(shuffle){
   i=0;render();
 }
 
-const savePos=()=>{try{localStorage.setItem(tKey+'-pos',JSON.stringify({f:$('filt').value,d:deck.map(w=>w.id),i}))}catch(e){}};
-function restorePos(){try{
-  const s=JSON.parse(localStorage.getItem(tKey+'-pos')||'null');if(!s||!Array.isArray(s.d))return false;
+const savePos=()=>posPut(tKey+'-pos',$('filt').value,{d:deck.map(w=>w.id),i});
+function restorePos(f){try{
+  const P=posGet(tKey+'-pos');f=f||P.cur;const s=f&&P.by[f];if(!s||!Array.isArray(s.d))return false;s.f=f;
   if(![...$('filt').options].some(o=>o.value===s.f))return false;
   const by=new Map(W.map(w=>[w.id,w])),d=s.d.map(x=>by.get(x)).filter(Boolean);if(!d.length)return false;
   $('filt').value=s.f;deck=d;i=Math.max(0,Math.min(+s.i||0,d.length));render();return true;
@@ -4286,8 +4290,8 @@ function setDir(d){dir=d;$('dNo').classList.toggle('on',d==='no');$('dPt').class
 $('dNo').onclick=()=>setDir('no');
 $('dPt').onclick=()=>setDir('pt');
 $('shuf').onclick=()=>build(true);
-$('filt').onchange=()=>build(true);
-$('reset').onclick=()=>{known.clear();missed.clear();save();list();build(false)};
+$('filt').onchange=()=>{const f=$('filt').value;if(f==='miss'||!restorePos(f))build(true)};
+$('reset').onclick=()=>{known.clear();missed.clear();save();posDel(tKey+'-pos');list();build(false)};
 document.addEventListener('keydown',e=>{
   if(e.target.tagName==='SELECT'||e.target.tagName==='INPUT'||!$('vFlash')||$('vFlash').hidden)return;
   if(e.key==='ArrowRight'&&$('bYes'))$('bYes').click();
@@ -4323,7 +4327,7 @@ function show(v){
   const s=v==='search';
   [['flash','vFlash','navF'],['practice','vPractice','navP'],['verbs','vVerbs','navV'],['gender','vGender','navG'],['search','vSearch','navS'],['progress','vStats','navO'],['settings','vSettings','navT'],['help','vHelp','navH']].forEach(([n,vi,na])=>{$(vi).hidden=n!==v;$(na).classList.toggle('on',n===v);$(na).setAttribute('aria-current',n===v?'page':'false')});
   document.title={search:'Search',practice:'Practice',verbs:'Verbs',gender:'Gender',progress:'Progress',settings:'Settings',help:'Help'}[v]?({search:'Search',practice:'Practice',verbs:'Verbs',gender:'Gender',progress:'Progress',settings:'Settings',help:'Help'}[v]+' · Norsk Flashcards'):'Flashcards: '+tn($('theme').value);
-  if(v==='gender'&&!gReady){gReady=true;gBuild()}
+  if(v==='gender'&&!gReady){gReady=true;if(!gRestore())gBuild()}
   if(v==='verbs'&&!vbReady){vbReady=true;if(!vbRestore())vbBuild()}
   if(v==='progress')oRender();
   if(v==='practice'&&pReady&&pMode==='review'&&pI>=pDeck.length)pBuild();
@@ -4488,11 +4492,15 @@ function gBuild(){gFiltUI();const f=$('gFilt').value;
   gDeck=GN.filter(x=>f==='all'||(f==='miss'?gWrong.has(x.id):x.w.g===f));
   for(let k=gDeck.length-1;k>0;k--){const j=Math.floor(Math.random()*(k+1));[gDeck[k],gDeck[j]]=[gDeck[j],gDeck[k]]}
   gI=0;gOk=0;gN=0;gStreak=0;gRender()}
+const gSavePos=()=>posPut('kjp-gender-pos',$('gFilt').value,{d:gDeck.map(x=>x.id),i:gI,ok:gOk,n:gN,st:gStreak});
+function gRestore(f){try{gFiltUI();const P=posGet('kjp-gender-pos');f=f||P.cur;const s=f&&P.by[f];if(!s||!Array.isArray(s.d))return false;
+  if(![...$('gFilt').options].some(o=>o.value===f))return false;const by=new Map(GN.map(x=>[x.id,x])),d=s.d.map(x=>by.get(x)).filter(Boolean);if(!d.length)return false;
+  $('gFilt').value=f;gDeck=d;gI=Math.max(0,Math.min(+s.i||0,d.length));gOk=+s.ok||0;gN=+s.n||0;gStreak=+s.st||0;gRender();return true}catch(e){return false}}
 function gProg(){const n=gDeck.length;
   $('gTxt').textContent=n?(gI<n?`Word ${gI+1} of ${n.toLocaleString('en')}`:'Done'):'';
   $('gScore').textContent=gN?`Right ${gOk} of ${gN}`+(gStreak>2?` · streak ${gStreak}`:''):(gTot.t?`All time: ${Math.round(gTot.r/gTot.t*100)}% right`:'');
   $('gBar').style.width=(n?Math.min(gI,n)/n*100:0)+'%'}
-function gRender(){gDone=false;const st=$('gStage');
+function gRender(){gDone=false;gSavePos();const st=$('gStage');
   if(!gDeck.length){st.innerHTML=`<div class="face done" style="position:static"><h2>Nothing here</h2><p>${$('gFilt').value==='miss'?'No mistakes saved. Great!':'No nouns in this filter.'}</p></div>`;gProg();return}
   if(gI>=gDeck.length){st.innerHTML=`<div class="face done" style="position:static"><h2>Ferdig!</h2><p>You got ${gOk} of ${gN} right.</p><div class="ans"><button class="yes" id="gAgain">Again</button>${gWrong.size?`<button class="no" id="gMiss">My mistakes (${gWrong.size})</button>`:''}</div></div>`;
     $('gAgain').onclick=gBuild;if($('gMiss'))$('gMiss').onclick=()=>{$('gFilt').value='miss';gBuild()};gProg();return}
@@ -4508,9 +4516,9 @@ function gAnswer(a){if(gDone)return;gDone=true;const x=gDeck[gI],w=x.w,ok=x.alt.
   $('gStage').querySelectorAll('.gbtns button').forEach(b=>{b.disabled=true;if(b.dataset.a===w.g)b.classList.add('right');else if(b.dataset.a===a&&!ok)b.classList.add('wrong');else if(b.dataset.a===a&&ok)b.classList.add('right')});
   const extra=a!==w.g&&ok?` · <i>${a} ${esc(w.nb)}</i> is also correct`:(w.g==='ei'&&a===w.g?' · <i>en</i> is also accepted in Bokmål':'');
   $('gFb').innerHTML=(ok?'<span class="ok">Riktig!</span> ':'<span class="bad">Feil.</span> ')+`It’s <b>${w.g} ${esc(w.nb)}</b>${extra}${w.note?`<br><span style="color:var(--mut);font-size:14px">${esc(w.note)}</span>`:''}`;
-  $('gNext').hidden=false;$('gNext').focus();gProg()}
-$('gFilt').onchange=gBuild;
-$('gReset').onclick=()=>{gWrong.clear();gTot={r:0,t:0};gOk=0;gN=0;gStreak=0;gSave();gBuild()};
+  $('gNext').hidden=false;$('gNext').focus();gProg();posPut('kjp-gender-pos',$('gFilt').value,{d:gDeck.map(x=>x.id),i:gI+1,ok:gOk,n:gN,st:gStreak})}
+$('gFilt').onchange=()=>{const f=$('gFilt').value;if(f==='miss'||!gRestore(f))gBuild()};
+$('gReset').onclick=()=>{gWrong.clear();gTot={r:0,t:0};gOk=0;gN=0;gStreak=0;gSave();posDel('kjp-gender-pos');gBuild()};
 document.addEventListener('keydown',e=>{
   if($('vGender').hidden||e.target.tagName==='SELECT')return;
   const k={'1':'en','2':'ei','3':'et'}[e.key];
@@ -4552,8 +4560,8 @@ function vbBuild(shuffle){const cats=vbFiltUI(),f=$('vbFilt').value;
   vbDeck=VB.filter(x=>f==='all'||(f==='miss'?vbMissed.has(x.id):f==='strong'?x.strong:x.w.cat===cats[+f.slice(1)]));
   if(shuffle!==false)for(let k=vbDeck.length-1;k>0;k--){const j=Math.floor(Math.random()*(k+1));[vbDeck[k],vbDeck[j]]=[vbDeck[j],vbDeck[k]]}
   vbI=0;vbRender()}
-const vbSavePos=()=>{try{localStorage.setItem('kjp-verbs-pos',JSON.stringify({f:$('vbFilt').value,d:vbDeck.map(x=>x.id),i:vbI}))}catch(e){}};
-function vbRestore(){try{vbFiltUI();const s=JSON.parse(localStorage.getItem('kjp-verbs-pos')||'null');if(!s||!Array.isArray(s.d))return false;
+const vbSavePos=()=>posPut('kjp-verbs-pos',$('vbFilt').value,{d:vbDeck.map(x=>x.id),i:vbI});
+function vbRestore(f){try{vbFiltUI();const P=posGet('kjp-verbs-pos');f=f||P.cur;const s=f&&P.by[f];if(!s||!Array.isArray(s.d))return false;s.f=f;
   if(![...$('vbFilt').options].some(o=>o.value===s.f))return false;const by=new Map(VB.map(x=>[x.id,x])),d=s.d.map(x=>by.get(x)).filter(Boolean);if(!d.length)return false;
   $('vbFilt').value=s.f;vbDeck=d;vbI=Math.max(0,Math.min(+s.i||0,d.length));vbRender();return true}catch(e){return false}}
 function vbProg(){const n=vbDeck.length;
@@ -4576,8 +4584,8 @@ function vbRender(){vbSavePos();const st=$('vbStage');
   $('vbYes').onclick=()=>{vbKnown.add(x.id);vbMissed.delete(x.id);vbSave();tick();vbI++;vbRender()};
   $('vbNo').onclick=()=>{vbMissed.add(x.id);vbKnown.delete(x.id);vbSave();tick();vbI++;vbFiltUI();vbRender()};
   $('vbBack').onclick=()=>{if(vbI>0){vbI--;vbRender()}};vbProg()}
-$('vbFilt').onchange=()=>vbBuild(true);$('vbShuf').onclick=()=>vbBuild(true);
-$('vbReset').onclick=()=>{vbKnown.clear();vbMissed.clear();vbSave();vbBuild(true)};
+$('vbFilt').onchange=()=>{const f=$('vbFilt').value;if(f==='miss'||!vbRestore(f))vbBuild(true)};$('vbShuf').onclick=()=>vbBuild(true);
+$('vbReset').onclick=()=>{vbKnown.clear();vbMissed.clear();vbSave();posDel('kjp-verbs-pos');vbBuild(true)};
 document.addEventListener('keydown',e=>{
   if($('vVerbs').hidden||e.target.tagName==='SELECT'||e.target.tagName==='INPUT')return;
   if(e.key==='ArrowRight'&&$('vbYes'))$('vbYes').click();
