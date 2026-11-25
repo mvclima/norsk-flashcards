@@ -38,6 +38,16 @@ button,select{font:500 15px Inter,sans-serif;min-height:44px;border-radius:12px;
 button:focus-visible,select:focus-visible,.card:focus-visible{outline:3px solid var(--red);outline-offset:2px}
 button.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
 .scene{perspective:1200px}
+.clk{width:min(230px,62vw);height:auto;display:block;margin:0 auto}
+.clk .rim{fill:var(--card);stroke:var(--ink);stroke-width:4}
+.clk .tk{stroke:var(--mut);stroke-width:2;stroke-linecap:round}.clk .tk.h{stroke:var(--ink);stroke-width:4}
+.clk text{fill:var(--ink);font:600 15px Inter,sans-serif;text-anchor:middle;dominant-baseline:central}
+.clk .hh{stroke:var(--ink);stroke-width:7;stroke-linecap:round}.clk .mh{stroke:var(--ink);stroke-width:4.5;stroke-linecap:round}
+.clk .dot{fill:var(--red)}
+.digi{font:700 clamp(64px,20vw,104px)/1 Rubik,sans-serif;letter-spacing:.02em;font-variant-numeric:tabular-nums}
+.say{font:700 clamp(28px,7.5vw,42px)/1.15 Rubik,sans-serif;text-wrap:balance}
+#cMode{display:inline-flex;flex:0 0 auto;gap:0;border:1px solid var(--line);border-radius:12px;overflow:hidden}
+#cMode button{border:0;border-radius:0;min-width:96px}
 .card{position:relative;height:clamp(300px,52vh,380px);transform-style:preserve-3d;transition:transform .45s ease;cursor:pointer;border-radius:22px}
 .card.flip{transform:rotateY(180deg)}
 .face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;background:var(--card);border:1px solid var(--line);border-radius:22px;
@@ -206,6 +216,7 @@ table.ov .num2{text-align:right;white-space:nowrap;color:var(--mut);font-size:14
 <a href="#practice" id="navP"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M17 3l4 4-4 4V8h-2.6l-2.2 2.6-1.3-1.5L13.5 6H17V3zM3 6h4.5l9 10H17v-3l4 4-4 4v-3h-1.5l-9-10H3V6zm0 10h3.6l2.1-2.4 1.3 1.5L7.5 18H3v-2z"/></svg>Practice</a>
 <a href="#verbs" id="navV"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h10v2H4zm0 4h16v2H4zm0 4h10v2H4zm0 4h16v2H4zm13-12l4 2-4 2z"/></svg>Verbs</a>
 <a href="#gender" id="navG"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 5h5v14H3V5zm6.5 0h5v14h-5V5zM16 5h5v14h-5V5zM4.5 6.5v11h2v-11h-2zm6.5 0v11h2v-11h-2zm6.5 0v11h2v-11h-2z"/></svg>Gender</a>
+<a href="#clock" id="navC"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a10 10 0 1 1 0 20 10 10 0 0 1 0-20zm0 2a8 8 0 1 0 0 16 8 8 0 0 0 0-16zm-1 3h2v5.2l3.6 2.1-1 1.7L11 13.4V7z"/></svg>Clock</a>
 <a href="#search" id="navS"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 3a7 7 0 0 1 5.6 11.2l5.1 5.1-1.4 1.4-5.1-5.1A7 7 0 1 1 10 3zm0 2a5 5 0 1 0 0 10 5 5 0 0 0 0-10z"/></svg>Search</a>
 <a href="#progress" id="navO"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19h16v2H4zM5 11h3v6H5zm5.5-4h3v10h-3zM16 3h3v14h-3z"/></svg>Progress</a>
 <a href="#settings" id="navT"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10.6 2h2.8l.5 2.6c.6.2 1.2.5 1.7.9l2.5-.9 1.4 2.4-2 1.7c.1.6.1 1.3 0 1.9l2 1.7-1.4 2.4-2.5-.9c-.5.4-1.1.7-1.7.9l-.5 2.6h-2.8l-.5-2.6c-.6-.2-1.2-.5-1.7-.9l-2.5.9-1.4-2.4 2-1.7a6 6 0 0 1 0-1.9l-2-1.7 1.4-2.4 2.5.9c.5-.4 1.1-.7 1.7-.9L10.6 2zM12 8.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5z" transform="translate(0 1.5)"/></svg>Settings</a>
@@ -276,6 +287,18 @@ table.ov .num2{text-align:right;white-space:nowrap;color:var(--mut);font-size:14
 <div id="vbStage"></div>
 <div class="prog"><span id="vbTxt"></span><span id="vbKnown"></span></div>
 <div class="track"><i id="vbBar" style="width:0"></i></div>
+</main>
+</div>
+<div id="vClock" hidden>
+<header><div class="band">
+<div class="top"><button class="menuBtn" type="button" aria-label="Open menu"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg></button></div>
+<h1>Clock</h1>
+<p>What time is it? Say it in Norwegian, then flip to check.</p>
+</div></header>
+<main class="band">
+<div class="bar"><div id="cMode" role="group" aria-label="Clock type"><button type="button" data-m="analog">Analog</button><button type="button" data-m="digital">Digital</button></div><button id="cReset">Reset progress</button></div>
+<div id="cStage"></div>
+<div class="prog"><span id="cTxt"></span><span id="cScore"></span></div>
 </main>
 </div>
 <div id="vGender" hidden>
@@ -350,7 +373,7 @@ table.ov .num2{text-align:right;white-space:nowrap;color:var(--mut);font-size:14
 </div></header>
 <main class="band help">
 <nav class="toc" aria-label="Help topics">
-<a href="#h-flash">Flashcards</a><a href="#h-practice">Practice</a><a href="#h-review">Review</a><a href="#h-verbs">Verbs</a><a href="#h-gender">Gender</a><a href="#h-search">Search</a><a href="#h-progress">Progress</a><a href="#h-goal">Daily goal</a><a href="#h-lang">NO / EN</a><a href="#h-voice">Pronunciation</a><a href="#h-keys">Keyboard</a><a href="#h-settings">Settings</a><a href="#h-reset">Reset</a><a href="#h-saved">Your progress</a><a href="#h-install">Install</a><a href="#h-about">About</a>
+<a href="#h-flash">Flashcards</a><a href="#h-practice">Practice</a><a href="#h-review">Review</a><a href="#h-verbs">Verbs</a><a href="#h-gender">Gender</a><a href="#h-clock">Clock</a><a href="#h-search">Search</a><a href="#h-progress">Progress</a><a href="#h-goal">Daily goal</a><a href="#h-lang">NO / EN</a><a href="#h-voice">Pronunciation</a><a href="#h-keys">Keyboard</a><a href="#h-settings">Settings</a><a href="#h-reset">Reset</a><a href="#h-saved">Your progress</a><a href="#h-install">Install</a><a href="#h-about">About</a>
 </nav>
 
 <h2 id="h-flash">Flashcards</h2>
@@ -400,6 +423,15 @@ table.ov .num2{text-align:right;white-space:nowrap;color:var(--mut);font-size:14
 <ul>
 <li>In Bokmål every <b>ei</b> word can also be used with <b>en</b>, so <i>en bok</i> is accepted for <i>ei bok</i>. Other accepted forms mentioned in the card’s note also count as right.</li>
 <li>Wrong answers are saved; choose <b>Only my mistakes</b> to practise them. <b>Reset progress</b> clears the score, the mistakes and starts a new round.</li>
+</ul>
+
+<h2 id="h-clock">Clock</h2>
+<p>Practise telling the time in Norwegian. The card shows a random time; say it out loud, then flip to see how Norwegians say it, for example <i>04:30</i> → <i>Klokka er halv fem.</i></p>
+<ul>
+<li>Choose <b>Analog</b> (a clock face with hands) or <b>Digital</b> (like 16:30). The app remembers your choice.</li>
+<li>Times go in steps of five minutes. Norwegians use the 12-hour clock when speaking, so 16:30 is also <i>halv fem</i>.</li>
+<li>Remember: <i>halv fem</i> is half <b>to</b> five (4:30), and from :20 to :40 you count from the half hour: <i>ti på halv fem</i> = 4:20, <i>fem over halv fem</i> = 4:35.</li>
+<li>There is no end: a new time comes after each answer. The score shows how many you got right. <b>Reset progress</b> clears it.</li>
 </ul>
 
 <h2 id="h-search">Search</h2>
@@ -4392,9 +4424,10 @@ const fold=s=>s.toLowerCase().replace(/æ/g,'ae').replace(/[øö]/g,'o').replace
 const hi=(s,q)=>{const i=s.toLowerCase().indexOf(q);return i<0?esc(s):esc(s.slice(0,i))+'<mark>'+esc(s.slice(i,i+q.length))+'</mark>'+esc(s.slice(i+q.length))};
 function show(v){
   const s=v==='search';
-  [['flash','vFlash','navF'],['practice','vPractice','navP'],['verbs','vVerbs','navV'],['gender','vGender','navG'],['search','vSearch','navS'],['progress','vStats','navO'],['settings','vSettings','navT'],['help','vHelp','navH']].forEach(([n,vi,na])=>{$(vi).hidden=n!==v;$(na).classList.toggle('on',n===v);$(na).setAttribute('aria-current',n===v?'page':'false')});
-  document.title={search:'Search',practice:'Practice',verbs:'Verbs',gender:'Gender',progress:'Progress',settings:'Settings',help:'Help'}[v]?({search:'Search',practice:'Practice',verbs:'Verbs',gender:'Gender',progress:'Progress',settings:'Settings',help:'Help'}[v]+' · Norsk Flashcards'):'Flashcards: '+tn($('theme').value);
+  [['flash','vFlash','navF'],['practice','vPractice','navP'],['verbs','vVerbs','navV'],['gender','vGender','navG'],['clock','vClock','navC'],['search','vSearch','navS'],['progress','vStats','navO'],['settings','vSettings','navT'],['help','vHelp','navH']].forEach(([n,vi,na])=>{$(vi).hidden=n!==v;$(na).classList.toggle('on',n===v);$(na).setAttribute('aria-current',n===v?'page':'false')});
+  document.title={search:'Search',practice:'Practice',verbs:'Verbs',gender:'Gender',clock:'Clock',progress:'Progress',settings:'Settings',help:'Help'}[v]?({search:'Search',practice:'Practice',verbs:'Verbs',gender:'Gender',clock:'Clock',progress:'Progress',settings:'Settings',help:'Help'}[v]+' · Norsk Flashcards'):'Flashcards: '+tn($('theme').value);
   if(v==='gender'&&!gReady){gReady=true;if(!gRestore())gBuild()}
+  if(v==='clock'&&!cReady){cReady=true;cStart()}
   if(v==='verbs'&&!vbReady){vbReady=true;if(!vbRestore())vbBuild()}
   if(v==='progress')oRender();
   if(v==='practice'&&pReady&&pMode==='review'&&pI>=pDeck.length)pBuild();
@@ -4402,7 +4435,7 @@ function show(v){
   document.body.classList.remove('nav');window.scrollTo(0,0);
   if(s&&matchMedia('(min-width:900px)').matches)setTimeout(()=>$('sQ').focus(),0);
 }
-const route=()=>{const m={'#search':'search','#practice':'practice','#verbs':'verbs','#gender':'gender','#progress':'progress','#settings':'settings','#help':'help'};if(/^#h-/.test(location.hash)){if($('vHelp').hidden)show('help');const t=document.getElementById(location.hash.slice(1));if(t)t.scrollIntoView();return}show(m[location.hash]||'flash')};
+const route=()=>{const m={'#search':'search','#practice':'practice','#verbs':'verbs','#gender':'gender','#clock':'clock','#progress':'progress','#settings':'settings','#help':'help'};if(/^#h-/.test(location.hash)){if($('vHelp').hidden)show('help');const t=document.getElementById(location.hash.slice(1));if(t)t.scrollIntoView();return}show(m[location.hash]||'flash')};
 window.addEventListener('hashchange',route);
 document.querySelectorAll('.menuBtn').forEach(b=>b.onclick=()=>document.body.classList.add('nav'));
 document.querySelectorAll('header .top').forEach(t=>t.insertAdjacentHTML('beforeend','<div class="lang" role="group" aria-label="Language of theme and group names"><button type="button" data-l="no" title="Norsk">NO</button><button type="button" data-l="en" title="English">EN</button></div>'));
@@ -4429,7 +4462,7 @@ $('setYes').onclick=()=>{try{Object.keys(localStorage).filter(k=>/^kjp/.test(k))
   try{history.replaceState(null,'',location.pathname+location.search)}catch(e){}location.reload()};
 $('scrim').onclick=()=>document.body.classList.remove('nav');
 document.addEventListener('keydown',e=>{if(e.key==='Escape')document.body.classList.remove('nav')});
-['navF','navP','navV','navG','navS','navO','navT','navH'].forEach(id=>$(id).addEventListener('click',()=>document.body.classList.remove('nav')));
+['navF','navP','navV','navG','navC','navS','navO','navT','navH'].forEach(id=>$(id).addEventListener('click',()=>document.body.classList.remove('nav')));
 /* ---- search ---- */
 function search(){
   const raw=$('sQ').value.trim(),lang=$('sLang').value;
@@ -4683,6 +4716,45 @@ function goalUI(){document.querySelectorAll('#setGoal button').forEach(b=>{const
 $('setGoal').onclick=e=>{const b=e.target.closest('button');if(!b)return;DAILY.goal=+b.dataset.g;try{localStorage.setItem('kjp-daily',JSON.stringify(DAILY))}catch(e){}dailyUI();goalUI()};
 goalUI();
 dailyUI();
+/* ---- clock trainer ---- */
+let cReady=false,cHist=[],cI=0,cOk=0,cN=0,cMode='analog';
+try{const s=JSON.parse(localStorage.getItem('kjp-clock')||'{}');cOk=+s.ok||0;cN=+s.n||0;if(s.mode==='digital')cMode='digital'}catch(e){}
+const cSave=()=>{try{localStorage.setItem('kjp-clock',JSON.stringify({ok:cOk,n:cN,mode:cMode}))}catch(e){}};
+const C_H=['tolv','ett','to','tre','fire','fem','seks','sju','åtte','ni','ti','elleve','tolv'];
+function cSay(h,m){const a=C_H[h%12||12],b=C_H[(h+1)%12||12];
+  const t={0:a,5:'fem over '+a,10:'ti over '+a,15:'kvart over '+a,20:'ti på halv '+b,25:'fem på halv '+b,30:'halv '+b,35:'fem over halv '+b,40:'ti over halv '+b,45:'kvart på '+b,50:'ti på '+b,55:'fem på '+b}[m];
+  return 'Klokka er '+t+'.'}
+const c2=n=>String(n).padStart(2,'0');
+function cSVG(h,m){let t='';for(let k=0;k<60;k++){const a=k*6*Math.PI/180,r1=k%5?88:82,x1=100+Math.sin(a)*r1,y1=100-Math.cos(a)*r1,x2=100+Math.sin(a)*92,y2=100-Math.cos(a)*92;t+=`<line class="tk${k%5?'':' h'}" x1="${x1.toFixed(1)}" y1="${y1.toFixed(1)}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}"/>`}
+  for(let k=1;k<=12;k++){const a=k*30*Math.PI/180;t+=`<text x="${(100+Math.sin(a)*68).toFixed(1)}" y="${(100-Math.cos(a)*68).toFixed(1)}">${k}</text>`}
+  const ha=((h%12)+m/60)*30,ma=m*6;
+  return `<svg class="clk" viewBox="0 0 200 200" role="img" aria-label="Analog clock"><circle class="rim" cx="100" cy="100" r="96"/>${t}<line class="hh" x1="100" y1="100" x2="100" y2="52" transform="rotate(${ha} 100 100)"/><line class="mh" x1="100" y1="100" x2="100" y2="28" transform="rotate(${ma} 100 100)"/><circle class="dot" cx="100" cy="100" r="5"/></svg>`}
+function cNew(){let h,m,p=cHist[cHist.length-1];do{h=Math.floor(Math.random()*24);m=Math.floor(Math.random()*12)*5}while(p&&p.h===h&&p.m===m);return{h,m,a:null}}
+function cStart(){cHist=[cNew()];cI=0;cRender()}
+function cProg(){$('cTxt').textContent='';$('cScore').textContent=cN?`Right ${cOk} of ${cN}`:''}
+function cModeUI(){document.querySelectorAll('#cMode button').forEach(b=>{const on=b.dataset.m===cMode;b.classList.toggle('on',on);b.setAttribute('aria-pressed',on)})}
+function cRender(){const x=cHist[cI],st=$('cStage'),ph=cSay(x.h,x.m),dig=`${c2(x.h)}:${c2(x.m)}`;
+  const front=cMode==='analog'?cSVG(x.h,x.m):`<div class="digi" aria-label="${dig}">${dig}</div>`;
+  st.innerHTML=`<div class="scene"><div class="card" id="cCard" tabindex="0" role="button" aria-label="Flip card">
+  <div class="face"><span class="num">${cMode==='analog'?'analog':'digital'}</span>${front}<span class="hint">What time is it? Tap to flip</span></div>
+  <div class="face back"><span class="num">${dig}</span><button class="spk" id="cSpk" aria-label="Hear pronunciation">${spkSVG}</button><div class="say">${ph}</div></div>
+  </div></div>
+  <div class="ans"><button class="no" id="cNo">Didn’t know</button><button class="yes" id="cYes">Knew it!</button><button id="cBack" ${cI===0?'disabled':''}>← Back</button></div>`;
+  const c=$('cCard');let fl=false;const flip=()=>{fl=!fl;c.classList.toggle('flip',fl)};
+  c.onclick=e=>{if(!e.target.closest('.spk'))flip()};c.onkeydown=e=>{if(e.key===' '||e.key==='Enter'){e.preventDefault();flip()}};
+  $('cSpk').onclick=e=>{e.stopPropagation();say(ph)};
+  const ans=ok=>{if(x.a===null){cN++;if(ok)cOk++;tick()}else if(x.a!==ok){cOk+=ok?1:-1}x.a=ok;cSave();cI++;if(cI>=cHist.length)cHist.push(cNew());if(cHist.length>50){cHist.shift();cI--}cRender()};
+  $('cYes').onclick=()=>ans(true);$('cNo').onclick=()=>ans(false);
+  $('cBack').onclick=()=>{if(cI>0){cI--;cRender()}};cProg()}
+$('cMode').onclick=e=>{const b=e.target.closest('button');if(!b||b.dataset.m===cMode)return;cMode=b.dataset.m;cSave();cModeUI();if(cReady)cRender()};
+$('cReset').onclick=()=>{cOk=0;cN=0;cSave();cStart()};
+cModeUI();
+document.addEventListener('keydown',e=>{
+  if($('vClock').hidden||e.target.tagName==='SELECT'||e.target.tagName==='INPUT')return;
+  if(e.key==='ArrowRight'&&$('cYes'))$('cYes').click();
+  if(e.key==='ArrowLeft'&&$('cNo'))$('cNo').click();
+  if(e.key==='Backspace'&&$('cBack')&&!$('cBack').disabled)$('cBack').click();
+});
 search();
 route();
 }
