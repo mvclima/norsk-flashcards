@@ -272,7 +272,7 @@ table.ov .num2{text-align:right;white-space:nowrap;color:var(--mut);font-size:14
 <p id="vbDesc">Remember the forms: present · past · perfect</p>
 </div></header>
 <main class="band">
-<div class="bar"><select id="vbFilt" aria-label="Which verbs"></select><button id="vbShuf">Shuffle</button><button id="vbReset">Reset progress</button></div>
+<div class="bar"><select id="vbFilt" aria-label="Which verbs"></select><button id="vbReset">Reset progress</button></div>
 <div id="vbStage"></div>
 <div class="prog"><span id="vbTxt"></span><span id="vbKnown"></span></div>
 <div class="track"><i id="vbBar" style="width:0"></i></div>
@@ -4628,7 +4628,7 @@ function vbRender(){vbSavePos();const st=$('vbStage');
   $('vbYes').onclick=()=>{vbKnown.add(x.id);vbMissed.delete(x.id);vbSave();tick();vbMark(x.id);vbI++;vbSkip();vbRender()};
   $('vbNo').onclick=()=>{vbMissed.add(x.id);vbKnown.delete(x.id);vbSave();tick();vbMark(x.id);vbI++;vbSkip();vbFiltUI();vbRender()};
   $('vbBack').onclick=()=>{if(vbI>0){vbI--;vbRender()}};vbProg()}
-$('vbFilt').onchange=()=>{const f=$('vbFilt').value;if(f==='miss'||!vbRestore(f))vbBuild(true)};$('vbShuf').onclick=()=>vbBuild(true);
+$('vbFilt').onchange=()=>{const f=$('vbFilt').value;if(f==='miss'||!vbRestore(f))vbBuild(true)};
 $('vbReset').onclick=()=>{vbKnown.clear();vbMissed.clear();vbSave();posDel('kjp-verbs-pos');posDel('kjp-verbs-ans');vbA={};vbBuild(true)};
 document.addEventListener('keydown',e=>{
   if($('vVerbs').hidden||e.target.tagName==='SELECT'||e.target.tagName==='INPUT')return;
