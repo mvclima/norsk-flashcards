@@ -161,7 +161,8 @@ table.ov .num2{text-align:right;white-space:nowrap;color:var(--mut);font-size:14
 .side .today{margin:-8px 14px 14px;font-size:13px;color:var(--mut);line-height:1.35}
 .side .today .track{margin-top:5px;height:6px}
 .side .today b{color:var(--ink)}
-.forms{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;width:100%;max-width:520px;margin-top:6px}
+.forms{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;width:100%;max-width:620px;margin-top:6px}
+@media(max-width:520px){.forms{grid-template-columns:repeat(2,minmax(0,1fr))}}
 .forms div{background:var(--bg);border-radius:12px;padding:10px 6px}
 .forms small{display:block;font-size:12px;color:var(--mut);margin-bottom:2px}
 .forms b{font:700 clamp(17px,4.4vw,22px)/1.15 Rubik,sans-serif;overflow-wrap:anywhere}
@@ -281,7 +282,7 @@ table.ov .num2{text-align:right;white-space:nowrap;color:var(--mut);font-size:14
 <header><div class="band">
 <div class="top"><button class="menuBtn" type="button" aria-label="Open menu"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg></button></div>
 <h1>Verbs</h1>
-<p id="vbDesc">Remember the forms: present · past · perfect</p>
+<p id="vbDesc">Remember the forms: present · past · perfect · imperative</p>
 </div></header>
 <main class="band">
 <div class="bar"><select id="vbFilt" aria-label="Which verbs"></select><button id="vbReset">Reset progress</button></div>
@@ -425,7 +426,8 @@ table.ov .num2{text-align:right;white-space:nowrap;color:var(--mut);font-size:14
 </ul>
 
 <h2 id="h-verbs">Verbs</h2>
-<p>Practise the three forms of 500+ verbs. The card shows the infinitive (for example <i>å skrive · to write</i>). Say the <b>present · past · perfect</b> out loud, then flip to check (<i>skriver · skrev · har skrevet</i>).</p>
+<p>Practise four forms of 500+ verbs. The card shows the infinitive (for example <i>å skrive · to write</i>). Say the <b>present · past · perfect · imperative</b> out loud, then flip to check (<i>skriver · skrev · har skrevet · skriv!</i>).</p>
+<ul><li>The <b>imperative</b> is the infinitive without the final <i>-e</i>: <i>spise → spis!</i>, <i>komme → kom!</i>. Verbs without <i>-e</i> stay the same (<i>gå!</i>, <i>se!</i>), and after hard clusters the <i>-e</i> stays (<i>sykle!</i>, <i>åpne!</i>). <i>seg</i> becomes <i>deg</i>: <i>sett deg!</i> Verbs that have no imperative, like <i>kunne</i> or <i>synes</i>, show —.</li></ul>
 <ul>
 <li>Filter by all verbs, the ones you missed, <b>strong verbs</b> (they change the vowel in the past, like <i>skrive → skrev</i>), or one group.</li>
 <li>The speaker on the back reads all three forms.</li>
@@ -4677,10 +4679,21 @@ $('oList').onclick=e=>{const r=e.target.closest('tr.row');if(!r)return;$('theme'
 $('oList').onkeydown=e=>{if(e.key==='Enter'){const r=e.target.closest('tr.row');if(r)r.click()}};
 /* ---- verb forms trainer ---- */
 let vbReady=false,vbDeck=[],vbI=0,vbKnown=new Set(),vbMissed=new Set();
-const VB=ALL.filter(w=>w.g==='verb').map(w=>{const p=String(w.note||'').split(' · ');return p.length>=3&&/^har /.test(p[2])?{w,id:w.pid,f:p.slice(0,3),rest:p.slice(3).join(' · '),strong:!/(et|te|de|dde)$/.test(p[1].split(' ')[0])}:null}).filter(Boolean);
+/* imperative from the infinitive: drop the unstressed -e (spise → spis), keep it after hard clusters (sykle, åpne) */
+const IMP_NONE=new Set(['å kunne','å skulle','å ville','å måtte','å burde','å skje','å hende','å komme til å','å komme an på','å stå på spill','å gå i stykker','å ha lov til','å være nødt til','å gå tom for','å se ut','å avhenge av','å tilsvare','å inneholde','å gjelde']);
+const IMP_FIX={'å spørre':'spør','å eie':'ei'};
+function vbImp(nb){if(IMP_NONE.has(nb))return'';if(IMP_FIX[nb])return IMP_FIX[nb];
+  const ws=nb.replace(/^å /,'').split(' '),v=ws[0],rest=ws.slice(1).map(x=>x==='seg'?'deg':x);
+  if(/s$/.test(v)&&!/e$/.test(v))return'';
+  let iv=v;const V='aeiouyæøå';
+  if(v.length>2&&v.endsWith('e')){const st=v.slice(0,-1),a=st.slice(-1),b=st.slice(-2,-1);
+    if(!V.includes(a)){const keep=(/[lr]/.test(a)&&b&&!V.includes(b)&&b!==a)||(a==='n'&&/[pdkbtf]/.test(b));iv=keep?v:(st.endsWith('mm')?st.slice(0,-1):st)}
+    else if(v.length>3)iv=st}
+  return [iv,...rest].join(' ')}
+const VB=ALL.filter(w=>w.g==='verb').map(w=>{const p=String(w.note||'').split(' · ');return p.length>=3&&/^har /.test(p[2])?{w,id:w.pid,f:[...p.slice(0,3),vbImp(w.nb)||'—'],rest:p.slice(3).join(' · '),strong:!/(et|te|de|dde)$/.test(p[1].split(' ')[0])}:null}).filter(Boolean);
 try{const s=JSON.parse(localStorage.getItem('kjp-verbs')||'{}');vbKnown=new Set(s.k||[]);vbMissed=new Set(s.m||[])}catch(e){}
 const vbSave=()=>{try{localStorage.setItem('kjp-verbs',JSON.stringify({k:[...vbKnown],m:[...vbMissed]}))}catch(e){}};
-$('vbDesc').textContent=`${VB.length} verbs. See the infinitive, say the present, past and perfect, then flip to check.`;
+$('vbDesc').textContent=`${VB.length} verbs. See the infinitive, say the present, past, perfect and imperative, then flip to check.`;
 function vbFiltUI(){const v=$('vbFilt').value||'all';const cats=[...new Set(VB.map(x=>x.w.cat))];
   $('vbFilt').innerHTML=`<option value="all">All verbs (${VB.length})</option><option value="miss">Only the ones I missed (${VB.filter(x=>vbMissed.has(x.id)).length})</option><option value="strong">Strong verbs, vowel change (${VB.filter(x=>x.strong).length})</option>`+cats.map((c,k)=>`<option value="c${k}">Only ${esc(gn(c))}</option>`).join('');
   $('vbFilt').value=[...$('vbFilt').options].some(o=>o.value===v)?v:'all';return cats}
@@ -4703,15 +4716,15 @@ function vbRender(){vbSavePos();const st=$('vbStage');
   if(vbI>=vbDeck.length){const ok=vbDeck.filter(x=>vbKnown.has(x.id)).length;
     st.innerHTML=`<div class="face done" style="position:static"><h2>Ferdig! Round complete</h2><p>You knew ${ok} of ${vbDeck.length}.</p><div class="ans"><button class="yes" id="vbAgain">Again</button><button class="no" id="vbRev">My misses (${VB.filter(x=>vbMissed.has(x.id)).length})</button><button id="vbBack2">← Back</button></div></div>`;
     $('vbAgain').onclick=()=>vbBuild(true);$('vbRev').onclick=()=>{$('vbFilt').value='miss';vbBuild(true)};$('vbBack2').onclick=()=>{vbI--;vbRender()};vbProg();return}
-  const x=vbDeck[vbI],w=x.w;const L=['present','past','perfect'];
+  const x=vbDeck[vbI],w=x.w;const L=['present','past','perfect','imperative'];
   st.innerHTML=`<div class="scene"><div class="card" id="vbCard" tabindex="0" role="button" aria-label="Flip card">
-  <div class="face"><span class="num">${esc(gn(w.cat))}</span><button class="spk" id="vb1" aria-label="Hear pronunciation">${spkSVG}</button><span class="tag g-verb">verb${x.strong?' · strong':''}</span><div class="word">${esc(w.nb)}</div><div class="note">${esc(w.pt)}</div><span class="hint">Say the three forms, then tap to flip</span></div>
+  <div class="face"><span class="num">${esc(gn(w.cat))}</span><button class="spk" id="vb1" aria-label="Hear pronunciation">${spkSVG}</button><span class="tag g-verb">verb${x.strong?' · strong':''}</span><div class="word">${esc(w.nb)}</div><div class="note">${esc(w.pt)}</div><span class="hint">Say the four forms, then tap to flip</span></div>
   <div class="face back"><span class="num">${esc(w.nb)}</span><button class="spk" id="vb2" aria-label="Hear pronunciation">${spkSVG}</button><div class="forms">${x.f.map((f,k)=>`<div><small>${L[k]}</small><b>${esc(f)}</b></div>`).join('')}</div>${x.rest?`<div class="note">${esc(x.rest)}</div>`:''}</div>
   </div></div>
   <div class="ans"><button class="no" id="vbNo">Didn’t know</button><button class="yes" id="vbYes">Knew it!</button><button id="vbBack" ${vbI===0?'disabled':''}>← Back</button></div>`;
   const c=$('vbCard');let fl=false;const flip=()=>{fl=!fl;c.classList.toggle('flip',fl)};
   c.onclick=e=>{if(!e.target.closest('.spk'))flip()};c.onkeydown=e=>{if(e.key===' '||e.key==='Enter'){e.preventDefault();flip()}};
-  $('vb1').onclick=e=>{e.stopPropagation();say(w.nb)};$('vb2').onclick=e=>{e.stopPropagation();say(x.f.join(', '))};
+  $('vb1').onclick=e=>{e.stopPropagation();say(w.nb)};$('vb2').onclick=e=>{e.stopPropagation();say(x.f.filter(f=>f!=='—').join(', '))};
   $('vbYes').onclick=()=>{vbKnown.add(x.id);vbMissed.delete(x.id);vbSave();tick();vbMark(x.id);vbI++;vbSkip();vbRender()};
   $('vbNo').onclick=()=>{vbMissed.add(x.id);vbKnown.delete(x.id);vbSave();tick();vbMark(x.id);vbI++;vbSkip();vbFiltUI();vbRender()};
   $('vbBack').onclick=()=>{if(vbI>0){vbI--;vbRender()}};vbProg()}
