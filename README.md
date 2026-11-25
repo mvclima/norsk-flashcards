@@ -1,12 +1,12 @@
 # Norsk Flashcards
 
-[![Norsk Flashcards: learn Norwegian vocabulary. 3,300+ words, 500+ verbs, 32 themes](assets/thumbnail.png)](https://mvclima.github.io/norsk-flashcards/)
+[![Norsk Flashcards: learn Norwegian vocabulary. 3,400+ words, 500+ verbs, 32 themes](assets/thumbnail.png)](https://mvclima.github.io/norsk-flashcards/)
 
 A free web app for learning Norwegian (Bokmål) vocabulary, built by **Marcus Lima** ([LinkedIn](https://www.linkedin.com/in/mvcarvalholima/)) for his own study of Norwegian, working towards level A2–B1.
 
 **Live app:** https://mvclima.github.io/norsk-flashcards/
 
-- **3,300+ words** in **32 themes** (food, home, work, society, the body, verbs, adjectives, expressions…), each with English translation, grammatical gender and a note: plurals, verb forms, example sentences or usage tips.
+- **3,400+ words** in **32 themes** (food, home, work, society, the body, verbs, adjectives, expressions…), each with English translation, grammatical gender and a note: plurals, verb forms, example sentences or usage tips.
 - Works on phone and computer, can be installed as an app and works offline.
 - No account, no tracking of personal data.
 
