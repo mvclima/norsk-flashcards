@@ -360,7 +360,7 @@ table.ov .num2{text-align:right;white-space:nowrap;color:var(--mut);font-size:14
 <li><b>Knew it!</b> marks the word as known; <b>Didn’t know</b> marks it as missed. Both move to the next card. <b>← Back</b> goes to the previous one.</li>
 <li>The list next to the buttons filters the cards: all, only the ones you missed, one group of the theme, or one kind of word (en, ei, et, verbs…). <b>Shuffle</b> mixes the order.</li>
 <li>The coloured label shows the kind of word: <b>en</b> masculine, <b>ei</b> feminine, <b>et</b> neuter, plural, adjective, verb or expression. The note under the translation gives plurals, verb forms, examples and tips.</li>
-<li>The app remembers the card you stopped at in each theme.</li>
+<li>The app remembers the card you stopped at in each theme and in each filter. Cards you already answered under another filter count as done and are skipped, so you don’t see them twice in the same round. The same works in Verbs and Gender.</li>
 <li>The <b>Full list</b> at the bottom shows every word in the theme.</li>
 </ul>
 
@@ -4188,6 +4188,10 @@ const sn=x=>LANG==='en'?x:(SEC_NO[x]||x);
 const posGet=k=>{try{let s=JSON.parse(localStorage.getItem(k)||'null');if(!s||typeof s!=='object')return{cur:null,by:{}};if(!s.by)s={cur:s.f||null,by:s.f&&Array.isArray(s.d)?{[s.f]:{d:s.d,i:s.i}}:{}};return s}catch(e){return{cur:null,by:{}}}};
 const posPut=(k,f,o)=>{try{const s=posGet(k);s.cur=f;s.by[f]=o;localStorage.setItem(k,JSON.stringify(s))}catch(e){}};
 const posDel=k=>{try{localStorage.removeItem(k)}catch(e){}};
+/* when each card was last answered: a card answered in one filter counts as done in the other filters' current round */
+const ansGet=k=>{try{const o=JSON.parse(localStorage.getItem(k)||'{}');return o&&typeof o==='object'?o:{}}catch(e){return{}}};
+const ansSet=(k,o)=>{try{localStorage.setItem(k,JSON.stringify(o))}catch(e){}};
+let fA={},fB=0;
 /* ---- daily goal & streak ---- */
 let DAILY={goal:20,days:{}};try{const d=JSON.parse(localStorage.getItem('kjp-daily')||'null');if(d)DAILY={goal:+d.goal||20,days:d.days||{}}}catch(e){}
 function tick(){const t=String(new Date(Date.now()-new Date().getTimezoneOffset()*60000).toISOString().slice(0,10));
@@ -4217,6 +4221,7 @@ function loadTheme(id){
   $('legend').innerHTML=gs.map(g=>`<span><span class="dot g-${g}"></span>${gLeg[g]}</span>`).join('');
   known=new Set();missed=new Set();
   try{const s=JSON.parse(localStorage.getItem(tKey)||'{}');known=new Set(s.k||[]);missed=new Set(s.m||[])}catch(e){}
+  fA=ansGet(tKey+'-ans');
   if(t.from)try{const mk='kjp-mig-'+t.key+'-'+t.from.length;if(!localStorage.getItem(mk)){localStorage.setItem(mk,'1');t.from.forEach(f=>{const s=JSON.parse(localStorage.getItem(f)||'{}');(s.k||[]).forEach(x=>known.add(x));(s.m||[]).forEach(x=>{if(!known.has(x))missed.add(x)})})}}catch(e){}
   W.forEach(w=>w.id=W.filter(v=>v.nb===w.nb).length>1?w.cat+'|'+w.nb:w.nb);const ids=new Set(W.map(w=>w.id)),fix=x=>typeof x==='number'?(W[x-1]||{}).id:ids.has(x)?x:(W.find(w=>w.nb===x)||W.find(w=>w.nb.toLowerCase()===String(x).toLowerCase())||{}).id;known=new Set([...known].map(fix).filter(x=>ids.has(x)));missed=new Set([...missed].map(fix).filter(x=>ids.has(x)));save();
   $('tName').textContent=tn(id);
@@ -4258,15 +4263,16 @@ function build(shuffle){
   const f=$('filt').value;
   deck=W.filter(w=>f==='all'||(f==='miss'?missed.has(w.id):/^c\d+$/.test(f)?w.cat===catList[+f.slice(1)]:w.g===f));
   if(shuffle)for(let k=deck.length-1;k>0;k--){const j=Math.floor(Math.random()*(k+1));[deck[k],deck[j]]=[deck[j],deck[k]]}
-  i=0;render();
+  i=0;fB=Date.now();render();
 }
 
-const savePos=()=>posPut(tKey+'-pos',$('filt').value,{d:deck.map(w=>w.id),i});
+const savePos=()=>posPut(tKey+'-pos',$('filt').value,{d:deck.map(w=>w.id),i,b:fB});
+const fSkip=()=>{while(i<deck.length&&(fA[deck[i].id]||0)>fB)i++};
 function restorePos(f){try{
   const P=posGet(tKey+'-pos');f=f||P.cur;const s=f&&P.by[f];if(!s||!Array.isArray(s.d))return false;s.f=f;
   if(![...$('filt').options].some(o=>o.value===s.f))return false;
   const by=new Map(W.map(w=>[w.id,w])),d=s.d.map(x=>by.get(x)).filter(Boolean);if(!d.length)return false;
-  $('filt').value=s.f;deck=d;i=Math.max(0,Math.min(+s.i||0,d.length));render();return true;
+  $('filt').value=s.f;deck=d;fB=+s.b||0;i=Math.max(0,Math.min(+s.i||0,d.length));fSkip();render();return true;
 }catch(e){return false}}
 function render(){
   savePos();
@@ -4297,14 +4303,14 @@ function render(){
   c.onclick=e=>{if(!e.target.closest('.spk'))flip()};
   c.onkeydown=e=>{if(e.key===' '||e.key==='Enter'){e.preventDefault();flip()}};
   ['s1','s2'].forEach(id=>{const b=$(id);if(b)b.onclick=e=>{e.stopPropagation();say(full(w))}});
-  $('bYes').onclick=()=>{known.add(w.id);missed.delete(w.id);save();srsGrade(curK+'|'+w.id,true);tick();i++;render();list()};
-  $('bNo').onclick=()=>{missed.add(w.id);known.delete(w.id);save();srsGrade(curK+'|'+w.id,false);tick();i++;render();list()};
+  $('bYes').onclick=()=>{known.add(w.id);missed.delete(w.id);save();srsGrade(curK+'|'+w.id,true);tick();fA[w.id]=Date.now();ansSet(tKey+'-ans',fA);i++;fSkip();render();list()};
+  $('bNo').onclick=()=>{missed.add(w.id);known.delete(w.id);save();srsGrade(curK+'|'+w.id,false);tick();fA[w.id]=Date.now();ansSet(tKey+'-ans',fA);i++;fSkip();render();list()};
   $('bBack').onclick=()=>{if(i>0){i--;render()}};
   prog();
 }
 
 function prog(){
-  const n=deck.length,pos=Math.min(i+1,n);
+  const n=deck.length,pos=Math.min(deck.filter(w=>(fA[w.id]||0)>fB).length+1,n);
   $('pTxt').textContent=n?(i<n?`Card ${pos} of ${n}`:`Round complete`):'';
   $('pKnown').textContent=`Known ${known.size} of ${W.length}`;
   $('pBar').style.width=(known.size/W.length*100)+'%';
@@ -4320,7 +4326,7 @@ $('dNo').onclick=()=>setDir('no');
 $('dPt').onclick=()=>setDir('pt');
 $('shuf').onclick=()=>build(true);
 $('filt').onchange=()=>{const f=$('filt').value;if(f==='miss'||!restorePos(f))build(true)};
-$('reset').onclick=()=>{known.clear();missed.clear();save();posDel(tKey+'-pos');list();build(false)};
+$('reset').onclick=()=>{known.clear();missed.clear();save();posDel(tKey+'-pos');posDel(tKey+'-ans');fA={};list();build(false)};
 document.addEventListener('keydown',e=>{
   if(e.target.tagName==='SELECT'||e.target.tagName==='INPUT'||!$('vFlash')||$('vFlash').hidden)return;
   if(e.key==='ArrowRight'&&$('bYes'))$('bYes').click();
@@ -4524,13 +4530,15 @@ function gFiltUI(){const c={en:0,ei:0,et:0};GN.forEach(x=>c[x.w.g]++);const v=$(
 function gBuild(){gFiltUI();const f=$('gFilt').value;
   gDeck=GN.filter(x=>f==='all'||(f==='miss'?gWrong.has(x.id):x.w.g===f));
   for(let k=gDeck.length-1;k>0;k--){const j=Math.floor(Math.random()*(k+1));[gDeck[k],gDeck[j]]=[gDeck[j],gDeck[k]]}
-  gI=0;gOk=0;gN=0;gStreak=0;gRender()}
-const gSavePos=()=>posPut('kjp-gender-pos',$('gFilt').value,{d:gDeck.map(x=>x.id),i:gI,ok:gOk,n:gN,st:gStreak});
+  gI=0;gOk=0;gN=0;gStreak=0;gB=Date.now();gRender()}
+let gA=ansGet('kjp-gender-ans'),gB=0;
+const gSavePos=()=>posPut('kjp-gender-pos',$('gFilt').value,{d:gDeck.map(x=>x.id),i:gI,ok:gOk,n:gN,st:gStreak,b:gB});
+const gSkip=()=>{while(gI<gDeck.length&&(gA[gDeck[gI].id]||0)>gB)gI++};
 function gRestore(f){try{gFiltUI();const P=posGet('kjp-gender-pos');f=f||P.cur;const s=f&&P.by[f];if(!s||!Array.isArray(s.d))return false;
   if(![...$('gFilt').options].some(o=>o.value===f))return false;const by=new Map(GN.map(x=>[x.id,x])),d=s.d.map(x=>by.get(x)).filter(Boolean);if(!d.length)return false;
-  $('gFilt').value=f;gDeck=d;gI=Math.max(0,Math.min(+s.i||0,d.length));gOk=+s.ok||0;gN=+s.n||0;gStreak=+s.st||0;gRender();return true}catch(e){return false}}
+  $('gFilt').value=f;gDeck=d;gB=+s.b||0;gI=Math.max(0,Math.min(+s.i||0,d.length));gSkip();gOk=+s.ok||0;gN=+s.n||0;gStreak=+s.st||0;gRender();return true}catch(e){return false}}
 function gProg(){const n=gDeck.length;
-  $('gTxt').textContent=n?(gI<n?`Word ${gI+1} of ${n.toLocaleString('en')}`:'Done'):'';
+  $('gTxt').textContent=n?(gI<n?`Word ${Math.min(gDeck.filter(x=>(gA[x.id]||0)>gB).length+(gDone?0:1),n).toLocaleString('en')} of ${n.toLocaleString('en')}`:'Done'):'';
   $('gScore').textContent=gN?`Right ${gOk} of ${gN}`+(gStreak>2?` · streak ${gStreak}`:''):(gTot.t?`All time: ${Math.round(gTot.r/gTot.t*100)}% right`:'');
   $('gBar').style.width=(n?Math.min(gI,n)/n*100:0)+'%'}
 function gRender(){gDone=false;gSavePos();const st=$('gStage');
@@ -4543,15 +4551,15 @@ function gRender(){gDone=false;gSavePos();const st=$('gStage');
   <div class="gfb" id="gFb" aria-live="polite"></div><button id="gNext" hidden>Next →</button>`;
   $('gs').onclick=()=>say(w.nb);
   st.querySelectorAll('.gbtns button').forEach(b=>b.onclick=()=>gAnswer(b.dataset.a));
-  $('gNext').onclick=()=>{gI++;gRender()};gProg()}
+  $('gNext').onclick=()=>{gI++;gSkip();gRender()};gProg()}
 function gAnswer(a){if(gDone)return;gDone=true;const x=gDeck[gI],w=x.w,ok=x.alt.has(a);
-  gN++;gTot.t++;tick();if(ok){gOk++;gTot.r++;gStreak++;gWrong.delete(x.id)}else{gStreak=0;gWrong.add(x.id)}gSave();gFiltUI();
+  gN++;gTot.t++;tick();if(ok){gOk++;gTot.r++;gStreak++;gWrong.delete(x.id)}else{gStreak=0;gWrong.add(x.id)}gA[x.id]=Date.now();ansSet('kjp-gender-ans',gA);gSave();gFiltUI();
   $('gStage').querySelectorAll('.gbtns button').forEach(b=>{b.disabled=true;if(b.dataset.a===w.g)b.classList.add('right');else if(b.dataset.a===a&&!ok)b.classList.add('wrong');else if(b.dataset.a===a&&ok)b.classList.add('right')});
   const extra=a!==w.g&&ok?` · <i>${a} ${esc(w.nb)}</i> is also correct`:(w.g==='ei'&&a===w.g?' · <i>en</i> is also accepted in Bokmål':'');
   $('gFb').innerHTML=(ok?'<span class="ok">Riktig!</span> ':'<span class="bad">Feil.</span> ')+`It’s <b>${w.g} ${esc(w.nb)}</b>${extra}${w.note?`<br><span style="color:var(--mut);font-size:14px">${esc(w.note)}</span>`:''}`;
-  $('gNext').hidden=false;$('gNext').focus();gProg();posPut('kjp-gender-pos',$('gFilt').value,{d:gDeck.map(x=>x.id),i:gI+1,ok:gOk,n:gN,st:gStreak})}
+  $('gNext').hidden=false;$('gNext').focus();gProg();posPut('kjp-gender-pos',$('gFilt').value,{d:gDeck.map(x=>x.id),i:gI+1,ok:gOk,n:gN,st:gStreak,b:gB})}
 $('gFilt').onchange=()=>{const f=$('gFilt').value;if(f==='miss'||!gRestore(f))gBuild()};
-$('gReset').onclick=()=>{gWrong.clear();gTot={r:0,t:0};gOk=0;gN=0;gStreak=0;gSave();posDel('kjp-gender-pos');gBuild()};
+$('gReset').onclick=()=>{gWrong.clear();gTot={r:0,t:0};gOk=0;gN=0;gStreak=0;gSave();posDel('kjp-gender-pos');posDel('kjp-gender-ans');gA={};gBuild()};
 document.addEventListener('keydown',e=>{
   if($('vGender').hidden||e.target.tagName==='SELECT')return;
   const k={'1':'en','2':'ei','3':'et'}[e.key];
@@ -4592,13 +4600,16 @@ function vbFiltUI(){const v=$('vbFilt').value||'all';const cats=[...new Set(VB.m
 function vbBuild(shuffle){const cats=vbFiltUI(),f=$('vbFilt').value;
   vbDeck=VB.filter(x=>f==='all'||(f==='miss'?vbMissed.has(x.id):f==='strong'?x.strong:x.w.cat===cats[+f.slice(1)]));
   if(shuffle!==false)for(let k=vbDeck.length-1;k>0;k--){const j=Math.floor(Math.random()*(k+1));[vbDeck[k],vbDeck[j]]=[vbDeck[j],vbDeck[k]]}
-  vbI=0;vbRender()}
-const vbSavePos=()=>posPut('kjp-verbs-pos',$('vbFilt').value,{d:vbDeck.map(x=>x.id),i:vbI});
+  vbI=0;vbB=Date.now();vbRender()}
+let vbA=ansGet('kjp-verbs-ans'),vbB=0;
+const vbSavePos=()=>posPut('kjp-verbs-pos',$('vbFilt').value,{d:vbDeck.map(x=>x.id),i:vbI,b:vbB});
+const vbSkip=()=>{while(vbI<vbDeck.length&&(vbA[vbDeck[vbI].id]||0)>vbB)vbI++};
+const vbMark=id=>{vbA[id]=Date.now();ansSet('kjp-verbs-ans',vbA)};
 function vbRestore(f){try{vbFiltUI();const P=posGet('kjp-verbs-pos');f=f||P.cur;const s=f&&P.by[f];if(!s||!Array.isArray(s.d))return false;s.f=f;
   if(![...$('vbFilt').options].some(o=>o.value===s.f))return false;const by=new Map(VB.map(x=>[x.id,x])),d=s.d.map(x=>by.get(x)).filter(Boolean);if(!d.length)return false;
-  $('vbFilt').value=s.f;vbDeck=d;vbI=Math.max(0,Math.min(+s.i||0,d.length));vbRender();return true}catch(e){return false}}
+  $('vbFilt').value=s.f;vbDeck=d;vbB=+s.b||0;vbI=Math.max(0,Math.min(+s.i||0,d.length));vbSkip();vbRender();return true}catch(e){return false}}
 function vbProg(){const n=vbDeck.length;
-  $('vbTxt').textContent=n?(vbI<n?`Verb ${vbI+1} of ${n}`:'Round complete'):'';
+  $('vbTxt').textContent=n?(vbI<n?`Verb ${Math.min(vbDeck.filter(x=>(vbA[x.id]||0)>vbB).length+1,n)} of ${n}`:'Round complete'):'';
   const k=VB.filter(x=>vbKnown.has(x.id)).length;$('vbKnown').textContent=`Known ${k} of ${VB.length}`;$('vbBar').style.width=(k/VB.length*100)+'%'}
 function vbRender(){vbSavePos();const st=$('vbStage');
   if(!vbDeck.length){st.innerHTML=`<div class="face done" style="position:static"><h2>Nothing here</h2><p>${$('vbFilt').value==='miss'?'You haven’t missed any verbs yet.':'No verbs in this filter.'}</p></div>`;vbProg();return}
@@ -4614,11 +4625,11 @@ function vbRender(){vbSavePos();const st=$('vbStage');
   const c=$('vbCard');let fl=false;const flip=()=>{fl=!fl;c.classList.toggle('flip',fl)};
   c.onclick=e=>{if(!e.target.closest('.spk'))flip()};c.onkeydown=e=>{if(e.key===' '||e.key==='Enter'){e.preventDefault();flip()}};
   $('vb1').onclick=e=>{e.stopPropagation();say(w.nb)};$('vb2').onclick=e=>{e.stopPropagation();say(x.f.join(', '))};
-  $('vbYes').onclick=()=>{vbKnown.add(x.id);vbMissed.delete(x.id);vbSave();tick();vbI++;vbRender()};
-  $('vbNo').onclick=()=>{vbMissed.add(x.id);vbKnown.delete(x.id);vbSave();tick();vbI++;vbFiltUI();vbRender()};
+  $('vbYes').onclick=()=>{vbKnown.add(x.id);vbMissed.delete(x.id);vbSave();tick();vbMark(x.id);vbI++;vbSkip();vbRender()};
+  $('vbNo').onclick=()=>{vbMissed.add(x.id);vbKnown.delete(x.id);vbSave();tick();vbMark(x.id);vbI++;vbSkip();vbFiltUI();vbRender()};
   $('vbBack').onclick=()=>{if(vbI>0){vbI--;vbRender()}};vbProg()}
 $('vbFilt').onchange=()=>{const f=$('vbFilt').value;if(f==='miss'||!vbRestore(f))vbBuild(true)};$('vbShuf').onclick=()=>vbBuild(true);
-$('vbReset').onclick=()=>{vbKnown.clear();vbMissed.clear();vbSave();posDel('kjp-verbs-pos');vbBuild(true)};
+$('vbReset').onclick=()=>{vbKnown.clear();vbMissed.clear();vbSave();posDel('kjp-verbs-pos');posDel('kjp-verbs-ans');vbA={};vbBuild(true)};
 document.addEventListener('keydown',e=>{
   if($('vVerbs').hidden||e.target.tagName==='SELECT'||e.target.tagName==='INPUT')return;
   if(e.key==='ArrowRight'&&$('vbYes'))$('vbYes').click();
