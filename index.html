@@ -163,6 +163,7 @@ table.ov .num2{text-align:right;white-space:nowrap;color:var(--mut);font-size:14
 .side .today b{color:var(--ink)}
 .forms{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;width:100%;max-width:620px;margin-top:6px}
 @media(max-width:520px){.forms{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.face.back:has(.forms.sm){padding:22px 16px}.face.back:has(.forms.sm) .pt{font-size:clamp(24px,6.5vw,36px)}.forms.sm{margin-top:12px;gap:6px}.forms.sm+.note{margin-top:8px;font-size:14px}.forms.sm div{padding:7px 4px}.forms.sm b{font-size:clamp(15px,3.8vw,19px)}.forms.sm small{font-size:11px}
 .forms div{background:var(--bg);border-radius:12px;padding:10px 6px}
 .forms small{display:block;font-size:12px;color:var(--mut);margin-bottom:2px}
 .forms b{font:700 clamp(17px,4.4vw,22px)/1.15 Rubik,sans-serif;overflow-wrap:anywhere}
@@ -2995,7 +2996,7 @@ verb:{name:'Verb',desc:'verbs',key:'kjp-verb',from:['kjp-hjem','kjp-reise','kjp-
 ['verb','å vente','to wait','venter · ventet · har ventet'],
 ['verb','å pleie','to usually do; care for','pleier · pleide · har pleid · Jeg pleier å… = I usually…'],
 ['verb','å passe','to fit; look after','passer · passet · har passet'],
-['verb','å stelle','to take care of, tend (baby, patient, garden)','steller · stelte · har stelt · stelle babyen = change and wash the baby · stelle hagen = tend the garden · stelle seg = get ready, groom oneself · stelle i stand = arrange, prepare · et stellebord = changing table'],
+['verb','å stelle','to take care of, tend','steller · stelte · har stelt · stelle babyen = change and wash the baby · stelle hagen = tend the garden · stelle seg = get ready, groom oneself · stelle i stand = arrange, prepare · et stellebord = changing table'],
 ['verb','å tilbringe','to spend (time)','tilbringer · tilbrakte · har tilbrakt']]],
 ['Cooking · matlaging',[
 ['verb','å lage','to make','lager · laget · har laget · lage mat = cook'],
@@ -4286,6 +4287,9 @@ function vbImp(nb){if(IMP_NONE.has(nb))return'';if(IMP_FIX[nb])return IMP_FIX[nb
     if(!V.includes(a)){const keep=(/[lr]/.test(a)&&b&&!V.includes(b)&&b!==a)||(a==='n'&&/[pdkbtf]/.test(b));iv=keep?v:(st.endsWith('mm')?st.slice(0,-1):st)}
     else if(v.length>3)iv=st}
   return [iv,...rest].join(' ')}
+function vForms(w){const n=String(w.note||'');if(w.g!=='verb')return null;const p=n.split(' · ');if(p.length<3||!/^har /.test(p[2]))return null;return{f:[...p.slice(0,3),vbImp(w.nb)||'—'],rest:p.slice(3).join(' · ')}}
+function noteHTML(w){if(!w.note)return'';const v=vForms(w);if(!v)return`<div class="note">${w.note}</div>`;const L=['present','past','perfect','imperative'];
+  return `<div class="forms sm">${v.f.map((f,k)=>`<div><small>${L[k]}</small><b>${f}</b></div>`).join('')}</div>`+(v.rest?`<div class="note">${v.rest}</div>`:'')}
 function vNote(w){const n=String(w.note||'');if(w.g!=='verb')return n;const p=n.split(' · ');if(p.length<3||!/^har /.test(p[2]))return n;const im=vbImp(w.nb);return im?[...p.slice(0,3),im+'!',...p.slice(3)].join(' · '):n}
 
 /* when each card was last answered: a card answered in one filter counts as done in the other filters' current round */
@@ -4391,7 +4395,7 @@ function render(){
   const tag=`<span class="tag g-${w.g}">${gName[w.g]}</span>`;
   const no=`${tag}<div class="word">${nbHTML(w)}</div>`;
   const pt=(w.sw?`<div class="sw" style="background:${w.sw}"></div>`:'')+`<div class="pt">${w.pt}</div>`;
-  const note=w.note?`<div class="note">${vNote(w)}</div>`:'';
+  const note=noteHTML(w);
   const front=dir==='no'?no:pt, back=dir==='no'?pt+note:no+note;
   st.innerHTML=`<div class="scene"><div class="card" id="card" tabindex="0" role="button" aria-label="Flip card">
   <div class="face"><span class="num">${w.n}</span>${dir==='no'?`<button class="spk" id="s1" aria-label="Hear pronunciation">${spkSVG}</button>`:''}${front}<span class="hint">Tap to flip</span></div>
@@ -4590,7 +4594,7 @@ function pRender(){
   const tag=`<span class="tag g-${w.g}">${gName[w.g]}</span>`;
   const no=`${tag}<div class="word">${nbHTML(w)}</div>`;
   const pt=(w.sw?`<div class="sw" style="background:${w.sw}"></div>`:'')+`<div class="pt">${w.pt}</div>`;
-  const note=w.note?`<div class="note">${vNote(w)}</div>`:'';
+  const note=noteHTML(w);
   const src=esc(tn(w.k));
   const front=pDir==='no'?no:pt,back=pDir==='no'?pt+note:no+note;
   st.innerHTML=`<div class="scene"><div class="card" id="pCard" tabindex="0" role="button" aria-label="Flip card">
