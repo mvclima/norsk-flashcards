@@ -46,8 +46,8 @@ button.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
 .clk .dot{fill:var(--red)}
 .digi{font:700 clamp(64px,20vw,104px)/1 Rubik,sans-serif;letter-spacing:.02em;font-variant-numeric:tabular-nums}
 .say{font:700 clamp(28px,7.5vw,42px)/1.15 Rubik,sans-serif;text-wrap:balance}
-#cMode{display:inline-flex;flex:0 0 auto;gap:0;border:1px solid var(--line);border-radius:12px;overflow:hidden}
-#cMode button{border:0;border-radius:0;min-width:96px}
+#cMode,#nMode{display:inline-flex;flex:0 0 auto;gap:0;border:1px solid var(--line);border-radius:12px;overflow:hidden}
+#cMode button,#nMode button{border:0;border-radius:0;min-width:96px}
 .card{position:relative;height:clamp(300px,52vh,380px);transform-style:preserve-3d;transition:transform .45s ease;cursor:pointer;border-radius:22px}
 .card.flip{transform:rotateY(180deg)}
 .face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;background:var(--card);border:1px solid var(--line);border-radius:22px;
@@ -217,6 +217,7 @@ table.ov .num2{text-align:right;white-space:nowrap;color:var(--mut);font-size:14
 <a href="#verbs" id="navV"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h10v2H4zm0 4h16v2H4zm0 4h10v2H4zm0 4h16v2H4zm13-12l4 2-4 2z"/></svg>Verbs</a>
 <a href="#gender" id="navG"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 5h5v14H3V5zm6.5 0h5v14h-5V5zM16 5h5v14h-5V5zM4.5 6.5v11h2v-11h-2zm6.5 0v11h2v-11h-2zm6.5 0v11h2v-11h-2z"/></svg>Gender</a>
 <a href="#clock" id="navC"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a10 10 0 1 1 0 20 10 10 0 0 1 0-20zm0 2a8 8 0 1 0 0 16 8 8 0 0 0 0-16zm-1 3h2v5.2l3.6 2.1-1 1.7L11 13.4V7z"/></svg>Clock</a>
+<a href="#numbers" id="navN"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 7h2v10H5V9.5L3.6 10.3 3 8.6 5 7zm4.5 0h4.2c1.3 0 2.3 1 2.3 2.3 0 .8-.4 1.4-1 2L11.7 15H16v2H9.5v-1.8l4-4.6c.2-.2.3-.4.3-.6 0-.3-.2-.5-.5-.5H9.5V7zM17 7h4v2h-2.4l-.1 1.6c1.6-.1 2.8 1.1 2.8 2.7 0 2-1.6 3.7-4.3 3.5v-2c1.3.1 2.1-.5 2.1-1.4 0-.8-.7-1.3-1.9-1L17 12V7z"/></svg>Numbers</a>
 <a href="#search" id="navS"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 3a7 7 0 0 1 5.6 11.2l5.1 5.1-1.4 1.4-5.1-5.1A7 7 0 1 1 10 3zm0 2a5 5 0 1 0 0 10 5 5 0 0 0 0-10z"/></svg>Search</a>
 <a href="#progress" id="navO"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19h16v2H4zM5 11h3v6H5zm5.5-4h3v10h-3zM16 3h3v14h-3z"/></svg>Progress</a>
 <a href="#settings" id="navT"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10.6 2h2.8l.5 2.6c.6.2 1.2.5 1.7.9l2.5-.9 1.4 2.4-2 1.7c.1.6.1 1.3 0 1.9l2 1.7-1.4 2.4-2.5-.9c-.5.4-1.1.7-1.7.9l-.5 2.6h-2.8l-.5-2.6c-.6-.2-1.2-.5-1.7-.9l-2.5.9-1.4-2.4 2-1.7a6 6 0 0 1 0-1.9l-2-1.7 1.4-2.4 2.5.9c.5-.4 1.1-.7 1.7-.9L10.6 2zM12 8.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5z" transform="translate(0 1.5)"/></svg>Settings</a>
@@ -301,6 +302,18 @@ table.ov .num2{text-align:right;white-space:nowrap;color:var(--mut);font-size:14
 <div class="prog"><span id="cTxt"></span><span id="cScore"></span></div>
 </main>
 </div>
+<div id="vNumbers" hidden>
+<header><div class="band">
+<div class="top"><button class="menuBtn" type="button" aria-label="Open menu"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg></button></div>
+<h1>Numbers</h1>
+<p>Say the number in Norwegian, then flip to check.</p>
+</div></header>
+<main class="band">
+<div class="bar"><div id="nMode" role="group" aria-label="Kind of number"><button type="button" data-m="card">Cardinal</button><button type="button" data-m="ord">Ordinal</button></div><button id="nReset">Reset progress</button></div>
+<div id="nStage"></div>
+<div class="prog"><span id="nTxt"></span><span id="nScore"></span></div>
+</main>
+</div>
 <div id="vGender" hidden>
 <header><div class="band">
 <div class="top"><button class="menuBtn" type="button" aria-label="Open menu"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg></button></div>
@@ -373,7 +386,7 @@ table.ov .num2{text-align:right;white-space:nowrap;color:var(--mut);font-size:14
 </div></header>
 <main class="band help">
 <nav class="toc" aria-label="Help topics">
-<a href="#h-flash">Flashcards</a><a href="#h-practice">Practice</a><a href="#h-review">Review</a><a href="#h-verbs">Verbs</a><a href="#h-gender">Gender</a><a href="#h-clock">Clock</a><a href="#h-search">Search</a><a href="#h-progress">Progress</a><a href="#h-goal">Daily goal</a><a href="#h-lang">NO / EN</a><a href="#h-voice">Pronunciation</a><a href="#h-keys">Keyboard</a><a href="#h-settings">Settings</a><a href="#h-reset">Reset</a><a href="#h-saved">Your progress</a><a href="#h-install">Install</a><a href="#h-about">About</a>
+<a href="#h-flash">Flashcards</a><a href="#h-practice">Practice</a><a href="#h-review">Review</a><a href="#h-verbs">Verbs</a><a href="#h-gender">Gender</a><a href="#h-clock">Clock</a><a href="#h-numbers">Numbers</a><a href="#h-search">Search</a><a href="#h-progress">Progress</a><a href="#h-goal">Daily goal</a><a href="#h-lang">NO / EN</a><a href="#h-voice">Pronunciation</a><a href="#h-keys">Keyboard</a><a href="#h-settings">Settings</a><a href="#h-reset">Reset</a><a href="#h-saved">Your progress</a><a href="#h-install">Install</a><a href="#h-about">About</a>
 </nav>
 
 <h2 id="h-flash">Flashcards</h2>
@@ -432,6 +445,14 @@ table.ov .num2{text-align:right;white-space:nowrap;color:var(--mut);font-size:14
 <li>Times go in steps of five minutes. Norwegians use the 12-hour clock when speaking, so 16:30 is also <i>halv fem</i>.</li>
 <li>Remember: <i>halv fem</i> is half <b>to</b> five (4:30), and from :20 to :40 you count from the half hour: <i>ti på halv fem</i> = 4:20, <i>fem over halv fem</i> = 4:35.</li>
 <li>There is no end: a new time comes after each answer. The score shows how many you got right. <b>Reset progress</b> clears it.</li>
+</ul>
+
+<h2 id="h-numbers">Numbers</h2>
+<p>Practise numbers from 0 to 100. The card shows a random number; say it out loud, then flip to see it written out.</p>
+<ul>
+<li><b>Cardinal</b>: 21 → <i>tjueen</i>. <b>Ordinal</b>: 21. → <i>tjueførste</i>. In Norwegian a dot after the number means it is ordinal.</li>
+<li>Numbers are written as one word: <i>tjuefem</i>, <i>førtiåtte</i>. Some have another accepted form, shown under the word (<i>sju / syv</i>).</li>
+<li>Like Clock, there is no end: a new number comes after each answer. Each mode keeps its own score; <b>Reset progress</b> clears the score of the mode you are in.</li>
 </ul>
 
 <h2 id="h-search">Search</h2>
@@ -4424,10 +4445,11 @@ const fold=s=>s.toLowerCase().replace(/æ/g,'ae').replace(/[øö]/g,'o').replace
 const hi=(s,q)=>{const i=s.toLowerCase().indexOf(q);return i<0?esc(s):esc(s.slice(0,i))+'<mark>'+esc(s.slice(i,i+q.length))+'</mark>'+esc(s.slice(i+q.length))};
 function show(v){
   const s=v==='search';
-  [['flash','vFlash','navF'],['practice','vPractice','navP'],['verbs','vVerbs','navV'],['gender','vGender','navG'],['clock','vClock','navC'],['search','vSearch','navS'],['progress','vStats','navO'],['settings','vSettings','navT'],['help','vHelp','navH']].forEach(([n,vi,na])=>{$(vi).hidden=n!==v;$(na).classList.toggle('on',n===v);$(na).setAttribute('aria-current',n===v?'page':'false')});
-  document.title={search:'Search',practice:'Practice',verbs:'Verbs',gender:'Gender',clock:'Clock',progress:'Progress',settings:'Settings',help:'Help'}[v]?({search:'Search',practice:'Practice',verbs:'Verbs',gender:'Gender',clock:'Clock',progress:'Progress',settings:'Settings',help:'Help'}[v]+' · Norsk Flashcards'):'Flashcards: '+tn($('theme').value);
+  [['flash','vFlash','navF'],['practice','vPractice','navP'],['verbs','vVerbs','navV'],['gender','vGender','navG'],['clock','vClock','navC'],['numbers','vNumbers','navN'],['search','vSearch','navS'],['progress','vStats','navO'],['settings','vSettings','navT'],['help','vHelp','navH']].forEach(([n,vi,na])=>{$(vi).hidden=n!==v;$(na).classList.toggle('on',n===v);$(na).setAttribute('aria-current',n===v?'page':'false')});
+  document.title={search:'Search',practice:'Practice',verbs:'Verbs',gender:'Gender',clock:'Clock',numbers:'Numbers',progress:'Progress',settings:'Settings',help:'Help'}[v]?({search:'Search',practice:'Practice',verbs:'Verbs',gender:'Gender',clock:'Clock',numbers:'Numbers',progress:'Progress',settings:'Settings',help:'Help'}[v]+' · Norsk Flashcards'):'Flashcards: '+tn($('theme').value);
   if(v==='gender'&&!gReady){gReady=true;if(!gRestore())gBuild()}
   if(v==='clock'&&!cReady){cReady=true;cStart()}
+  if(v==='numbers'&&!nReady){nReady=true;nStart()}
   if(v==='verbs'&&!vbReady){vbReady=true;if(!vbRestore())vbBuild()}
   if(v==='progress')oRender();
   if(v==='practice'&&pReady&&pMode==='review'&&pI>=pDeck.length)pBuild();
@@ -4435,7 +4457,7 @@ function show(v){
   document.body.classList.remove('nav');window.scrollTo(0,0);
   if(s&&matchMedia('(min-width:900px)').matches)setTimeout(()=>$('sQ').focus(),0);
 }
-const route=()=>{const m={'#search':'search','#practice':'practice','#verbs':'verbs','#gender':'gender','#clock':'clock','#progress':'progress','#settings':'settings','#help':'help'};if(/^#h-/.test(location.hash)){if($('vHelp').hidden)show('help');const t=document.getElementById(location.hash.slice(1));if(t)t.scrollIntoView();return}show(m[location.hash]||'flash')};
+const route=()=>{const m={'#search':'search','#practice':'practice','#verbs':'verbs','#gender':'gender','#clock':'clock','#numbers':'numbers','#progress':'progress','#settings':'settings','#help':'help'};if(/^#h-/.test(location.hash)){if($('vHelp').hidden)show('help');const t=document.getElementById(location.hash.slice(1));if(t)t.scrollIntoView();return}show(m[location.hash]||'flash')};
 window.addEventListener('hashchange',route);
 document.querySelectorAll('.menuBtn').forEach(b=>b.onclick=()=>document.body.classList.add('nav'));
 document.querySelectorAll('header .top').forEach(t=>t.insertAdjacentHTML('beforeend','<div class="lang" role="group" aria-label="Language of theme and group names"><button type="button" data-l="no" title="Norsk">NO</button><button type="button" data-l="en" title="English">EN</button></div>'));
@@ -4462,7 +4484,7 @@ $('setYes').onclick=()=>{try{Object.keys(localStorage).filter(k=>/^kjp/.test(k))
   try{history.replaceState(null,'',location.pathname+location.search)}catch(e){}location.reload()};
 $('scrim').onclick=()=>document.body.classList.remove('nav');
 document.addEventListener('keydown',e=>{if(e.key==='Escape')document.body.classList.remove('nav')});
-['navF','navP','navV','navG','navC','navS','navO','navT','navH'].forEach(id=>$(id).addEventListener('click',()=>document.body.classList.remove('nav')));
+['navF','navP','navV','navG','navC','navN','navS','navO','navT','navH'].forEach(id=>$(id).addEventListener('click',()=>document.body.classList.remove('nav')));
 /* ---- search ---- */
 function search(){
   const raw=$('sQ').value.trim(),lang=$('sLang').value;
@@ -4754,6 +4776,41 @@ document.addEventListener('keydown',e=>{
   if(e.key==='ArrowRight'&&$('cYes'))$('cYes').click();
   if(e.key==='ArrowLeft'&&$('cNo'))$('cNo').click();
   if(e.key==='Backspace'&&$('cBack')&&!$('cBack').disabled)$('cBack').click();
+});
+/* ---- numbers trainer ---- */
+let nReady=false,nHist=[],nI=0,nMode='card',nSc={card:{ok:0,n:0},ord:{ok:0,n:0}};
+try{const s=JSON.parse(localStorage.getItem('kjp-numbers')||'{}');if(s.mode==='ord')nMode='ord';if(s.sc)['card','ord'].forEach(k=>{if(s.sc[k])nSc[k]={ok:+s.sc[k].ok||0,n:+s.sc[k].n||0}})}catch(e){}
+const nSave=()=>{try{localStorage.setItem('kjp-numbers',JSON.stringify({mode:nMode,sc:nSc}))}catch(e){}};
+const N_C=['null','en','to','tre','fire','fem','seks','sju','åtte','ni','ti','elleve','tolv','tretten','fjorten','femten','seksten','sytten','atten','nitten'];
+const N_T=['','','tjue','tretti','førti','femti','seksti','sytti','åtti','nitti'];
+const N_O=['','første','andre','tredje','fjerde','femte','sjette','sjuende','åttende','niende','tiende','ellevte','tolvte','trettende','fjortende','femtende','sekstende','syttende','attende','nittende'];
+function nCard(n){if(n===100)return'hundre';if(n<20)return N_C[n];const t=N_T[Math.floor(n/10)],u=n%10;return u?t+N_C[u]:t}
+function nOrd(n){if(n===100)return'hundrede';if(n<20)return N_O[n];const t=N_T[Math.floor(n/10)],u=n%10;return u?t+N_O[u]:(n===20?'tjuende':t+'ende')}
+function nAlt(n){if(nMode==='card'){if(n===1)return'ett with et-words: ett hus';if(n===7)return'also: syv';if(n===100)return'also: ett hundre';if(n>20&&n%10===1)return'also: '+N_T[Math.floor(n/10)]+'ett with et-words'}else{if(n===7)return'also: syvende';if(n===2)return'also: annen (older)';}return''}
+function nNew(){const lo=nMode==='ord'?1:0;let n,p=nHist[nHist.length-1];do{n=lo+Math.floor(Math.random()*(101-lo))}while(p&&p.n===n);return{n,a:null,m:nMode}}
+function nStart(){nHist=[nNew()];nI=0;nRender()}
+function nModeUI(){document.querySelectorAll('#nMode button').forEach(b=>{const on=b.dataset.m===nMode;b.classList.toggle('on',on);b.setAttribute('aria-pressed',on)})}
+function nProg(){const sc=nSc[nMode];$('nTxt').textContent='';$('nScore').textContent=sc.n?`Right ${sc.ok} of ${sc.n}`:''}
+function nRender(){const x=nHist[nI],st=$('nStage'),o=x.m==='ord',w=o?nOrd(x.n):nCard(x.n),alt=nAlt(x.n),f=o?x.n+'.':String(x.n);
+  st.innerHTML=`<div class="scene"><div class="card" id="nCard" tabindex="0" role="button" aria-label="Flip card">
+  <div class="face"><span class="num">${o?'ordinal':'cardinal'}</span><div class="digi">${f}</div><span class="hint">How do you say it? Tap to flip</span></div>
+  <div class="face back"><span class="num">${f}</span><button class="spk" id="nSpk" aria-label="Hear pronunciation">${spkSVG}</button><div class="say">${w}</div>${alt?`<div class="note">${alt}</div>`:''}</div>
+  </div></div>
+  <div class="ans"><button class="no" id="nNo">Didn’t know</button><button class="yes" id="nYes">Knew it!</button><button id="nBack" ${nI===0?'disabled':''}>← Back</button></div>`;
+  const c=$('nCard');let fl=false;const flip=()=>{fl=!fl;c.classList.toggle('flip',fl)};
+  c.onclick=e=>{if(!e.target.closest('.spk'))flip()};c.onkeydown=e=>{if(e.key===' '||e.key==='Enter'){e.preventDefault();flip()}};
+  $('nSpk').onclick=e=>{e.stopPropagation();say(w)};
+  const ans=ok=>{const sc=nSc[x.m];if(x.a===null){sc.n++;if(ok)sc.ok++;tick()}else if(x.a!==ok){sc.ok+=ok?1:-1}x.a=ok;nSave();nI++;if(nI>=nHist.length)nHist.push(nNew());if(nHist.length>50){nHist.shift();nI--}nRender()};
+  $('nYes').onclick=()=>ans(true);$('nNo').onclick=()=>ans(false);
+  $('nBack').onclick=()=>{if(nI>0){nI--;nRender()}};nProg()}
+$('nMode').onclick=e=>{const b=e.target.closest('button');if(!b||b.dataset.m===nMode)return;nMode=b.dataset.m;nSave();nModeUI();if(nReady)nStart()};
+$('nReset').onclick=()=>{nSc[nMode]={ok:0,n:0};nSave();nStart()};
+nModeUI();
+document.addEventListener('keydown',e=>{
+  if($('vNumbers').hidden||e.target.tagName==='SELECT'||e.target.tagName==='INPUT')return;
+  if(e.key==='ArrowRight'&&$('nYes'))$('nYes').click();
+  if(e.key==='ArrowLeft'&&$('nNo'))$('nNo').click();
+  if(e.key==='Backspace'&&$('nBack')&&!$('nBack').disabled)$('nBack').click();
 });
 search();
 route();

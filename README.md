@@ -20,6 +20,7 @@ A free web app for learning Norwegian (Bokmål) vocabulary, built by **Marcus Li
 | **Verbs** | Practise the present, past and perfect of 500+ verbs. Filter by strong verbs (vowel change). |
 | **Gender** | Choose *en*, *ei* or *et* for 1,600+ nouns. Follows the Bokmål rule that *ei* words also accept *en*. |
 | **Clock** | Tell the time in Norwegian: a random time on an analog or digital clock, flip to see e.g. *Klokka er halv fem*. |
+| **Numbers** | Numbers 0–100, cardinal (*tjueen*) or ordinal (*tjueførste*): see the number, flip to see it written out. |
 | **Search** | Find any word in Norwegian or English, also by part of a word and without special letters (*vaeske* finds *væske*). |
 | **Progress** | Words known, reviews due, learning vs. mastered, daily goal, streak and progress per theme. |
 | **NO / EN** | A switch in the header shows the names of themes, sections and word groups in Norwegian or English. |
