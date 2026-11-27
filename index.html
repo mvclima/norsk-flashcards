@@ -2219,7 +2219,7 @@ tanker:{name:'Tanker og følelser',desc:'ideas and feelings',key:'kjp-tanker',gr
 familie:{name:'Familie',desc:'family',key:'kjp-familie',groups:[
 ['Close family · nærmeste familie',[
 ['en','familie','family',''],
-['pl','foreldre','parents','sing. en forelder'],
+['en','forelder','parent','usually in the plural: foreldre = parents · mine foreldre = my parents'],
 ['ei','mor','mother','pl. mødre'],
 ['en','far','father','pl. fedre'],
 ['ei','mamma','mum, mom',''],
@@ -2227,7 +2227,7 @@ familie:{name:'Familie',desc:'family',key:'kjp-familie',groups:[
 ['et','barn','child','pl. barn'],
 ['en','sønn','son',''],
 ['ei','datter','daughter','pl. døtre'],
-['pl','søsken','siblings','no single English word: brothers and sisters'],
+['et','søsken','sibling','usually in the plural: søsken = siblings, brothers and sisters · Har du søsken? = Do you have any brothers or sisters?'],
 ['en','bror','brother','pl. brødre'],
 ['ei','søster','sister','pl. søstre'],
 ['en','tvilling','twin',''],
@@ -2235,7 +2235,7 @@ familie:{name:'Familie',desc:'family',key:'kjp-familie',groups:[
 ['ei','bleie','nappy, diaper','pl. bleier · å skifte bleie = change a nappy'],
 ['en','smokk','dummy, pacifier','pl. smokker']]],
 ['Grandparents · besteforeldre',[
-['pl','besteforeldre','grandparents',''],
+['en','besteforelder','grandparent','usually in the plural: besteforeldre = grandparents'],
 ['ei','bestemor','grandmother','beste = best + mor'],
 ['en','bestefar','grandfather',''],
 ['ei','mormor','grandmother (mother’s mother)','mor + mor'],
@@ -4261,6 +4261,10 @@ abstrakt:{name:'Abstrakte ord',desc:'abstract nouns by ending',key:'kjp-abstrakt
 ]}
 };
 /* ---- one-time: plural cards became singular (keep progress) ---- */
+try{if(!localStorage.getItem('kjp-mig-sing2')){const k=Object.keys(THEMES).find(x=>THEMES[x].groups&&THEMES[x].groups.some(g=>g[1].some(w=>w[1]==='forelder')));const M={foreldre:'forelder',besteforeldre:'besteforelder'};
+  if(k){const key=THEMES[k].key,ren=x=>M[x]||x;const s2=JSON.parse(localStorage.getItem(key)||'null');if(s2){s2.k=(s2.k||[]).map(ren);s2.m=(s2.m||[]).map(ren);localStorage.setItem(key,JSON.stringify(s2))}
+    const sr=JSON.parse(localStorage.getItem('kjp-srs')||'null');if(sr){const o={};for(const x in sr){const j=x.indexOf('|');o[j>0&&x.slice(0,j)===k?k+'|'+ren(x.slice(j+1)):x]=sr[x]}localStorage.setItem('kjp-srs',JSON.stringify(o))}}
+  localStorage.setItem('kjp-mig-sing2','1')}}catch(e){}
 try{if(!localStorage.getItem('kjp-mig-sing1')){const M={"klaer": {"sokker": "sokk", "joggesko": "joggesko", "pensko": "pensko", "vintersko": "vintersko", "støvler": "støvel", "gummistøvler": "gummistøvel", "tøfler": "tøffel", "sandaler": "sandal", "brodder": "brodd", "piggsko": "piggsko", "votter": "vott", "hansker": "hanske"}, "mat": {"erter": "ert", "bønner": "bønne", "kikerter": "kikert", "linser": "linse", "kjøttkaker": "kjøttkake"}, "hjem": {"gardiner": "gardin"}, "samfunn": {"kroner": "krone"}};
   const ren=(k,x)=>{const m=M[k];return m&&m[x]?m[x]:x};
   for(const k in M){const key=THEMES[k].key;const s=JSON.parse(localStorage.getItem(key)||'null');if(s){s.k=(s.k||[]).map(x=>ren(k,x));s.m=(s.m||[]).map(x=>ren(k,x));localStorage.setItem(key,JSON.stringify(s))}}
@@ -4303,7 +4307,7 @@ farfar:['farfaren','farfedre','farfedrene'],svigerfar:['svigerfaren','svigerfedr
 sommer:['sommeren','somrer','somrene'],vinter:['vinteren','vintrer','vintrene'],feber:['feberen','febrer','febrene'],lever:['leveren','levrer','levrene'],hulder:['huldra','huldrer','huldrene'],
 halvdel:['halvdelen','halvdeler','halvdelene'],fjerdedel:['fjerdedelen','fjerdedeler','fjerdedelene'],bydel:['bydelen','bydeler','bydelene'],kanel:['kanelen','—','—'],tunnel:['tunnelen','tunneler','tunnelene'],
 gresskar:['gresskaret','gresskar','gresskarene'],badekar:['badekaret','badekar','badekarene'],ekorn:['ekornet','ekorn','ekornene'],eventyr:['eventyret','eventyr','eventyrene'],bryllup:['bryllupet','bryllup','bryllupene'],
-mamma:['mammaen','mammaer','mammaene'],frivillig:['den frivillige','frivillige','de frivillige'],arbeidsledig:['den arbeidsledige','arbeidsledige','de arbeidsledige'],ansatt:['den ansatte','ansatte','de ansatte'],kabinansatt:['den kabinansatte','kabinansatte','de kabinansatte'],reisende:['den reisende','reisende','de reisende'],midnatt:['midnatt','—','—']};
+mamma:['mammaen','mammaer','mammaene'],forelder:['forelderen','foreldre','foreldrene'],besteforelder:['besteforelderen','besteforeldre','besteforeldrene'],søsken:['søskenet','søsken','søsknene'],frivillig:['den frivillige','frivillige','de frivillige'],arbeidsledig:['den arbeidsledige','arbeidsledige','de arbeidsledige'],ansatt:['den ansatte','ansatte','de ansatte'],kabinansatt:['den kabinansatte','kabinansatte','de kabinansatte'],reisende:['den reisende','reisende','de reisende'],midnatt:['midnatt','—','—']};
 const N_MASS=new Set(['mat','kål','mais','mugg','gjær','ris','dill','melk','te','brus','søvn','ved','ull','plast','papp','kos','frykt','angst','skam','fred','støy','frost','snø','luft','røyk','sand',
 'pepper','karri','basilikum','oregano','kakao','ruccola','pasta','humor','latter','torden','energi','politi','smør','salt','mel','kjøtt','vann','blod','gull','sølv','stress','støv','søppel','sludd','hagl','regn',
 'gress','drivstoff','potetgull','peanøttsmør','lammekjøtt','pinnekjøtt','friluftsliv','håp','ansvar','personvern','vær','undertøy','ullundertøy','bacon','godteri','sukker','bestikk','havregryn','munnskyll',
