@@ -14,7 +14,7 @@ A free web app for learning Norwegian (Bokmål) vocabulary, built by **Marcus Li
 
 | Feature | What it does |
 |---|---|
-| **Flashcards** | Study one theme or one group at a time, in both directions (Norsk → English / English → Norsk). Filter by group, by kind of word or by the ones you missed. Verb cards show present, past, perfect and imperative. Remembers where you stopped. |
+| **Flashcards** | Study one theme or one group at a time, in both directions (Norsk → English / English → Norsk). Filter by group, by kind of word or by the ones you missed. Verb cards show present, past, perfect and imperative; adjective cards show the en/ei, et and plural forms. Remembers where you stopped. |
 | **All words / Due today** | Two special themes in Flashcards: every card from every theme, shuffled, and the words due for review today. Progress is shared with the themes. |
 | **Review** | Spaced repetition: every answer schedules the word for review after 1, 3, 7, 14, 30 or 60 days; the theme *Due today* shows what is due. |
 | **Verbs** | Practise the present, past, perfect and imperative of 500+ verbs. Filter by strong verbs (vowel change). |
