@@ -1,7 +1,7 @@
 // Norwegian Flashcards – offline support.
 // The page is fetched from the network first (so updates show up right away)
 // and falls back to the saved copy when offline. Fonts are cached as they load.
-const CACHE = 'norsk-v33';
+const CACHE = 'norsk-v34';
 const CORE = ['./', './index.html', './manifest.webmanifest', './icons/icon-192.png', './icons/icon-512.png', './icons/icon-180.png'];
 
 self.addEventListener('install', e => {
