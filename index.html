@@ -452,7 +452,7 @@ table.ov .num2{text-align:right;white-space:nowrap;color:var(--mut);font-size:14
 <ul>
 <li><b>Cards today</b>: answers today, your daily goal and your streak.</li>
 <li><b>Words known</b>: words you marked <b>Knew it!</b> in Flashcards.</li>
-<li><b>Due for review today</b>, with a button to start the review.</li>
+<li><b>Due for review today</b>, with a <b>Review now</b> button. When nothing is due, it shows when the next review is and how many words it has.</li>
 <li><b>Learning / mastered</b>: see <a href="#h-review">Review</a> above.</li>
 <li><b>Right in Gender</b> and <b>verb forms known</b>.</li>
 <li><b>By theme</b>: progress in each theme. Tap a theme to open it.</li>
@@ -4629,6 +4629,8 @@ document.addEventListener('keydown',e=>{
 });
 /* ---- progress overview ---- */
 function themeKnown(k){const t=THEMES[k];let s;try{s=JSON.parse(localStorage.getItem(t.key)||'{}')}catch(e){s={}}return new Set((s.k||[]).map(x=>k+'|'+x))}
+function nextRev(){const t=today(),fut=Object.values(SRS).map(c=>c[1]).filter(d=>d>t);if(!fut.length)return'<div class="lab" style="margin-top:8px">Answer some cards in Flashcards to start your reviews.</div>';
+  const d=Math.min(...fut),n=fut.filter(x=>x===d).length,dd=d-t;return `<div class="lab" style="margin-top:8px">Next review: <b>${dd===1?'tomorrow':`in ${dd} days`}</b> (${n.toLocaleString('en')} word${n===1?'':'s'})</div>`}
 function oRender(){
   const t=today(),v=Object.values(SRS),due=v.filter(c=>c[1]<=t).length,mast=v.filter(c=>c[0]>=5).length,learn=v.length-mast;
   const byK={};ALL.forEach(w=>{(byK[w.k]=byK[w.k]||[]).push(w)});
@@ -4640,7 +4642,7 @@ function oRender(){
   $('oList').innerHTML=rows.join('');
   const pct=ALL.length?tot/ALL.length*100:0;
   $('oTiles').innerHTML=`<div class="tile" id="oDaily"></div><div class="tile"><div class="big">${tot.toLocaleString('en')}</div><div class="lab">words known of ${ALL.length.toLocaleString('en')} (${Math.round(pct)}%)</div><div class="track"><i style="width:${pct}%"></i></div></div>
-  <div class="tile"><div class="big">${due.toLocaleString('en')}</div><div class="lab">due for review today</div>${due?'<button id="oRev" class="yes" style="margin-top:10px;width:100%">Review now</button>':''}</div>
+  <div class="tile"><div class="big">${due.toLocaleString('en')}</div><div class="lab">due for review today</div>${due?'<button id="oRev" class="yes" style="margin-top:10px;width:100%">Review now</button>':nextRev()}</div>
   <div class="tile"><div class="big">${learn.toLocaleString('en')} <span style="font-size:20px;color:var(--mut)">/ ${mast.toLocaleString('en')}</span></div><div class="lab">learning / mastered</div><a class="q" href="#h-review">What’s the difference?</a></div>
   <div class="tile"><div class="big">${gTot.t?Math.round(gTot.r/gTot.t*100)+'%':'–'}</div><div class="lab">right in Gender${gTot.t?` (${gTot.t.toLocaleString('en')} answers)`:''}</div></div>`;
   oDaily();
