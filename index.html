@@ -4293,8 +4293,11 @@ function vbImp(nb){if(IMP_NONE.has(nb))return'';if(IMP_FIX[nb])return IMP_FIX[nb
   return [iv,...rest].join(' ')}
 function vForms(w){const n=String(w.note||'');if(w.g!=='verb')return null;const p=n.split(' · ');if(p.length<3||!/^har /.test(p[2]))return null;return{f:[...p.slice(0,3),vbImp(w.nb)||'—'],rest:p.slice(3).join(' · ')}}
 function aForms(w){if(w.g!=='adj')return null;const p=String(w.note||'').split(' · ');const i=p.indexOf(w.nb);
-  if(i>=0&&p.length>=i+3)return{f:p.slice(i,i+3),rest:[...p.slice(0,i),...p.slice(i+3)].join(' · ')};
-  const j=p.indexOf('never changes');if(j>=0)return{f:[w.nb,w.nb,w.nb],rest:[...p.slice(0,j),...p.slice(j+1)].join(' · ')};return null}
+  const nc=j=>({f:[w.nb,w.nb,w.nb],rest:[...p.slice(0,j),...p.slice(j+1)].join(' · ')});
+  if(i>=0&&p[i+1]==='never changes')return{f:[w.nb,w.nb,w.nb],rest:[...p.slice(0,i),...p.slice(i+2)].join(' · ')};
+  if(i>=0&&p.length>=i+3){const extra=[];const f=p.slice(i,i+3).map(x=>{const h=x.split(/;| \(| ≠/)[0].trim();let t=x.slice(h.length).replace(/^;\s*/,'').trim();if(t==='(never changes)')t='';if(t)extra.push(t);return h});
+    return{f,rest:[...p.slice(0,i),...extra,...p.slice(i+3)].join(' · ')}}
+  const j=p.indexOf('never changes');if(j>=0)return nc(j);return null}
 function noteHTML(w){if(!w.note)return'';const a=aForms(w);if(a){const L=['en / ei','et','plural · definite'];
   return `<div class="forms sm three">${a.f.map((f,k)=>`<div><small>${L[k]}</small><b>${f}</b></div>`).join('')}</div>`+(a.rest?`<div class="note">${a.rest}</div>`:'')}
   const v=vForms(w);if(!v)return`<div class="note">${w.note}</div>`;const L=['present','past','perfect','imperative'];
