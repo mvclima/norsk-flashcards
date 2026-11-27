@@ -163,7 +163,7 @@ table.ov .num2{text-align:right;white-space:nowrap;color:var(--mut);font-size:14
 .side .today b{color:var(--ink)}
 .forms{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;width:100%;max-width:620px;margin-top:6px}
 @media(max-width:520px){.forms{grid-template-columns:repeat(2,minmax(0,1fr))}}
-.face.back:has(.forms.sm){padding:22px 16px}.face.back:has(.forms.sm) .pt{font-size:clamp(24px,6.5vw,36px)}.forms.sm{margin-top:12px;gap:6px}.forms.three,.forms.sm.three{grid-template-columns:repeat(3,minmax(0,1fr));max-width:480px}.forms.sm+.note{margin-top:8px;font-size:14px}.forms.sm div{padding:7px 4px}.forms.sm b{font-size:clamp(15px,3.8vw,19px)}.forms.sm small{font-size:11px}
+.face.back:has(.forms.sm){padding:22px 16px}.face.back:has(.forms.sm) .pt{font-size:clamp(24px,6.5vw,36px)}.forms.sm{margin-top:12px;gap:6px}.nrows{display:grid;grid-template-columns:auto 1fr;gap:6px 14px;align-items:baseline;margin:12px auto 0;max-width:440px;width:100%;text-align:left;background:var(--bg);border-radius:12px;padding:10px 14px}.nrows small{font-size:12px;color:var(--mut)}.nrows b{font:700 clamp(16px,4.2vw,19px)/1.2 Rubik,sans-serif;overflow-wrap:anywhere}.nrows+.note{margin-top:8px;font-size:14px}.face.back:has(.nrows){padding:22px 16px}.face.back:has(.nrows) .pt{font-size:clamp(24px,6.5vw,36px)}.forms.three,.forms.sm.three{grid-template-columns:repeat(3,minmax(0,1fr));max-width:480px}.forms.sm+.note{margin-top:8px;font-size:14px}.forms.sm div{padding:7px 4px}.forms.sm b{font-size:clamp(15px,3.8vw,19px)}.forms.sm small{font-size:11px}
 .forms div{background:var(--bg);border-radius:12px;padding:10px 6px}
 .forms small{display:block;font-size:12px;color:var(--mut);margin-bottom:2px}
 .forms b{font:700 clamp(17px,4.4vw,22px)/1.15 Rubik,sans-serif;overflow-wrap:anywhere}
@@ -378,7 +378,7 @@ table.ov .num2{text-align:right;white-space:nowrap;color:var(--mut);font-size:14
 <li><b>Norsk → English / English → Norsk</b> chooses which side you see first.</li>
 <li><b>Knew it!</b> marks the word as known; <b>Didn’t know</b> marks it as missed. Both move to the next card. <b>← Back</b> goes to the previous one.</li>
 <li>The list next to the buttons filters the cards: all, only the ones you missed, one group of the theme, or one kind of word (en, ei, et, verbs…). <b>Shuffle</b> mixes the order.</li>
-<li>The coloured label shows the kind of word: <b>en</b> masculine, <b>ei</b> feminine, <b>et</b> neuter, plural, adjective, verb or expression. The note under the translation gives plurals, examples and tips. On verb cards the four forms (present · past · perfect · imperative) are shown in boxes, and on adjective cards the three forms (en/ei · et · plural and definite, e.g. <i>stor · stort · store</i>).</li>
+<li>The coloured label shows the kind of word: <b>en</b> masculine, <b>ei</b> feminine, <b>et</b> neuter, plural, adjective, verb or expression. The note under the translation gives plurals, examples and tips. On verb cards the four forms (present · past · perfect · imperative) are shown in boxes, on adjective cards the three forms (en/ei · et · plural and definite, e.g. <i>stor · stort · store</i>), and on noun cards the four forms (<i>en bil · bilen · biler · bilene</i>). Long nouns are shown in rows instead of boxes. Words with no plural, like <i>melk</i>, show — in the plural. Feminine words use the <i>-a</i> form (<i>jenta</i>); <i>jenten</i> is also correct.</li>
 <li>The app remembers the card you stopped at in each theme and in each filter. Cards you already answered under another filter count as done and are skipped, so you don’t see them twice in the same round. The same works in Verbs and Gender.</li>
 <li>The <b>Full list</b> at the bottom shows every word in the theme.</li>
 </ul>
@@ -4292,13 +4292,88 @@ function vbImp(nb){if(IMP_NONE.has(nb))return'';if(IMP_FIX[nb])return IMP_FIX[nb
     else if(v.length>3)iv=st}
   return [iv,...rest].join(' ')}
 function vForms(w){const n=String(w.note||'');if(w.g!=='verb')return null;const p=n.split(' · ');if(p.length<3||!/^har /.test(p[2]))return null;return{f:[...p.slice(0,3),vbImp(w.nb)||'—'],rest:p.slice(3).join(' · ')}}
+/* ---- noun forms: generated from rules, plural from the note when given ---- */
+const N_IRR={mann:['mannen','menn','mennene'],sjømann:['sjømannen','sjømenn','sjømennene'],forretningsmann:['forretningsmannen','forretningsmenn','forretningsmennene'],
+mus:['musa','mus','musene'],natt:['natta','netter','nettene'],tre:['treet','trær','trærne'],juletre:['juletreet','juletrær','juletrærne'],kne:['kneet','knær','knærne'],
+håndkle:['håndkleet','håndklær','håndklærne'],tørkle:['tørkleet','tørkler','tørklene'],program:['programmet','programmer','programmene'],depositum:['depositumet','depositumer','depositumene'],
+sentrum:['sentrumet','sentrum','sentrumene'],kilo:['kiloen','kilo','kiloene'],øl:['ølet','øl','ølene'],voksen:['den voksne','voksne','de voksne'],
+jordmor:['jordmora','jordmødre','jordmødrene'],bestemor:['bestemora','bestemødre','bestemødrene'],mormor:['mormora','mormødre','mormødrene'],farmor:['farmora','farmødre','farmødrene'],
+svigermor:['svigermora','svigermødre','svigermødrene'],stemor:['stemora','stemødre','stemødrene'],bestefar:['bestefaren','bestefedre','bestefedrene'],morfar:['morfaren','morfedre','morfedrene'],
+farfar:['farfaren','farfedre','farfedrene'],svigerfar:['svigerfaren','svigerfedre','svigerfedrene'],stefar:['stefaren','stefedre','stefedrene'],halvbror:['halvbroren','halvbrødre','halvbrødrene'],
+sommer:['sommeren','somrer','somrene'],vinter:['vinteren','vintrer','vintrene'],feber:['feberen','febrer','febrene'],lever:['leveren','levrer','levrene'],hulder:['huldra','huldrer','huldrene'],
+halvdel:['halvdelen','halvdeler','halvdelene'],fjerdedel:['fjerdedelen','fjerdedeler','fjerdedelene'],bydel:['bydelen','bydeler','bydelene'],kanel:['kanelen','—','—'],tunnel:['tunnelen','tunneler','tunnelene'],
+gresskar:['gresskaret','gresskar','gresskarene'],badekar:['badekaret','badekar','badekarene'],ekorn:['ekornet','ekorn','ekornene'],eventyr:['eventyret','eventyr','eventyrene'],bryllup:['bryllupet','bryllup','bryllupene'],
+mamma:['mammaen','mammaer','mammaene'],frivillig:['den frivillige','frivillige','de frivillige'],arbeidsledig:['den arbeidsledige','arbeidsledige','de arbeidsledige'],ansatt:['den ansatte','ansatte','de ansatte'],kabinansatt:['den kabinansatte','kabinansatte','de kabinansatte'],reisende:['den reisende','reisende','de reisende'],midnatt:['midnatt','—','—']};
+const N_MASS=new Set(['mat','kål','mais','mugg','gjær','ris','dill','melk','te','brus','søvn','ved','ull','plast','papp','kos','frykt','angst','skam','fred','støy','frost','snø','luft','røyk','sand',
+'pepper','karri','basilikum','oregano','kakao','ruccola','pasta','humor','latter','torden','energi','politi','smør','salt','mel','kjøtt','vann','blod','gull','sølv','stress','støv','søppel','sludd','hagl','regn',
+'gress','drivstoff','potetgull','peanøttsmør','lammekjøtt','pinnekjøtt','friluftsliv','håp','ansvar','personvern','vær','undertøy','ullundertøy','bacon','godteri','sukker','bestikk','havregryn','munnskyll',
+'avfall','restavfall','matavfall','plastavfall','papiravfall','sinne','humør','syltetøy','fravær','influensa','kjærlighet','ensomhet','takknemlighet','stolthet','tillit','lykke','helse','musikk','kondisjon','misunnelse','bevissthet','uvitenhet','oppmerksomhet','taushet','tristhet','ærlighet','høflighet','tålmodighet','nysgjerrighet','vennlighet','selvstendighet','menneskehet','allmennhet','åpenhet','kreativitet','elektrisitet','informasjon','motivasjon','turisme','rasisme','kriminalitet','fattigdom','visdom','galskap','integrering','innvandring','likestilling','sparing','programmering','opplæring','bagasje','håndbagasje','fritid','sjømat','kveldsmat','honning','rømme','kaffe','juice','olivenolje','ketchup','majones','remulade','sennep','persille','muskat','kardemomme','ingefær','spinat','kjøttdeig','skinke','risgrøt','fårikål','tunfisk','klippfisk','bomull','keramikk','brunost','bensin','natur','søle','tåke','tannkrem','sminke','balsam','håndsåpe','tanntråd','oppvask','tøyvask','kildesortering','legitimasjon','vilje','ungdom','barndom','alderdom','hvitløk','blomkål','sikkerhet','nærhet','tilstedeværelse','forståelse','sivilstand','dugnad']);
+const N_MONO_EXTRA=['kar','svin','bud','bryn','ledd','skjell','renn','hopp','søk','hov','fall','brett','jern','lys','gryn','lær','verk','tøy','felt','funn','hell','blikk','slett','ritt'];
+
+const N_VW=/[aeiouyæøå]+/g;
+const nSyl=x=>(x.match(N_VW)||[]).length;
+const N_V='aeiouyæøå';
+const N_SUF={bok:['boka','bøker','bøkene'],rot:['rota','røtter','røttene'],mann:['mannen','menn','mennene'],natt:['natta','netter','nettene'],hånd:['hånda','hender','hendene'],tann:['tannen','tenner','tennene'],fot:['foten','føtter','føttene'],strand:['stranda','strender','strendene']};
+function nounForms(g,nb,note,MONO_NT,IRR,MASS){
+  if(/ /.test(nb))return null;
+  if(IRR[nb])return IRR[nb];
+  for(const k in N_SUF)if(nb.endsWith(k)){const pre=nb.slice(0,-k.length);return N_SUF[k].map(x=>x==='—'?x:pre+x)}
+  if(/het$/.test(nb)&&g==='ei')g='en';
+  const n=String(note||'');let pl=null;
+  const m=n.match(/(?:^|· )pl\. ([^ ·;,(]+)/);if(m)pl=m[1];
+  const mono=nSyl(nb)===1;
+  const dbl=x=>/[aeiouyæøå]m$/.test(x)&&!/[aeiouyæøå]{2}m$/.test(x);
+  let st=nb;
+  if((mono&&dbl(nb))||/dom$/.test(nb))st=nb+'m';
+  let compMono=null;
+  if(g==='et'&&!mono)compMono=[...MONO_NT].filter(x=>nb.length-x.length>=2&&nb.endsWith(x)).sort((a,b)=>b.length-a.length)[0]||null;
+  if(compMono&&dbl(compMono))st=nb+'m';
+  let def;
+  if(g==='en')def=nb.endsWith('e')?nb+'n':st+'en';
+  else if(g==='ei')def=nb.endsWith('e')?nb.slice(0,-1)+'a':/a$/.test(nb)?nb+'en':st+'a';
+  else def=nb.endsWith('e')?nb+'t':/[ei]um$/.test(nb)?nb.slice(0,-2)+'et':st+'et';
+  if(!pl&&MASS.has(nb))return[def,'—','—'];
+  const elPl=x=>{let s=x.slice(0,-2);if(s.length>1&&s.slice(-1)===s.slice(-2,-1))s=s.slice(0,-1);return s+'ler'};
+  if(!pl){
+    if(g==='et'){
+      if(mono||compMono||(/en$/.test(nb)&&nSyl(nb)>1))pl=nb;
+      else if(nb.endsWith('e'))pl=nb+'r';
+      else if(/[ei]um$/.test(nb))pl=nb.slice(0,-2)+'er';
+      else if(/[^aeiouyæøå]er$/.test(nb)&&nSyl(nb)>1){let s=nb.slice(0,-2);if(s.slice(-1)===s.slice(-2,-1))s=s.slice(0,-1);pl=s+'re'}
+      else if(/[^aeiouyæøå]el$/.test(nb)&&nSyl(nb)>1)pl=elPl(nb);
+      else pl=nb+'er';
+    }else{
+      if(nb.endsWith('e'))pl=nb+'r';
+      else if(/[^aeiouyæøål]el$/.test(nb)&&!/del$/.test(nb)&&nSyl(nb)>1)pl=elPl(nb);
+      else if(/er$/.test(nb)&&nSyl(nb)>1&&!/asjer$/.test(nb))pl=nb+'e';
+      else pl=st+'er';
+    }
+  }
+  let dp;
+  if(pl===nb)dp=st+'ene';
+  else if(/ere$/.test(pl))dp=pl.slice(0,-1)+'ne';
+  else if(/re$/.test(pl))dp=pl.slice(0,-1)+'ene';
+  else if(/er$/.test(pl))dp=pl.slice(0,-1)+'ne';
+  else if(/[^e]r$/.test(pl))dp=pl+'ne';
+  else if(/e$/.test(pl))dp=pl+'ne';
+  else dp=pl+'ene';
+  return[def,pl,dp];
+}
+
+let N_MONO=null;
+function nForms(w){if(!ART.includes(w.g))return null;if(!N_MONO)N_MONO=new Set([...ALL.filter(x=>x.g==='et'&&nSyl(x.nb)===1).map(x=>x.nb),...N_MONO_EXTRA]);
+  const f=nounForms(w.g,w.nb,w.note,N_MONO,N_IRR,N_MASS);if(!f)return null;
+  const rest=String(w.note||'').split(' · ').map(x=>{if(!/^pl\. /.test(x))return x;return x.replace(/^pl\. [^ ·;,(]+( \(unchanged\))?;?\s*/,'')}).filter(Boolean).join(' · ');
+  return{f:[w.g+' '+w.nb,...f],rest}}
 function aForms(w){if(w.g!=='adj')return null;const p=String(w.note||'').split(' · ');const i=p.indexOf(w.nb);
   const nc=j=>({f:[w.nb,w.nb,w.nb],rest:[...p.slice(0,j),...p.slice(j+1)].join(' · ')});
   if(i>=0&&p[i+1]==='never changes')return{f:[w.nb,w.nb,w.nb],rest:[...p.slice(0,i),...p.slice(i+2)].join(' · ')};
   if(i>=0&&p.length>=i+3){const extra=[];const f=p.slice(i,i+3).map(x=>{const h=x.split(/;| \(| ≠/)[0].trim();let t=x.slice(h.length).replace(/^;\s*/,'').trim();if(t==='(never changes)')t='';if(t)extra.push(t);return h});
     return{f,rest:[...p.slice(0,i),...extra,...p.slice(i+3)].join(' · ')}}
   const j=p.indexOf('never changes');if(j>=0)return nc(j);return null}
-function noteHTML(w){if(!w.note)return'';const a=aForms(w);if(a){const L=['en / ei','et','plural · definite'];
+function noteHTML(w){const nf=nForms(w);if(nf){const L=['indefinite','definite','plural','def. plural'];const long=nf.f.some(x=>x.length>13);
+  return (long?`<div class="nrows">${nf.f.map((f,k)=>`<small>${L[k]}</small><b>${f}</b>`).join('')}</div>`:`<div class="forms sm">${nf.f.map((f,k)=>`<div><small>${L[k]}</small><b>${f}</b></div>`).join('')}</div>`)+(nf.rest?`<div class="note">${nf.rest}</div>`:'')}
+  if(!w.note)return'';const a=aForms(w);if(a){const L=['en / ei','et','plural · definite'];
   return `<div class="forms sm three">${a.f.map((f,k)=>`<div><small>${L[k]}</small><b>${f}</b></div>`).join('')}</div>`+(a.rest?`<div class="note">${a.rest}</div>`:'')}
   const v=vForms(w);if(!v)return`<div class="note">${w.note}</div>`;const L=['present','past','perfect','imperative'];
   return `<div class="forms sm">${v.f.map((f,k)=>`<div><small>${L[k]}</small><b>${f}</b></div>`).join('')}</div>`+(v.rest?`<div class="note">${v.rest}</div>`:'')}
