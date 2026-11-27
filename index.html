@@ -215,7 +215,6 @@ table.ov .num2{text-align:right;white-space:nowrap;color:var(--mut);font-size:14
 <div class="brand">Norsk Flashcards</div>
 <div class="today" id="today"></div>
 <a href="#flashcards" id="navF"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h11a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2zm0 2v12h11V7H4zm15-4a2 2 0 0 1 2 2v12h-2V5H7V3h12z"/></svg>Flashcards</a>
-<a href="#practice" id="navP"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M17 3l4 4-4 4V8h-2.6l-2.2 2.6-1.3-1.5L13.5 6H17V3zM3 6h4.5l9 10H17v-3l4 4-4 4v-3h-1.5l-9-10H3V6zm0 10h3.6l2.1-2.4 1.3 1.5L7.5 18H3v-2z"/></svg>Practice</a>
 <a href="#verbs" id="navV"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h10v2H4zm0 4h16v2H4zm0 4h10v2H4zm0 4h16v2H4zm13-12l4 2-4 2z"/></svg>Verbs</a>
 <a href="#gender" id="navG"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 5h5v14H3V5zm6.5 0h5v14h-5V5zM16 5h5v14h-5V5zM4.5 6.5v11h2v-11h-2zm6.5 0v11h2v-11h-2zm6.5 0v11h2v-11h-2z"/></svg>Gender</a>
 <a href="#clock" id="navC"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a10 10 0 1 1 0 20 10 10 0 0 1 0-20zm0 2a8 8 0 1 0 0 16 8 8 0 0 0 0-16zm-1 3h2v5.2l3.6 2.1-1 1.7L11 13.4V7z"/></svg>Clock</a>
@@ -255,28 +254,10 @@ table.ov .num2{text-align:right;white-space:nowrap;color:var(--mut);font-size:14
 <div class="prog"><span id="pTxt"></span><span id="pKnown"></span></div>
 <div class="track"><i id="pBar" style="width:0"></i></div>
 
-<section style="margin-top:36px">
+<section id="fullList" style="margin-top:36px">
 <h2 class="sec">Full list</h2>
 <div class="legend" id="legend"></div>
 <table><tbody id="list"></tbody></table></section>
-</main>
-</div>
-<div id="vPractice" hidden>
-<header><div class="band">
-<div class="top"><button class="menuBtn" type="button" aria-label="Open menu"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg></button></div>
-<h1>Practice</h1>
-<p id="pDesc">All words from every theme, shuffled</p>
-</div></header>
-<main class="band">
-<div class="bar">
-<button id="pdNo" class="on" aria-pressed="true">Norsk → English</button>
-<button id="pdPt" aria-pressed="false">English → Norsk</button>
-<button id="pReset">Reset progress</button>
-</div>
-<div class="mode" role="group" aria-label="Practice mode"><button id="pmAll" class="on" aria-pressed="true">All cards</button><button id="pmRev" aria-pressed="false">Review</button></div>
-<div id="pStage"></div>
-<div class="prog"><span id="ppTxt"></span><span id="ppKnown"></span></div>
-<div class="track"><i id="ppBar" style="width:0"></i></div>
 </main>
 </div>
 <div id="vVerbs" hidden>
@@ -338,7 +319,7 @@ table.ov .num2{text-align:right;white-space:nowrap;color:var(--mut);font-size:14
 <main class="band">
 <div class="tiles" id="oTiles"></div>
 <h2 class="sec">By theme</h2>
-<p style="color:var(--mut);font-size:14px;margin:-4px 0 12px">A word counts as known when you marked it “Knew it!” in Flashcards or Practice. Tap a theme to open it.</p>
+<p style="color:var(--mut);font-size:14px;margin:-4px 0 12px">A word counts as known when you marked it “Knew it!” in Flashcards. Tap a theme to open it.</p>
 <table class="ov"><tbody id="oList"></tbody></table>
 </main>
 </div>
@@ -358,7 +339,7 @@ table.ov .num2{text-align:right;white-space:nowrap;color:var(--mut);font-size:14
 </section>
 <section class="setCard">
 <h2>Daily goal</h2>
-<p>How many cards you want to answer each day. Every answer in Flashcards, Practice, Verbs and Gender counts.</p>
+<p>How many cards you want to answer each day. Every answer in Flashcards, Verbs, Gender, Clock and Numbers counts.</p>
 <div class="seg" role="group" aria-label="Daily goal" id="setGoal">
 <button type="button" data-g="10">10</button><button type="button" data-g="20">20</button><button type="button" data-g="30">30</button><button type="button" data-g="50">50</button><button type="button" data-g="100">100</button>
 </div>
@@ -371,7 +352,7 @@ table.ov .num2{text-align:right;white-space:nowrap;color:var(--mut);font-size:14
 </section>
 <section class="setCard">
 <h2>Reset progress</h2>
-<p>Delete everything this app has saved in this browser: progress in every theme, Practice, Review, Verbs, Gender, daily goal, streak and settings. The app starts again as for a new user.</p>
+<p>Delete everything this app has saved in this browser: progress in every theme, Review, Verbs, Gender, Clock, Numbers, daily goal, streak and settings. The app starts again as for a new user.</p>
 <button type="button" class="no" id="setReset">Reset progress</button>
 <div id="setAsk" hidden>
 <p role="alert" style="color:var(--ink);margin:0 0 12px"><b>Delete all progress and settings?</b> This can’t be undone.</p>
@@ -388,7 +369,7 @@ table.ov .num2{text-align:right;white-space:nowrap;color:var(--mut);font-size:14
 </div></header>
 <main class="band help">
 <nav class="toc" aria-label="Help topics">
-<a href="#h-flash">Flashcards</a><a href="#h-practice">Practice</a><a href="#h-review">Review</a><a href="#h-verbs">Verbs</a><a href="#h-gender">Gender</a><a href="#h-clock">Clock</a><a href="#h-numbers">Numbers</a><a href="#h-search">Search</a><a href="#h-progress">Progress</a><a href="#h-goal">Daily goal</a><a href="#h-lang">NO / EN</a><a href="#h-voice">Pronunciation</a><a href="#h-keys">Keyboard</a><a href="#h-settings">Settings</a><a href="#h-reset">Reset</a><a href="#h-saved">Your progress</a><a href="#h-install">Install</a><a href="#h-about">About</a>
+<a href="#h-flash">Flashcards</a><a href="#h-mix">All words</a><a href="#h-review">Review</a><a href="#h-verbs">Verbs</a><a href="#h-gender">Gender</a><a href="#h-clock">Clock</a><a href="#h-numbers">Numbers</a><a href="#h-search">Search</a><a href="#h-progress">Progress</a><a href="#h-goal">Daily goal</a><a href="#h-lang">NO / EN</a><a href="#h-voice">Pronunciation</a><a href="#h-keys">Keyboard</a><a href="#h-settings">Settings</a><a href="#h-reset">Reset</a><a href="#h-saved">Your progress</a><a href="#h-install">Install</a><a href="#h-about">About</a>
 </nav>
 
 <h2 id="h-flash">Flashcards</h2>
@@ -402,15 +383,17 @@ table.ov .num2{text-align:right;white-space:nowrap;color:var(--mut);font-size:14
 <li>The <b>Full list</b> at the bottom shows every word in the theme.</li>
 </ul>
 
-<h2 id="h-practice">Practice</h2>
-<p>All words from every theme in one shuffled deck, with two modes:</p>
+<h2 id="h-mix">All words and Due today</h2>
+<p>At the end of the theme list, the section <b>Blanding / Mix</b> has two special themes:</p>
 <ul>
-<li><b>All cards</b>: a word you mark <b>Knew it!</b> leaves this deck for good. <b>Didn’t know</b> keeps it, and it comes back in the next round. <b>Reset progress</b> puts all words back.</li>
-<li><b>Review</b>: only the words that are due today, see below.</li>
+<li><b>Alle ord / All words</b>: every card from every theme, always shuffled. Filter by <b>Not known yet</b>, your mistakes, a kind of word or one theme.</li>
+<li><b>Til repetisjon / Due today</b>: only the words that are due for review today, see <a href="#h-review">Review</a>. A word you miss comes back once more at the end.</li>
+<li>Progress is shared: <b>Knew it!</b> and <b>Didn’t know</b> here count in the word’s own theme too, and the other way round.</li>
+<li>These two themes have no Full list and no Reset button. To start a theme again, open it and use its own <b>Reset progress</b>.</li>
 </ul>
 
 <h2 id="h-review">Review (spaced repetition)</h2>
-<p>Every time you answer a card in Flashcards or Practice, the app schedules it for review. Words you know come back less and less often; words you miss come back soon. This is the best way to keep words in long-term memory.</p>
+<p>Every time you answer a card in Flashcards, the app schedules it for review. Words you know come back less and less often; words you miss come back soon. This is the best way to keep words in long-term memory.</p>
 <table><thead><tr><th>Step</th><th>Next review</th><th>Counts as</th></tr></thead><tbody>
 <tr><td>1</td><td>tomorrow</td><td><b>learning</b></td></tr>
 <tr><td>2</td><td>in 3 days</td><td><b>learning</b></td></tr>
@@ -421,9 +404,9 @@ table.ov .num2{text-align:right;white-space:nowrap;color:var(--mut);font-size:14
 </tbody></table>
 <ul>
 <li><b>Knew it!</b> moves the word one step up. The first time you know a word it goes straight to step 2.</li>
-<li><b>Didn’t know</b> sends it back to step 1. In Review it also comes back once more at the end of the same session.</li>
+<li><b>Didn’t know</b> sends it back to step 1. In <b>Due today</b> it also comes back once more at the end of the same session.</li>
 <li><b>Learning</b> are words still being fixed in memory (reviews up to 14 days apart). <b>Mastered</b> are words that reached 30 days or more, which takes several correct reviews spread over a few weeks.</li>
-<li>Open <b>Practice → Review</b> each day to clear the words that are due. The button shows how many there are.</li>
+<li>Open the theme <b>Til repetisjon / Due today</b> each day to clear the words that are due. <b>Progress</b> shows how many there are, with a <b>Review now</b> button.</li>
 </ul>
 
 <h2 id="h-verbs">Verbs</h2>
@@ -468,7 +451,7 @@ table.ov .num2{text-align:right;white-space:nowrap;color:var(--mut);font-size:14
 <h2 id="h-progress">Progress</h2>
 <ul>
 <li><b>Cards today</b>: answers today, your daily goal and your streak.</li>
-<li><b>Words known</b>: words you marked <b>Knew it!</b> in Flashcards or Practice.</li>
+<li><b>Words known</b>: words you marked <b>Knew it!</b> in Flashcards.</li>
 <li><b>Due for review today</b>, with a button to start the review.</li>
 <li><b>Learning / mastered</b>: see <a href="#h-review">Review</a> above.</li>
 <li><b>Right in Gender</b> and <b>verb forms known</b>.</li>
@@ -477,7 +460,7 @@ table.ov .num2{text-align:right;white-space:nowrap;color:var(--mut);font-size:14
 
 <h2 id="h-goal">Daily goal and streak</h2>
 <ul>
-<li>Every answer in Flashcards, Practice, Verbs and Gender counts towards today’s goal. It is shown under the app name in the menu.</li>
+<li>Every answer in Flashcards, Verbs, Gender, Clock and Numbers counts towards today’s goal. It is shown under the app name in the menu.</li>
 <li>Choose the goal in <b>Settings</b>: 10, 20, 30, 50 or 100 cards a day. It starts at 20.</li>
 <li>Your <b>streak</b> counts the days in a row on which you reached the goal. If you haven’t reached it yet today, yesterday’s streak still counts until the day is over.</li>
 </ul>
@@ -510,20 +493,20 @@ table.ov .num2{text-align:right;white-space:nowrap;color:var(--mut);font-size:14
 <li><b>Appearance</b>: <b>Automatic</b> follows your device’s light or dark mode; <b>Light</b> or <b>Dark</b> keeps it fixed.</li>
 <li><b>Daily goal</b>: 10, 20, 30, 50 or 100 cards a day, see <a href="#h-goal">Daily goal</a>.</li>
 <li><b>Pronunciation</b>: the voice that reads the words, with a <b>Test</b> button, see <a href="#h-voice">Pronunciation</a>.</li>
-<li><b>Reset progress</b>: deletes everything saved (progress, reviews, goal, streak and settings), after you confirm. The app starts again as for a new user. The <b>Reset progress</b> buttons in Flashcards, Practice, Verbs and Gender only clear that page.</li>
+<li><b>Reset progress</b>: deletes everything saved (progress, reviews, goal, streak and settings), after you confirm. The app starts again as for a new user. The <b>Reset progress</b> buttons in Flashcards, Verbs, Gender, Clock and Numbers only clear that page.</li>
 </ul>
 
 <h2 id="h-reset">Reset progress</h2>
-<p>There are five <b>Reset progress</b> buttons. Four of them clear only their own page; the one in Settings clears everything.</p>
+<p>Each page has its own <b>Reset progress</b> button that clears only that page; the one in Settings clears everything.</p>
 <table><thead><tr><th>Where</th><th>What it deletes</th></tr></thead><tbody>
 <tr><td><b>Flashcards</b></td><td>The words you knew and missed in the <b>open theme</b> only. The theme starts again from the first card.</td></tr>
-<tr><td><b>Practice</b></td><td>The words you marked <b>Knew it!</b> and the ones you missed. All words come back into the deck.</td></tr>
 <tr><td><b>Verbs</b></td><td>The verbs you knew and missed. The verb deck starts again.</td></tr>
 <tr><td><b>Gender</b></td><td>The score and your saved mistakes. A new round starts.</td></tr>
+<tr><td><b>Clock</b>, <b>Numbers</b></td><td>The score (in Numbers, of the mode you are in).</td></tr>
 <tr><td><b>Settings</b></td><td><b>Everything</b>: all of the above, Review, daily goal, streak and settings. Asks you to confirm first.</td></tr>
 </tbody></table>
 <ul>
-<li>The four page buttons don’t touch <a href="#h-review">Review</a>, your <a href="#h-goal">daily goal and streak</a>, or the other pages and themes.</li>
+<li>The page buttons don’t touch <a href="#h-review">Review</a>, your <a href="#h-goal">daily goal and streak</a>, or the other pages and themes.</li>
 <li>They delete at once, with no confirmation. Only the button in Settings asks first.</li>
 <li>Nothing can be undone. Progress on your other devices is not affected.</li>
 </ul>
@@ -4288,8 +4271,9 @@ try{if(!localStorage.getItem('kjp-mig-sing1')){const M={"klaer": {"sokker": "sok
 let W=[],tKey='',catList=[],curK='';
 let LANG='no';try{if(localStorage.getItem('kjp-lang')==='en')LANG='en'}catch(e){}
 const T_EN={smaord:'Greetings',uttrykk:'Expressions',tall:'Numbers',farger:'Colours',tid:'Time',pronomen:'Pronouns',familie:'Family',folk:'People',land:'Countries & languages',kroppen:'The body',tanker:'Thoughts & feelings',mat:'Food & drink',klaer:'Clothes',hjem:'Home',hverdag:'Everyday things',skole:'School',byen:'The city',natur:'Nature & weather',dyr:'Animals',reise:'Travel',transport:'Transport',fritid:'Free time & sport',teknologi:'Technology',yrker:'Jobs',arbeid:'Work',samfunn:'Society',verb:'Verbs',adjektiv:'Adjectives',adverb:'Adverbs',preposisjoner:'Prepositions',konjunksjoner:'Conjunctions',abstrakt:'Abstract nouns'};
-const SEC_NO={'Basics':'Det grunnleggende','Me & people':'Meg og andre','Everyday life':'Hverdagsliv','The wider world':'Verden rundt oss','Work & society':'Arbeid og samfunn','Grammar':'Grammatikk','More':'Mer'};
-const tn=k=>LANG==='en'?(T_EN[k]||THEMES[k].name):THEMES[k].name;
+const SEC_NO={'Basics':'Det grunnleggende','Me & people':'Meg og andre','Everyday life':'Hverdagsliv','The wider world':'Verden rundt oss','Work & society':'Arbeid og samfunn','Grammar':'Grammatikk','Mix':'Blanding','More':'Mer'};
+const VT={mix:{no:'Alle ord',en:'All words'},due:{no:'Til repetisjon',en:'Due today'}};
+const tn=k=>VT[k]?VT[k][LANG]:LANG==='en'?(T_EN[k]||THEMES[k].name):THEMES[k].name;
 const gn=c=>{const p=String(c).split(' · ');return p.length<2?c:LANG==='en'?p[0]:p.slice(1).join(' · ')};
 const sn=x=>LANG==='en'?x:(SEC_NO[x]||x);
 /* positions kept per filter: {cur, by:{filter:{d,i,...}}} */
@@ -4334,7 +4318,45 @@ const gFilt={en:'Only “en” (masculine)',ei:'Only “ei” (feminine)',et:'On
 const ART=['en','ei','et'];
 let known=new Set(),missed=new Set();
 const save=()=>{try{localStorage.setItem(tKey,JSON.stringify({k:[...known],m:[...missed]}))}catch(e){}};
+const ALL=[];
+for(const k in THEMES){const t=THEMES[k];
+  if(t.groups)t.groups.forEach(([cat,ws],gi)=>ws.forEach(([g,nb,pt,note])=>ALL.push({k,gi,cat,g,nb,pt,note})));
+  else t.words.forEach(([n,g,nb,pt,note,sw])=>ALL.push({k,gi:-1,cat:'',g,nb,pt,note,sw}));}
+{const cnt={};ALL.forEach(w=>{const k=w.k+'|'+w.nb;cnt[k]=(cnt[k]||0)+1});ALL.forEach(w=>{w.pid=w.k+'|'+(cnt[w.k+'|'+w.nb]>1?w.cat+'|':'')+w.nb})}
+const dueList=()=>{const t=today();return ALL.filter(w=>SRS[w.pid]&&SRS[w.pid][1]<=t)};
+/* one-time: move progress from the old Practice page into the themes */
+try{if(!localStorage.getItem('kjp-mig-practice')){const ps=JSON.parse(localStorage.getItem('kjp-practice')||'null');
+  if(ps){const by={};const put=(pid,st)=>{const k=pid.split('|')[0];if(!THEMES[k])return;const id=pid.slice(k.length+1);(by[k]=by[k]||[]).push([id,st])};
+    (ps.k||[]).forEach(x=>put(x,'k'));(ps.m||[]).forEach(x=>put(x,'m'));
+    for(const k in by){const key=THEMES[k].key;let s2={};try{s2=JSON.parse(localStorage.getItem(key)||'{}')||{}}catch(e){}const K=new Set(s2.k||[]),M=new Set(s2.m||[]);
+      by[k].forEach(([id,st])=>{if(st==='k'){K.add(id);M.delete(id)}else if(!K.has(id))M.add(id)});localStorage.setItem(key,JSON.stringify({k:[...K],m:[...M]}))}}
+  ['kjp-practice','kjp-practice-pos','kjp-pmode'].forEach(k=>localStorage.removeItem(k));localStorage.setItem('kjp-mig-practice','1')}}catch(e){}
+let VIRT=null;
+function vSave(w,st){const key=THEMES[w.k].key,id=w.id.slice(w.k.length+1);let s2={};try{s2=JSON.parse(localStorage.getItem(key)||'{}')||{}}catch(e){}
+  const K=new Set(s2.k||[]),M=new Set(s2.m||[]);if(st==='k'){K.add(id);M.delete(id)}else{M.add(id);K.delete(id)}try{localStorage.setItem(key,JSON.stringify({k:[...K],m:[...M]}))}catch(e){}}
+function loadVirtual(id){
+  VIRT=id;tKey='kjp-'+id;curK=id;
+  const src=id==='due'?dueList():ALL;
+  W=src.map(w=>({n:tn(w.k),k:w.k,g:w.g,nb:w.nb,pt:w.pt,note:w.note,sw:w.sw,cat:w.cat,id:w.pid}));
+  const gs=Object.keys(gName).filter(g=>W.some(w=>w.g===g)),ks=Object.keys(THEMES).filter(k=>W.some(w=>w.k===k));
+  $('filt').innerHTML=`<option value="all" id="allOpt">All</option><option value="new">Not known yet</option><option value="miss">Only the ones I missed</option>`+(gs.length>1?gs.map(g=>`<option value="${g}">${gFilt[g]}</option>`).join(''):'')+(id==='mix'?ks.map(k=>`<option value="t:${k}">Only ${tn(k)}</option>`).join(''):'');
+  catList=[];
+  $('legend').innerHTML=gs.map(g=>`<span><span class="dot g-${g}"></span>${gLeg[g]}</span>`).join('');
+  known=new Set();missed=new Set();
+  for(const k in THEMES){let s2={};try{s2=JSON.parse(localStorage.getItem(THEMES[k].key)||'{}')||{}}catch(e){}(s2.k||[]).forEach(x=>known.add(k+'|'+x));(s2.m||[]).forEach(x=>missed.add(k+'|'+x))}
+  const ids=new Set(W.map(w=>w.id));if(id==='mix'){known=new Set([...known].filter(x=>ids.has(x)));missed=new Set([...missed].filter(x=>ids.has(x)&&!known.has(x)))}
+  fA=ansGet(tKey+'-ans');
+  $('tName').textContent=tn(id);
+  $('tDesc').textContent=id==='mix'?`${W.length.toLocaleString('en')} words · every theme, shuffled`:(W.length?`${W.length} words due today · spaced repetition`:'No words are due today');
+  $('allOpt').textContent=`All ${W.length.toLocaleString('en')}`;
+  document.title='Flashcards: '+tn(id);
+  try{localStorage.setItem('kjp-theme',id)}catch(e){}
+  $('fullList').hidden=true;$('reset').hidden=true;$('shuf').hidden=false;
+  list();if(id==='due'||!restorePos()){$('filt').value='all';build(true)}
+}
 function loadTheme(id){
+  if(VT[id])return loadVirtual(id);
+  VIRT=null;$('fullList').hidden=false;$('reset').hidden=false;
   const t=THEMES[id];tKey=t.key;curK=id;
   if(t.groups){let n=0;W=[];t.groups.forEach(([cat,ws])=>ws.forEach(([g,nb,pt,note])=>W.push({n:++n,g,nb,pt,note,cat})))}
   else W=t.words.map(([n,g,nb,pt,note,sw])=>({n,g,nb,pt,note,sw}));
@@ -4385,7 +4407,8 @@ function say(t){try{
 
 function build(shuffle){
   const f=$('filt').value;
-  deck=W.filter(w=>f==='all'||(f==='miss'?missed.has(w.id):/^c\d+$/.test(f)?w.cat===catList[+f.slice(1)]:w.g===f));
+  deck=W.filter(w=>f==='all'||(f==='miss'?missed.has(w.id):f==='new'?!known.has(w.id):/^t:/.test(f)?w.k===f.slice(2):/^c\d+$/.test(f)?w.cat===catList[+f.slice(1)]:w.g===f));
+  if(VIRT)shuffle=true;
   if(shuffle)for(let k=deck.length-1;k>0;k--){const j=Math.floor(Math.random()*(k+1));[deck[k],deck[j]]=[deck[j],deck[k]]}
   i=0;fB=Date.now();render();
 }
@@ -4402,7 +4425,8 @@ function render(){
   savePos();
   flipped=false;
   const st=$('stage');
-  if(!deck.length){st.innerHTML=`<div class="face done" style="position:static"><h2>Nothing here</h2><p>${$('filt').value==='miss'?'You haven’t missed any words yet. Great!':'No words in this filter.'}</p></div>`;prog();return}
+  if(!deck.length){st.innerHTML=`<div class="face done" style="position:static"><h2>Nothing here</h2><p>${VIRT==='due'&&$('filt').value==='all'?'No words are due for review today. Come back tomorrow!':$('filt').value==='miss'?'You haven’t missed any words yet. Great!':'No words in this filter.'}</p></div>`;prog();return}
+  if(i>=deck.length&&VIRT==='due'){st.innerHTML=`<div class="face done" style="position:static"><h2>Ferdig!</h2><p>You reviewed all the words due today. Come back tomorrow.</p><div class="ans"><button id="bBack">← Back</button></div></div>`;$('bBack').onclick=()=>{i--;render()};prog();return}
   if(i>=deck.length){
     const ok=deck.filter(w=>known.has(w.id)).length;
     st.innerHTML=`<div class="face done" style="position:static"><h2>Ferdig! Round complete</h2><p>You got ${ok} of ${deck.length}.</p><div class="ans"><button id="again">Again</button><button id="rev" class="no">Review misses (${missed.size})</button><button id="bBack">← Back</button></div></div>`;
@@ -4427,20 +4451,22 @@ function render(){
   c.onclick=e=>{if(!e.target.closest('.spk'))flip()};
   c.onkeydown=e=>{if(e.key===' '||e.key==='Enter'){e.preventDefault();flip()}};
   ['s1','s2'].forEach(id=>{const b=$(id);if(b)b.onclick=e=>{e.stopPropagation();say(full(w))}});
-  $('bYes').onclick=()=>{known.add(w.id);missed.delete(w.id);save();srsGrade(curK+'|'+w.id,true);tick();fA[w.id]=Date.now();ansSet(tKey+'-ans',fA);i++;fSkip();render();list()};
-  $('bNo').onclick=()=>{missed.add(w.id);known.delete(w.id);save();srsGrade(curK+'|'+w.id,false);tick();fA[w.id]=Date.now();ansSet(tKey+'-ans',fA);i++;fSkip();render();list()};
+  $('bYes').onclick=()=>{known.add(w.id);missed.delete(w.id);if(VIRT)vSave(w,'k');else save();srsGrade(VIRT?w.id:curK+'|'+w.id,true);tick();fA[w.id]=Date.now();ansSet(tKey+'-ans',fA);i++;fSkip();render();list()};
+  $('bNo').onclick=()=>{missed.add(w.id);known.delete(w.id);if(VIRT)vSave(w,'m');else save();srsGrade(VIRT?w.id:curK+'|'+w.id,false);tick();fA[w.id]=Date.now();ansSet(tKey+'-ans',fA);if(VIRT==='due'&&!w.rq){w.rq=true;deck.push({...w,rq:true})}i++;fSkip();render();list()};
   $('bBack').onclick=()=>{if(i>0){i--;render()}};
   prog();
 }
 
 function prog(){
   const n=deck.length,pos=Math.min(deck.filter(w=>(fA[w.id]||0)>fB).length+1,n);
-  $('pTxt').textContent=n?(i<n?`Card ${pos} of ${n}`:`Round complete`):'';
-  $('pKnown').textContent=`Known ${known.size} of ${W.length}`;
-  $('pBar').style.width=(known.size/W.length*100)+'%';
+  $('pTxt').textContent=n?(i<n?`Card ${pos.toLocaleString('en')} of ${n.toLocaleString('en')}`:`Round complete`):'';
+  const kn=W.filter(w=>known.has(w.id)).length;
+  $('pKnown').textContent=`Known ${kn.toLocaleString('en')} of ${W.length.toLocaleString('en')}`;
+  $('pBar').style.width=(W.length?kn/W.length*100:0)+'%';
 }
 
 function list(){
+  if(VIRT){$('list').innerHTML='';return}
   let last;
   $('list').innerHTML=W.map(w=>(w.cat&&w.cat!==last?(last=w.cat,`<tr class="cat"><td colspan="3">${gn(w.cat)}</td></tr>`):'')+`<tr><td class="n">${w.n}</td><td class="nb"><span class="dot g-${w.g}"></span>${full(w)}</td><td>${w.pt}${w.sw?`<span class="sws" style="background:${w.sw}"></span>`:''}${known.has(w.id)?' <span class="k">✓</span>':''}</td></tr>`).join('');
 }
@@ -4467,47 +4493,41 @@ const SECTIONS=[['Basics',['smaord','uttrykk','tall','farger','tid','pronomen']]
 ['Work & society',['yrker','arbeid','samfunn']],
 ['Grammar',['verb','adjektiv','adverb','preposisjoner','konjunksjoner','abstrakt']]];
 {const used=new Set(SECTIONS.flatMap(x=>x[1]));const rest=Object.keys(THEMES).filter(k=>!used.has(k));if(rest.length)SECTIONS.push(['More',rest]);}
-function fillThemes(){const v=$('theme').value;$('theme').innerHTML=SECTIONS.map(([lab,ids])=>`<optgroup label="${sn(lab)}">`+ids.filter(k=>THEMES[k]).map(id=>`<option value="${id}">${tn(id)}</option>`).join('')+'</optgroup>').join('');if(v)$('theme').value=v}
+function fillThemes(){const v=$('theme').value;$('theme').innerHTML=SECTIONS.concat([['Mix',['mix','due']]]).map(([lab,ids])=>`<optgroup label="${sn(lab)}">`+ids.filter(k=>THEMES[k]||VT[k]).map(id=>`<option value="${id}">${tn(id)}</option>`).join('')+'</optgroup>').join('');if(v)$('theme').value=v}
 fillThemes();
-let start=$('theme').options[0].value;try{const v=localStorage.getItem('kjp-theme');if(THEMES[v])start=v}catch(e){}
+let start=$('theme').options[0].value;try{const v=localStorage.getItem('kjp-theme');if(THEMES[v]||VT[v])start=v}catch(e){}
 $('theme').value=start;
 $('theme').onchange=()=>loadTheme($('theme').value);
 loadTheme(start);
 /* ---- views & menu ---- */
-const ALL=[];
-for(const k in THEMES){const t=THEMES[k];
-  if(t.groups)t.groups.forEach(([cat,ws],gi)=>ws.forEach(([g,nb,pt,note])=>ALL.push({k,gi,cat,g,nb,pt,note})));
-  else t.words.forEach(([n,g,nb,pt,note,sw])=>ALL.push({k,gi:-1,cat:'',g,nb,pt,note,sw}));}
 $('sDesc').textContent=`Find any of the ${ALL.length.toLocaleString('en')} words in all ${Object.keys(THEMES).length} themes`;
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const fold=s=>s.toLowerCase().replace(/æ/g,'ae').replace(/[øö]/g,'o').replace(/[åä]/g,'a').replace(/[éèê]/g,'e').replace(/[’']/g,"'");
 const hi=(s,q)=>{const i=s.toLowerCase().indexOf(q);return i<0?esc(s):esc(s.slice(0,i))+'<mark>'+esc(s.slice(i,i+q.length))+'</mark>'+esc(s.slice(i+q.length))};
 function show(v){
   const s=v==='search';
-  [['flash','vFlash','navF'],['practice','vPractice','navP'],['verbs','vVerbs','navV'],['gender','vGender','navG'],['clock','vClock','navC'],['numbers','vNumbers','navN'],['search','vSearch','navS'],['progress','vStats','navO'],['settings','vSettings','navT'],['help','vHelp','navH']].forEach(([n,vi,na])=>{$(vi).hidden=n!==v;$(na).classList.toggle('on',n===v);$(na).setAttribute('aria-current',n===v?'page':'false')});
-  document.title={search:'Search',practice:'Practice',verbs:'Verbs',gender:'Gender',clock:'Clock',numbers:'Numbers',progress:'Progress',settings:'Settings',help:'Help'}[v]?({search:'Search',practice:'Practice',verbs:'Verbs',gender:'Gender',clock:'Clock',numbers:'Numbers',progress:'Progress',settings:'Settings',help:'Help'}[v]+' · Norsk Flashcards'):'Flashcards: '+tn($('theme').value);
+  [['flash','vFlash','navF'],['verbs','vVerbs','navV'],['gender','vGender','navG'],['clock','vClock','navC'],['numbers','vNumbers','navN'],['search','vSearch','navS'],['progress','vStats','navO'],['settings','vSettings','navT'],['help','vHelp','navH']].forEach(([n,vi,na])=>{$(vi).hidden=n!==v;$(na).classList.toggle('on',n===v);$(na).setAttribute('aria-current',n===v?'page':'false')});
+  document.title={search:'Search',verbs:'Verbs',gender:'Gender',clock:'Clock',numbers:'Numbers',progress:'Progress',settings:'Settings',help:'Help'}[v]?({search:'Search',verbs:'Verbs',gender:'Gender',clock:'Clock',numbers:'Numbers',progress:'Progress',settings:'Settings',help:'Help'}[v]+' · Norsk Flashcards'):'Flashcards: '+tn($('theme').value);
   if(v==='gender'&&!gReady){gReady=true;if(!gRestore())gBuild()}
   if(v==='clock'&&!cReady){cReady=true;cStart()}
   if(v==='numbers'&&!nReady){nReady=true;nStart()}
   if(v==='verbs'&&!vbReady){vbReady=true;if(!vbRestore())vbBuild()}
   if(v==='progress')oRender();
-  if(v==='practice'&&pReady&&pMode==='review'&&pI>=pDeck.length)pBuild();
-  if(v==='practice'&&!pReady){pReady=true;if(pMode==='review'||!pRestore())pBuild()}
   document.body.classList.remove('nav');window.scrollTo(0,0);
   if(s&&matchMedia('(min-width:900px)').matches)setTimeout(()=>$('sQ').focus(),0);
 }
-const route=()=>{const m={'#search':'search','#practice':'practice','#verbs':'verbs','#gender':'gender','#clock':'clock','#numbers':'numbers','#progress':'progress','#settings':'settings','#help':'help'};if(/^#h-/.test(location.hash)){if($('vHelp').hidden)show('help');const t=document.getElementById(location.hash.slice(1));if(t)t.scrollIntoView();return}show(m[location.hash]||'flash')};
+const route=()=>{if(location.hash==='#practice'){$('theme').value='mix';loadTheme('mix');history.replaceState(null,'','#flashcards')}const m={'#search':'search','#verbs':'verbs','#gender':'gender','#clock':'clock','#numbers':'numbers','#progress':'progress','#settings':'settings','#help':'help'};if(/^#h-/.test(location.hash)){if($('vHelp').hidden)show('help');const t=document.getElementById(location.hash.slice(1));if(t)t.scrollIntoView();return}show(m[location.hash]||'flash')};
 window.addEventListener('hashchange',route);
 document.querySelectorAll('.menuBtn').forEach(b=>b.onclick=()=>document.body.classList.add('nav'));
 document.querySelectorAll('header .top').forEach(t=>t.insertAdjacentHTML('beforeend','<div class="lang" role="group" aria-label="Language of theme and group names"><button type="button" data-l="no" title="Norsk">NO</button><button type="button" data-l="en" title="English">EN</button></div>'));
 function langUI(){document.querySelectorAll('.lang button').forEach(b=>{const on=b.dataset.l===LANG;b.classList.toggle('on',on);b.setAttribute('aria-pressed',on)});$('tLab').textContent=LANG==='en'?'Theme':'Tema';$('theme').setAttribute('aria-label',LANG==='en'?'Theme':'Tema')}
 function setLang(l){if(l===LANG)return;LANG=l;try{localStorage.setItem('kjp-lang',l)}catch(e){}langUI();fillThemes();
-  $('tName').textContent=tn(curK);if(!$('vFlash').hidden)document.title='Flashcards: '+tn(curK);
+  $('tName').textContent=tn(curK);if(VIRT){W.forEach(w=>w.n=tn(w.k));[...$('filt').options].forEach(o=>{if(/^t:/.test(o.value))o.textContent='Only '+tn(o.value.slice(2))});render()}if(!$('vFlash').hidden)document.title='Flashcards: '+tn(curK);
   [...$('filt').options].forEach(o=>{if(/^c\d+$/.test(o.value))o.textContent='Only '+gn(catList[+o.value.slice(1)])});list();
   if($('sQ').value.trim()&&!$('sTable').hidden)search();
   if(!$('vStats').hidden)oRender();
   if(vbReady){const st=$('vbStage').querySelector('.face .num');if(st&&vbDeck[vbI])st.textContent=gn(vbDeck[vbI].w.cat);vbFiltUI()}
-  document.querySelectorAll('#pStage .num,#gStage .num').forEach(n=>{const k=n.dataset.k;if(k)n.textContent=tn(k)})}
+  document.querySelectorAll('#gStage .num').forEach(n=>{const k=n.dataset.k;if(k)n.textContent=tn(k)})}
 document.querySelectorAll('.lang').forEach(g=>g.onclick=e=>{const b=e.target.closest('button');if(b)setLang(b.dataset.l)});
 langUI();
 /* ---- settings: appearance ---- */
@@ -4523,7 +4543,7 @@ $('setYes').onclick=()=>{try{Object.keys(localStorage).filter(k=>/^kjp/.test(k))
   try{history.replaceState(null,'',location.pathname+location.search)}catch(e){}location.reload()};
 $('scrim').onclick=()=>document.body.classList.remove('nav');
 document.addEventListener('keydown',e=>{if(e.key==='Escape')document.body.classList.remove('nav')});
-['navF','navP','navV','navG','navC','navN','navS','navO','navT','navH'].forEach(id=>$(id).addEventListener('click',()=>document.body.classList.remove('nav')));
+['navF','navV','navG','navC','navN','navS','navO','navT','navH'].forEach(id=>$(id).addEventListener('click',()=>document.body.classList.remove('nav')));
 /* ---- search ---- */
 function search(){
   const raw=$('sQ').value.trim(),lang=$('sLang').value;
@@ -4556,92 +4576,6 @@ $('sRes').onclick=e=>{const b=e.target.closest('.src');if(!b)return;
   {const x=deck.findIndex(w=>w.nb===b.dataset.nb);if(x>0){i=x;render()}}
   location.hash='flashcards';show('flash')};
 try{const l=localStorage.getItem('kjp-slang');if(l==='no'||l==='en')$('sLang').value=l}catch(e){}
-/* ---- practice ---- */
-let pReady=false,pMode='all',pDir='no',pDeck=[],pI=0,pKnown=new Set(),pMissed=new Set(),pRound={ok:0,n:0};
-{const cnt={};ALL.forEach(w=>{const k=w.k+'|'+w.nb;cnt[k]=(cnt[k]||0)+1});ALL.forEach(w=>{w.pid=w.k+'|'+(cnt[w.k+'|'+w.nb]>1?w.cat+'|':'')+w.nb})}
-try{const s=JSON.parse(localStorage.getItem('kjp-practice')||'{}');const ids=new Set(ALL.map(w=>w.pid));pKnown=new Set((s.k||[]).filter(x=>ids.has(x)));pMissed=new Set((s.m||[]).filter(x=>ids.has(x)))}catch(e){}
-const pSave=()=>{try{localStorage.setItem('kjp-practice',JSON.stringify({k:[...pKnown],m:[...pMissed]}))}catch(e){}};
-$('pDesc').textContent=`All ${ALL.length.toLocaleString('en')} words from every theme, shuffled. A word you know leaves the deck for good.`;
-const dueList=()=>{const t=today();return ALL.filter(w=>SRS[w.pid]&&SRS[w.pid][1]<=t)};
-const P_DESC_ALL=`All ${ALL.length.toLocaleString('en')} words from every theme, shuffled. A word you know leaves the deck for good.`;
-const P_DESC_REV='Words you answered in Flashcards or Practice come back here at growing intervals: 1, 3, 7, 14, 30 and 60 days. Miss one and it starts again tomorrow.';
-function pModeUI(){
-  const n=dueList().length;$('pDesc').textContent=pMode==='review'?P_DESC_REV:P_DESC_ALL;
-  $('pmRev').textContent=`Review · ${n.toLocaleString('en')} due`;
-  $('pmAll').classList.toggle('on',pMode==='all');$('pmRev').classList.toggle('on',pMode==='review');
-  $('pmAll').setAttribute('aria-pressed',pMode==='all');$('pmRev').setAttribute('aria-pressed',pMode==='review');
-}
-function pSetMode(m){pMode=m;try{localStorage.setItem('kjp-pmode',m)}catch(e){}if(m==='all'){if(!pRestore())pBuild()}else pBuild()}
-function pBuild(){
-  if(pMode==='review'){pDeck=dueList();pDeck.forEach(w=>w.rq=false);
-    for(let k=pDeck.length-1;k>0;k--){const j=Math.floor(Math.random()*(k+1));[pDeck[k],pDeck[j]]=[pDeck[j],pDeck[k]]}
-    pDeck.sort((a,b)=>SRS[a.pid][1]-SRS[b.pid][1]);pI=0;pRender();return}
-  pDeck=ALL.filter(w=>!pKnown.has(w.pid));
-  for(let k=pDeck.length-1;k>0;k--){const j=Math.floor(Math.random()*(k+1));[pDeck[k],pDeck[j]]=[pDeck[j],pDeck[k]]}
-  pI=0;pRender();
-}
-function pProg(){
-  pModeUI();
-  const n=pDeck.length;
-  if(pMode==='review'){const v=Object.values(SRS);
-    $('ppTxt').textContent=n?(pI<n?`Review ${pI+1} of ${n}`:'Reviews done'):'';
-    $('ppKnown').textContent=`Learning ${v.filter(c=>c[0]<5).length.toLocaleString('en')} · Mastered ${v.filter(c=>c[0]>=5).length.toLocaleString('en')}`;
-    $('ppBar').style.width=(n?Math.min(pI,n)/n*100:100)+'%';return}
-  $('ppTxt').textContent=n?(pI<n?`Card ${(pI+1).toLocaleString('en')} of ${n.toLocaleString('en')}`:'Round complete'):'';
-  $('ppKnown').textContent=`Known ${pKnown.size.toLocaleString('en')} of ${ALL.length.toLocaleString('en')}`;
-  $('ppBar').style.width=(pKnown.size/ALL.length*100)+'%';
-}
-const pSavePos=()=>{if(pMode!=='all')return;try{localStorage.setItem('kjp-practice-pos',JSON.stringify({d:pDeck.map(w=>w.pid),i:pI}))}catch(e){}};
-function pRestore(){try{
-  const s=JSON.parse(localStorage.getItem('kjp-practice-pos')||'null');if(!s||!Array.isArray(s.d))return false;
-  const by=new Map(ALL.map(w=>[w.pid,w])),d=s.d.map(x=>by.get(x)).filter(Boolean);if(!d.length)return false;
-  pDeck=d;pI=Math.max(0,Math.min(+s.i||0,d.length));pRender();return true;
-}catch(e){return false}}
-function pRender(){
-  pSavePos();
-  const st=$('pStage');
-  if(pMode==='review'&&pI>=pDeck.length){
-    const t=today(),tom=ALL.filter(w=>SRS[w.pid]&&SRS[w.pid][1]===t+1).length,any=Object.keys(SRS).length;
-    st.innerHTML=`<div class="face done" style="position:static"><h2>${pDeck.length?'Ferdig! All reviews done':'Nothing to review today'}</h2><p>${any?`Tomorrow: ${tom} card${tom===1?'':'s'} to review.`:'Answer cards in Flashcards or Practice and they will come back here for review at the right time.'}</p><div class="ans"><button class="yes" id="pToAll">Practice all cards</button>${pDeck.length?'<button id="pBack2">← Back</button>':''}</div></div>`;
-    $('pToAll').onclick=()=>pSetMode('all');if($('pBack2'))$('pBack2').onclick=()=>{pI--;pRender()};pProg();return}
-  if(pKnown.size>=ALL.length&&pMode==='all'){st.innerHTML=`<div class="face done" style="position:static"><h2>Gratulerer!</h2><p>You know all ${ALL.length.toLocaleString('en')} words.</p></div>`;pProg();return}
-  if(pI>=pDeck.length){
-    const ok=pDeck.filter(w=>pKnown.has(w.pid)).length;
-    st.innerHTML=`<div class="face done" style="position:static"><h2>Ferdig! Round complete</h2><p>You knew ${ok} of ${pDeck.length}. ${ALL.length-pKnown.size} words are still left.</p><div class="ans"><button class="yes" id="pAgain">Next round</button><button id="pBack2">← Back</button></div></div>`;
-    $('pAgain').onclick=pBuild;$('pBack2').onclick=()=>{pI--;pRender()};pProg();return;
-  }
-  const w=pDeck[pI];
-  const tag=`<span class="tag g-${w.g}">${gName[w.g]}</span>`;
-  const no=`${tag}<div class="word">${nbHTML(w)}</div>`;
-  const pt=(w.sw?`<div class="sw" style="background:${w.sw}"></div>`:'')+`<div class="pt">${w.pt}</div>`;
-  const note=noteHTML(w);
-  const src=esc(tn(w.k));
-  const front=pDir==='no'?no:pt,back=pDir==='no'?pt+note:no+note;
-  st.innerHTML=`<div class="scene"><div class="card" id="pCard" tabindex="0" role="button" aria-label="Flip card">
-  <div class="face"><span class="num" data-k="${w.k}">${src}</span>${pDir==='no'?`<button class="spk" id="ps1" aria-label="Hear pronunciation">${spkSVG}</button>`:''}${front}<span class="hint">Tap to flip</span></div>
-  <div class="face back"><span class="num" data-k="${w.k}">${src}</span><button class="spk" id="ps2" aria-label="Hear pronunciation">${spkSVG}</button>${back}</div>
-  </div></div>
-  <div class="ans"><button class="no" id="pNo">Didn’t know</button><button class="yes" id="pYes">Knew it!</button><button id="pBack" ${pI===0?'disabled':''}>← Back</button></div>`;
-  const c=$('pCard');let fl=false;const flip=()=>{fl=!fl;c.classList.toggle('flip',fl)};
-  c.onclick=e=>{if(!e.target.closest('.spk'))flip()};
-  c.onkeydown=e=>{if(e.key===' '||e.key==='Enter'){e.preventDefault();flip()}};
-  ['ps1','ps2'].forEach(id=>{const b=$(id);if(b)b.onclick=e=>{e.stopPropagation();say(full(w))}});
-  $('pYes').onclick=()=>{pKnown.add(w.pid);pMissed.delete(w.pid);pSave();srsGrade(w.pid,true);tick();pI++;pRender()};
-  $('pNo').onclick=()=>{pMissed.add(w.pid);pKnown.delete(w.pid);pSave();srsGrade(w.pid,false);tick();if(pMode==='review'&&!w.rq){w.rq=true;pDeck.push(w)}pI++;pRender()};
-  $('pBack').onclick=()=>{if(pI>0){pI--;pRender()}};
-  pProg();
-}
-function pSetDir(d){pDir=d;$('pdNo').classList.toggle('on',d==='no');$('pdPt').classList.toggle('on',d==='pt');$('pdNo').setAttribute('aria-pressed',d==='no');$('pdPt').setAttribute('aria-pressed',d==='pt');if(pReady)pRender()}
-$('pdNo').onclick=()=>pSetDir('no');$('pdPt').onclick=()=>pSetDir('pt');
-$('pReset').onclick=()=>{pKnown.clear();pMissed.clear();pSave();pBuild()};
-$('pmAll').onclick=()=>pSetMode('all');$('pmRev').onclick=()=>pSetMode('review');
-try{if(localStorage.getItem('kjp-pmode')==='review')pMode='review'}catch(e){}
-document.addEventListener('keydown',e=>{
-  if($('vPractice').hidden||e.target.tagName==='SELECT'||e.target.tagName==='INPUT')return;
-  if(e.key==='ArrowRight'&&$('pYes'))$('pYes').click();
-  if(e.key==='ArrowLeft'&&$('pNo'))$('pNo').click();
-  if(e.key==='Backspace'&&$('pBack')&&!$('pBack').disabled)$('pBack').click();
-});
 /* ---- gender trainer ---- */
 let gReady=false,gDeck=[],gI=0,gDone=false,gOk=0,gN=0,gStreak=0,gWrong=new Set(),gTot={r:0,t:0};
 const GN=[];{const seen=new Set();ALL.forEach(w=>{if(!ART.includes(w.g))return;const key=w.g+'|'+w.nb;if(seen.has(key))return;seen.add(key);
@@ -4699,7 +4633,7 @@ function oRender(){
   const byK={};ALL.forEach(w=>{(byK[w.k]=byK[w.k]||[]).push(w)});
   let tot=0;const rows=[];
   SECTIONS.forEach(([lab,ids])=>{rows.push(`<tr class="sec"><td colspan="3">${esc(sn(lab))}</td></tr>`);
-    ids.filter(k=>THEMES[k]).forEach(k=>{const fk=themeKnown(k),ws=byK[k]||[];const n=ws.filter(w=>fk.has(w.pid)||pKnown.has(w.pid)).length;tot+=n;
+    ids.filter(k=>THEMES[k]).forEach(k=>{const fk=themeKnown(k),ws=byK[k]||[];const n=ws.filter(w=>fk.has(w.pid)).length;tot+=n;
       const p=ws.length?n/ws.length*100:0;
       rows.push(`<tr class="row" data-k="${k}" tabindex="0"><td class="nb">${esc(tn(k))}</td><td class="pc"><div class="track"><i style="width:${p}%"></i></div></td><td class="num2">${n} / ${ws.length}</td></tr>`)})});
   $('oList').innerHTML=rows.join('');
@@ -4710,7 +4644,7 @@ function oRender(){
   <div class="tile"><div class="big">${gTot.t?Math.round(gTot.r/gTot.t*100)+'%':'–'}</div><div class="lab">right in Gender${gTot.t?` (${gTot.t.toLocaleString('en')} answers)`:''}</div></div>`;
   oDaily();
   {const k=VB.filter(x=>vbKnown.has(x.id)).length;$('oTiles').insertAdjacentHTML('beforeend',`<div class="tile"><div class="big">${k} <span style="font-size:20px;color:var(--mut)">/ ${VB.length}</span></div><div class="lab">verb forms known</div><div class="track"><i style="width:${k/VB.length*100}%"></i></div></div>`)}
-  if($('oRev'))$('oRev').onclick=()=>{pMode='review';try{localStorage.setItem('kjp-pmode','review')}catch(e){}location.hash='practice';if(pReady)pBuild()};
+  if($('oRev'))$('oRev').onclick=()=>{$('theme').value='due';loadTheme('due');location.hash='flashcards'};
 }
 $('oList').onclick=e=>{const r=e.target.closest('tr.row');if(!r)return;$('theme').value=r.dataset.k;loadTheme(r.dataset.k);location.hash='flashcards'};
 $('oList').onkeydown=e=>{if(e.key==='Enter'){const r=e.target.closest('tr.row');if(r)r.click()}};
