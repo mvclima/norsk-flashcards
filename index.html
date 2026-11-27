@@ -444,6 +444,7 @@ table.ov .num2{text-align:right;white-space:nowrap;color:var(--mut);font-size:14
 <h2 id="h-search">Search</h2>
 <p>Find any word in all themes. Type a whole word or part of one, choose its language (<b>NO</b> or <b>EN</b>) and press the magnifier.</p>
 <ul>
+<li>In <b>NO</b>, the search also looks in the notes, so <i>stor bokstav</i> finds the card <i>bokstav</i>. Those results come after the cards whose word matches.</li>
 <li>You can type without special letters: <i>vaeske</i> finds <i>væske</i>, <i>o</i> finds <i>ø</i>, <i>a</i> finds <i>å</i>.</li>
 <li>Under each result is its theme and group. Tap it to open that card in Flashcards.</li>
 </ul>
@@ -854,7 +855,7 @@ mat:{name:'Mat',desc:'food and drink',key:'kjp-mat',groups:[
 ['en','majones','mayonnaise',''],
 ['en','soyasaus','soy sauce','soya + saus = sauce'],
 ['en','remulade','remoulade','classic on a pølse'],
-['en','sprøstekt løk','crispy fried onions','sprø = crispy + stekt = fried; pølse topping'],
+['adj','sprøstekt','crispy-fried','sprøstekt · sprøstekt · sprøstekte · sprøstekt løk = crispy fried onions (a pølse topping) · sprø = crispy + stekt = fried'],
 ['en','olje','oil',''],
 ['en','olivenolje','olive oil','oliven = olive + olje = oil']]],
 ['Drinks · drikke',[
@@ -959,7 +960,7 @@ hjem:{name:'Hjem',desc:'home, by room',key:'kjp-hjem',groups:[
 ['en','ostehøvel','cheese slicer','pl. ostehøvler · Norwegian invention · ost + høvel']]],
 ['Kitchen tools · kjøkkenredskaper',[
 ['et','lokk','lid','pl. lokk · legg lokk på kjelen = put a lid on the saucepan'],
-['en','ildfast form','ovenproof dish, baking dish','pl. ildfaste former · ildfast = fireproof, ovenproof'],
+['adj','ildfast','ovenproof, fireproof','ildfast · ildfast · ildfaste · en ildfast form = an ovenproof dish, baking dish · pl. ildfaste former'],
 ['et','kjevle','rolling pin','pl. kjevler · also: en/ei kjevle · å kjevle = to roll out'],
 ['et','skjærebrett','cutting board','pl. skjærebrett · skjære = cut + brett = board'],
 ['en','visp','whisk','pl. visper · å vispe = to whisk'],
@@ -1641,8 +1642,7 @@ hverdag:{name:'Hverdag',desc:'everyday nouns',key:'kjp-hverdag',groups:[
 ['et','etternavn','surname','also: slektsnavn'],
 ['ei','adresse','address',''],
 ['et','ord','word','pl. ord'],
-['en','bokstav','letter (of the alphabet)','pl. bokstaver; bokstav for bokstav'],
-['en','stor bokstav','capital letter','liten bokstav = lower-case letter'],
+['en','bokstav','letter (of the alphabet)','pl. bokstaver; bokstav for bokstav · stor bokstav = capital letter · liten bokstav = lower-case letter'],
 ['et','alfabet','alphabet','29 letters: … x y z æ ø å'],
 ['et','brev','letter (mail)','pl. brev'],
 ['et','språk','language','pl. språk (unchanged)'],
@@ -4261,6 +4261,10 @@ abstrakt:{name:'Abstrakte ord',desc:'abstract nouns by ending',key:'kjp-abstrakt
 ]}
 };
 /* ---- one-time: plural cards became singular (keep progress) ---- */
+try{if(!localStorage.getItem('kjp-mig-sing3')){const M={mat:{'sprøstekt løk':'sprøstekt'},hjem:{'ildfast form':'ildfast'}};
+  for(const k in M){if(!THEMES[k])continue;const key=THEMES[k].key,ren=x=>M[k][x]||x;const s2=JSON.parse(localStorage.getItem(key)||'null');if(s2){s2.k=(s2.k||[]).map(ren);s2.m=(s2.m||[]).map(ren);localStorage.setItem(key,JSON.stringify(s2))}}
+  const sr=JSON.parse(localStorage.getItem('kjp-srs')||'null');if(sr){const o={};for(const x in sr){const j=x.indexOf('|'),k=x.slice(0,j),id=x.slice(j+1);o[M[k]&&M[k][id]?k+'|'+M[k][id]:x]=sr[x]}localStorage.setItem('kjp-srs',JSON.stringify(o))}
+  localStorage.setItem('kjp-mig-sing3','1')}}catch(e){}
 try{if(!localStorage.getItem('kjp-mig-sing2')){const k=Object.keys(THEMES).find(x=>THEMES[x].groups&&THEMES[x].groups.some(g=>g[1].some(w=>w[1]==='forelder')));const M={foreldre:'forelder',besteforeldre:'besteforelder'};
   if(k){const key=THEMES[k].key,ren=x=>M[x]||x;const s2=JSON.parse(localStorage.getItem(key)||'null');if(s2){s2.k=(s2.k||[]).map(ren);s2.m=(s2.m||[]).map(ren);localStorage.setItem(key,JSON.stringify(s2))}
     const sr=JSON.parse(localStorage.getItem('kjp-srs')||'null');if(sr){const o={};for(const x in sr){const j=x.indexOf('|');o[j>0&&x.slice(0,j)===k?k+'|'+ren(x.slice(j+1)):x]=sr[x]}localStorage.setItem('kjp-srs',JSON.stringify(o))}}
@@ -4647,6 +4651,7 @@ function search(){
     for(const f of fields){const ff=fold(f.replace(/^(å|to|a|an|the) /i,''));const full=fold(f);
       const r=ff===fq||full===fq?0:ff.startsWith(fq)||full.startsWith(fq)?1:new RegExp('(^|[\\s\\-(/])'+fq.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')).test(full)?2:full.includes(fq)?3:9;
       if(r<best)best=r}
+    if(best===9&&lang==='no'&&w.note&&new RegExp('(^|[^a-zæøå])'+fq.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')).test(fold(String(w.note))))best=4;
     if(best<9)res.push([best,w]);
   }
   res.sort((a,b)=>a[0]-b[0]||(lang==='no'?a[1].nb:a[1].pt).localeCompare(lang==='no'?b[1].nb:b[1].pt,'nb'));
