@@ -386,7 +386,7 @@ table.ov .num2{text-align:right;white-space:nowrap;color:var(--mut);font-size:14
 <h2 id="h-mix">All words and Due today</h2>
 <p>At the end of the theme list, the section <b>Blanding / Mix</b> has two special themes:</p>
 <ul>
-<li><b>Alle ord / All words</b>: every card from every theme, always shuffled. Filter by <b>Not known yet</b>, your mistakes, a kind of word or one theme.</li>
+<li><b>Alle ord / All words</b>: every card from every theme, always shuffled. Words you already marked <b>Knew it!</b> in any theme count as done and are skipped, so the counter starts after them. Filter by <b>Not known yet</b>, your mistakes, a kind of word or one theme.</li>
 <li><b>Til repetisjon / Due today</b>: only the words that are due for review today, see <a href="#h-review">Review</a>. A word you miss comes back once more at the end.</li>
 <li>Progress is shared: <b>Knew it!</b> and <b>Didn’t know</b> here count in the word’s own theme too, and the other way round.</li>
 <li>These two themes have no Full list and no Reset button. To start a theme again, open it and use its own <b>Reset progress</b>.</li>
@@ -4414,7 +4414,8 @@ function build(shuffle){
 }
 
 const savePos=()=>posPut(tKey+'-pos',$('filt').value,{d:deck.map(w=>w.id),i,b:fB});
-const fSkip=()=>{while(i<deck.length&&(fA[deck[i].id]||0)>fB)i++};
+const fDone=w=>(fA[w.id]||0)>fB||(VIRT==='mix'&&known.has(w.id));
+const fSkip=()=>{while(i<deck.length&&fDone(deck[i]))i++};
 function restorePos(f){try{
   const P=posGet(tKey+'-pos');f=f||P.cur;const s=f&&P.by[f];if(!s||!Array.isArray(s.d))return false;s.f=f;
   if(![...$('filt').options].some(o=>o.value===s.f))return false;
@@ -4451,14 +4452,14 @@ function render(){
   c.onclick=e=>{if(!e.target.closest('.spk'))flip()};
   c.onkeydown=e=>{if(e.key===' '||e.key==='Enter'){e.preventDefault();flip()}};
   ['s1','s2'].forEach(id=>{const b=$(id);if(b)b.onclick=e=>{e.stopPropagation();say(full(w))}});
-  $('bYes').onclick=()=>{known.add(w.id);missed.delete(w.id);if(VIRT)vSave(w,'k');else save();srsGrade(VIRT?w.id:curK+'|'+w.id,true);tick();fA[w.id]=Date.now();ansSet(tKey+'-ans',fA);i++;fSkip();render();list()};
-  $('bNo').onclick=()=>{missed.add(w.id);known.delete(w.id);if(VIRT)vSave(w,'m');else save();srsGrade(VIRT?w.id:curK+'|'+w.id,false);tick();fA[w.id]=Date.now();ansSet(tKey+'-ans',fA);if(VIRT==='due'&&!w.rq){w.rq=true;deck.push({...w,rq:true})}i++;fSkip();render();list()};
+  $('bYes').onclick=()=>{known.add(w.id);missed.delete(w.id);if(VIRT)vSave(w,'k');else save();srsGrade(VIRT?w.id:curK+'|'+w.id,true);tick();fA[w.id]=Date.now();ansSet(tKey+'-ans',fA);if(VIRT){const tk=THEMES[w.k].key+'-ans',o=ansGet(tk);o[w.id.slice(w.k.length+1)]=Date.now();ansSet(tk,o)}i++;fSkip();render();list()};
+  $('bNo').onclick=()=>{missed.add(w.id);known.delete(w.id);if(VIRT)vSave(w,'m');else save();srsGrade(VIRT?w.id:curK+'|'+w.id,false);tick();fA[w.id]=Date.now();ansSet(tKey+'-ans',fA);if(VIRT){const tk=THEMES[w.k].key+'-ans',o=ansGet(tk);o[w.id.slice(w.k.length+1)]=Date.now();ansSet(tk,o)}if(VIRT==='due'&&!w.rq){w.rq=true;deck.push({...w,rq:true})}i++;fSkip();render();list()};
   $('bBack').onclick=()=>{if(i>0){i--;render()}};
   prog();
 }
 
 function prog(){
-  const n=deck.length,pos=Math.min(deck.filter(w=>(fA[w.id]||0)>fB).length+1,n);
+  const n=deck.length,pos=Math.min(deck.filter(fDone).length+1,n);
   $('pTxt').textContent=n?(i<n?`Card ${pos.toLocaleString('en')} of ${n.toLocaleString('en')}`:`Round complete`):'';
   const kn=W.filter(w=>known.has(w.id)).length;
   $('pKnown').textContent=`Known ${kn.toLocaleString('en')} of ${W.length.toLocaleString('en')}`;
