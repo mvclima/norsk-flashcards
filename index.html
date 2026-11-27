@@ -855,7 +855,6 @@ mat:{name:'Mat',desc:'food and drink',key:'kjp-mat',groups:[
 ['en','majones','mayonnaise',''],
 ['en','soyasaus','soy sauce','soya + saus = sauce'],
 ['en','remulade','remoulade','classic on a pølse'],
-['adj','sprøstekt','crispy-fried','sprøstekt · sprøstekt · sprøstekte · sprøstekt løk = crispy fried onions (a pølse topping) · sprø = crispy + stekt = fried'],
 ['en','olje','oil',''],
 ['en','olivenolje','olive oil','oliven = olive + olje = oil']]],
 ['Drinks · drikke',[
@@ -960,7 +959,6 @@ hjem:{name:'Hjem',desc:'home, by room',key:'kjp-hjem',groups:[
 ['en','ostehøvel','cheese slicer','pl. ostehøvler · Norwegian invention · ost + høvel']]],
 ['Kitchen tools · kjøkkenredskaper',[
 ['et','lokk','lid','pl. lokk · legg lokk på kjelen = put a lid on the saucepan'],
-['adj','ildfast','ovenproof, fireproof','ildfast · ildfast · ildfaste · en ildfast form = an ovenproof dish, baking dish · pl. ildfaste former'],
 ['et','kjevle','rolling pin','pl. kjevler · also: en/ei kjevle · å kjevle = to roll out'],
 ['et','skjærebrett','cutting board','pl. skjærebrett · skjære = cut + brett = board'],
 ['en','visp','whisk','pl. visper · å vispe = to whisk'],
@@ -3808,6 +3806,7 @@ adjektiv:{name:'Adjektiv',desc:'adjectives',key:'kjp-adjektiv',groups:[
 ['adj','fersk','fresh','fersk · ferskt · ferske'],
 ['adj','rå','raw','rå · rått · rå'],
 ['adj','sprø','crispy; crazy','sprø · sprøtt · sprø'],
+['adj','sprøstekt','crispy-fried','sprøstekt · sprøstekt · sprøstekte · sprøstekt løk = crispy fried onions (a pølse topping) · sprø = crispy + stekt = fried'],
 ['adj','myk','soft','myk · mykt · myke'],
 ['adj','hard','hard','hard · hardt · harde'],
 ['adj','glatt','slippery; smooth','glatt · glatt · glatte · very useful in winter!'],
@@ -3984,7 +3983,8 @@ adjektiv:{name:'Adjektiv',desc:'adjectives',key:'kjp-adjektiv',groups:[
 ['adj','lik','alike, similar; equal','lik · likt · like · Dere er like = You look alike'],
 ['adj','tilsvarende','equivalent, corresponding','tilsvarende · never changes · eller tilsvarende = or equivalent'],
 ['adj','ulik','different, unlike','ulik · ulikt · ulike · ulike typer mat = different kinds of food · på ulike måter = in different ways · Vi er veldig ulike. = We are very different. · = forskjellig (more common in speech) · annerledes = different from usual, never changes'],
-['adj','fast','firm, fixed; permanent','fast · fast · faste · fast jobb = permanent job']]]
+['adj','fast','firm, fixed; permanent','fast · fast · faste · fast jobb = permanent job'],
+['adj','ildfast','ovenproof, fireproof','ildfast · ildfast · ildfaste · en ildfast form = an ovenproof dish, baking dish · pl. ildfaste former']]]
 ]},
 adverb:{name:'Adverb',desc:'adverbs',key:'kjp-adverb',groups:[
 ['Time · tid',[
@@ -4265,6 +4265,12 @@ try{if(!localStorage.getItem('kjp-mig-sing3')){const M={mat:{'sprøstekt løk':'
   for(const k in M){if(!THEMES[k])continue;const key=THEMES[k].key,ren=x=>M[k][x]||x;const s2=JSON.parse(localStorage.getItem(key)||'null');if(s2){s2.k=(s2.k||[]).map(ren);s2.m=(s2.m||[]).map(ren);localStorage.setItem(key,JSON.stringify(s2))}}
   const sr=JSON.parse(localStorage.getItem('kjp-srs')||'null');if(sr){const o={};for(const x in sr){const j=x.indexOf('|'),k=x.slice(0,j),id=x.slice(j+1);o[M[k]&&M[k][id]?k+'|'+M[k][id]:x]=sr[x]}localStorage.setItem('kjp-srs',JSON.stringify(o))}
   localStorage.setItem('kjp-mig-sing3','1')}}catch(e){}
+try{if(!localStorage.getItem('kjp-mig-mv1')){const mv=[['hjem','ildfast'],['mat','sprøstekt']],to='adjektiv';
+  const rd=k=>{try{return JSON.parse(localStorage.getItem(THEMES[k].key)||'{}')||{}}catch(e){return{}}},wr=(k,o)=>localStorage.setItem(THEMES[k].key,JSON.stringify(o));
+  const T2=rd(to);T2.k=T2.k||[];T2.m=T2.m||[];
+  mv.forEach(([k,id])=>{const S=rd(k);if((S.k||[]).includes(id)&&!T2.k.includes(id))T2.k.push(id);if((S.m||[]).includes(id)&&!T2.m.includes(id))T2.m.push(id);S.k=(S.k||[]).filter(x=>x!==id);S.m=(S.m||[]).filter(x=>x!==id);wr(k,S)});wr(to,T2);
+  const sr=JSON.parse(localStorage.getItem('kjp-srs')||'null');if(sr){mv.forEach(([k,id])=>{if(sr[k+'|'+id]){sr[to+'|'+id]=sr[k+'|'+id];delete sr[k+'|'+id]}});localStorage.setItem('kjp-srs',JSON.stringify(sr))}
+  localStorage.setItem('kjp-mig-mv1','1')}}catch(e){}
 try{if(!localStorage.getItem('kjp-mig-sing2')){const k=Object.keys(THEMES).find(x=>THEMES[x].groups&&THEMES[x].groups.some(g=>g[1].some(w=>w[1]==='forelder')));const M={foreldre:'forelder',besteforeldre:'besteforelder'};
   if(k){const key=THEMES[k].key,ren=x=>M[x]||x;const s2=JSON.parse(localStorage.getItem(key)||'null');if(s2){s2.k=(s2.k||[]).map(ren);s2.m=(s2.m||[]).map(ren);localStorage.setItem(key,JSON.stringify(s2))}
     const sr=JSON.parse(localStorage.getItem('kjp-srs')||'null');if(sr){const o={};for(const x in sr){const j=x.indexOf('|');o[j>0&&x.slice(0,j)===k?k+'|'+ren(x.slice(j+1)):x]=sr[x]}localStorage.setItem('kjp-srs',JSON.stringify(o))}}
