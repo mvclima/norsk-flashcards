@@ -4338,7 +4338,7 @@ function loadVirtual(id){
   VIRT=id;tKey='kjp-'+id;curK=id;
   const src=id==='due'?dueList():ALL;
   W=src.map(w=>({n:tn(w.k),k:w.k,g:w.g,nb:w.nb,pt:w.pt,note:w.note,sw:w.sw,cat:w.cat,id:w.pid}));
-  const gs=Object.keys(gName).filter(g=>W.some(w=>w.g===g)),ks=Object.keys(THEMES).filter(k=>W.some(w=>w.k===k));
+  const gs=Object.keys(gName).filter(g=>W.some(w=>w.g===g)),ks=SECTIONS.flatMap(([,ids])=>ids).filter(k=>THEMES[k]&&W.some(w=>w.k===k));
   $('filt').innerHTML=`<option value="all" id="allOpt">All</option><option value="new">Not known yet</option><option value="miss">Only the ones I missed</option>`+(gs.length>1?gs.map(g=>`<option value="${g}">${gFilt[g]}</option>`).join(''):'')+(id==='mix'?ks.map(k=>`<option value="t:${k}">Only ${tn(k)}</option>`).join(''):'');
   catList=[];
   $('legend').innerHTML=gs.map(g=>`<span><span class="dot g-${g}"></span>${gLeg[g]}</span>`).join('');
